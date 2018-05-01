@@ -7,6 +7,9 @@
   
 </ul>
 
+<button (click)="toggleEdit()">Toggle Edit</button>
+
+<div *ngIf="isEdit">
 <h1>Edit User</h1>
 <form>
     <div>
@@ -33,6 +36,7 @@
       <input type="text"[(ngModel)]="address.state" name="state"><br>
     </div>
 </form>
+</div>
 
 <h1>Hobbies</h1>
 
@@ -49,3 +53,10 @@
     {{i+1}}: {{hobby}} <button (click)="deleteHobby(i)">X</button>
   </li>
 </ul>
+
+<h1>Posts</h1>
+
+<div *ngFor="let post of posts">
+  <h4>{{post.title}}</h4>
+  <p>{{post.body}}</p>
+</div>
