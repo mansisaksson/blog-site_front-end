@@ -1,0 +1,7 @@
+
+[ ] Mock up a main page where stories are listed
+[ ] Mock up a story page
+
+[ ] Tools for creating a story
+[ ] Create a story, send it to the server and save it in the database
+[ ] List stories on the main page
