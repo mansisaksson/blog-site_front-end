@@ -14,4 +14,8 @@ export class DataService {
       .map(res => res.json())
    }
 
+   getStoryMetaData() {
+    return this.http.get('http://mansisaksson.com/scripts/scripts/json_post/stories_meta_data.php')
+    .map(res => res.json())
+   }
 }
