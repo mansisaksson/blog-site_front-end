@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 import { Http } from '@angular/http'
 import 'rxjs/add/operator/map'
 
@@ -9,13 +9,14 @@ export class DataService {
     console.log("data service connected")
    }
 
+   // old from tutorial
    getPosts() {
-    return this.http.get('https://jsonplaceholder.typicode.com/posts')
+    return this.http.get('//jsonplaceholder.typicode.com/posts')
       .map(res => res.json())
    }
 
    getStoryMetaData() {
-    return this.http.get('http://mansisaksson.com/scripts/scripts/json_post/stories_meta_data.php')
+    return this.http.get('//mansisaksson.com/scripts/scripts/json_post/stories_meta_data.php')
     .map(res => res.json())
    }
 }

@@ -25,5 +25,8 @@ export class StoryExplorerComponent implements OnInit {
 interface StoryMetaData {
   title:string,
   authorName:string,
-  storyId:number
+  storyId:number,
+  upvotes:number,
+  downvotes:number,
+  thumbnail:string,
 }

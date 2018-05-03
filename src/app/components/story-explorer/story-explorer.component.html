@@ -1,4 +1,13 @@
-<div *ngFor="let metaData of storyMetaData">
-  <h4>{{metaData.title}}</h4>
-  <p>{{metaData.authorName}}</p>
-</div>
+<table style="width:100%">
+  <tr *ngFor="let metaData of storyMetaData">
+    <div class="story-link">
+      <th class="thumbnail">
+        <img src="{{metaData.thumbnail}}" width="140" height="82" >
+      </th>
+      <th>
+        <a href=""><h4>{{metaData.title}}</h4></a>
+        <p>{{metaData.authorName}}</p>
+      </th>
+    </div>
+  </tr>
+</table>
