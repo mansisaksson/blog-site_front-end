@@ -20,11 +20,14 @@
       "prefix": "app",
       "styles": [
         "styles.css",
-        "../node_modules/bootstrap/dist/css/bootstrap.css"
+        "../node_modules/bootstrap/dist/css/bootstrap.css",
+        "../node_modules/quill/dist/quill.core.css",
+        "../node_modules/quill/dist/quill.snow.css",
+        "../node_modules/quill/dist/quill.bubble.css"
       ],
       "scripts": [
-        "thirdparty/webodf/webodf.js",
-        "../node_modules/jquery/dist/jquery.js",
+        "../node_modules/quill/dist/quill.min.js",
+        "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.js"
       ],
       "environmentSource": "environments/environment.ts",
