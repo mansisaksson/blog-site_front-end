@@ -1,11 +1,11 @@
 
-[ ] Mock up a main page where stories are listed
-	[x] List all available stories
-	[ ] Press the story link and enter the story viewer
-	
 [ ] Mock up a story page
-	[ ] Title
-	[ ] Content
+	[ ] Story editor
+		[ ] Look at substance
+
+[x] Mock up a main page where stories are listed
+	[x] List all available stories
+	[x] Press the story link and enter the story viewer
 
 [ ] Tools for creating a story
 [ ] Create a story, send it to the server and save it in the database
