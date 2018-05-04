@@ -10,11 +10,13 @@ import { UserComponent } from './components/user/user.component';
 import { DataService } from './services/data.service';
 import { AboutComponent } from './components/about/about.component';
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
+import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
 
 const appRoutes: Routes = [
   {path:'tutorial', component:UserComponent},
   {path:'about', component:AboutComponent},
-  {path:'story_explorer', component:StoryExplorerComponent}
+  {path:'story-explorer', component:StoryExplorerComponent},
+  {path:'story-viewer/:story-id', component:StoryViewerComponent}
 ]
 
 @NgModule({
@@ -22,7 +24,8 @@ const appRoutes: Routes = [
     AppComponent,
     UserComponent,
     AboutComponent,
-    StoryExplorerComponent
+    StoryExplorerComponent,
+    StoryViewerComponent
   ],
   imports: [
     BrowserModule,

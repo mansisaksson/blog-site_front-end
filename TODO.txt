@@ -1,7 +1,7 @@
 
 [ ] Mock up a main page where stories are listed
 	[x] List all available stories
-	[ ] Press the story link and enter the story page
+	[ ] Press the story link and enter the story viewer
 	
 [ ] Mock up a story page
 	[ ] Title

@@ -16,7 +16,13 @@ export class DataService {
    }
 
    getStoryMetaData() {
-    return this.http.get('//mansisaksson.com/scripts/scripts/json_post/stories_meta_data.php')
-    .map(res => res.json())
+     return this.http.get('//mansisaksson.com/scripts/scripts/json_post/stories_meta_data.php')
+     .map(res => res.json())
    }
+
+   getStory(storyId:string) {
+     let url = '//mansisaksson.com/scripts/scripts/json_post/generate_story.php?' + storyId;
+     return this.http.get(url)
+     .map(res => res.json())
+    }
 }
