@@ -20,11 +20,20 @@
       "prefix": "app",
       "styles": [
         "styles.css",
-        "../node_modules/bootstrap/dist/css/bootstrap.css"
+        "../node_modules/bootstrap/dist/css/bootstrap.css",
+        "../node_modules/quill/dist/quill.bubble.css",
+        "../node_modules/quill/dist/quill.core.css",
+        "../node_modules/quill/dist/quill.snow.css",
+        "../node_modules/quill-mention/dist/quill.mention.min.css",
+        "../node_modules/katex/dist/katex.min.css"
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
-        "../node_modules/bootstrap/dist/js/bootstrap.js"
+        "../node_modules/bootstrap/dist/js/bootstrap.js",
+        "../node_modules/quill/dist/quill.min.js",
+        "../node_modules/quill-mention/dist/quill.mention.min.js",
+        "../node_modules/quill-image-resize-module/image-resize.min.js",
+        "../node_modules/katex/dist/katex.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
