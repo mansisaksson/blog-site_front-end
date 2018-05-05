@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core'
 import { Router, ActivatedRoute, Params } from '@angular/router'
-import * as quill from 'quill'
 
 @Component({
   selector: 'app-story-viewer',
@@ -10,8 +9,6 @@ import * as quill from 'quill'
 export class StoryViewerComponent implements OnInit {
   public storyId: string;
   
-  //private editor: quill.Quill;
-
   constructor(private activatedRoute: ActivatedRoute) {
 
   }
@@ -31,7 +28,5 @@ export class StoryViewerComponent implements OnInit {
       readOnly: true,
       theme: 'snow'
     };
-    console.log(quill);
-    //var test = new quill.Quill('.editor', options);
   }
 }
