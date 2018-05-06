@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { QuillEditorComponent } from 'ngx-quill/src/quill-editor.component';
 
 import * as quill from 'quill';
-let Quill: any = quill;
+let Quill: any = quill // due to a bug in Quill we have to declare the import as an any
 
 // add image resize module
 import ImageResize from 'quill-image-resize-module';
@@ -41,56 +41,14 @@ Quill.register(Font, true);
   ]
 })
 export class StoryViewerComponent implements OnInit {
-  title = '<ul><li>I am example content</li><li><u>And this, too</u></li></ul>';
-  isReadOnly = false;
-  placeholder = 'placeholder';
-  form: FormGroup;
-  modules = {};
 
   constructor(fb: FormBuilder) {
-    const values = [
-      { id: 1, value: 'Fredrik Sundqvist' },
-      { id: 2, value: 'Patrik Sjölin' }
-    ];
 
-    this.form = fb.group({
-      editor: ['test']
-    });
-
-    this.modules = {
-      formula: true,
-      toolbar: [['formula'], ['image']],
-      imageResize: {},
-      mention: {
-        allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
-        source: function (searchTerm) {
-          if (searchTerm.length === 0) {
-            this.renderList(values, searchTerm);
-          } else {
-            const matches = [];
-            for (let i = 0; i < values.length; i++)
-              if (~values[i].value.toLowerCase().indexOf(searchTerm)) matches.push(values[i]);
-            this.renderList(matches, searchTerm);
-          }
-        },
-      }
-    }
   }
   
   @ViewChild('editor') editor: QuillEditorComponent
 
   ngOnInit() {
-    this.form
-      .controls
-      .editor
-      .valueChanges.pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
-      .subscribe(data => {
-        console.log('native fromControl value changes with debounce', data)
-      });
-
     this.editor
       .onContentChanged
       .pipe(
@@ -98,39 +56,25 @@ export class StoryViewerComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(data => {
-        console.log('view child + directly subscription', data)
+        console.log(data)
       });
-  }
-
-  addBindingCreated(quill) {
-    quill.keyboard.addBinding({
-      key: 'B'
-    }, (range, context) => {
-      console.log('KEYBINDING B', range, context);
-    });
-  }
-
-  setControl() {
-    this.form.setControl('editor', new FormControl('test - new Control'))
   }
 
   setFocus($event) {
     $event.focus();
   }
 
-  patchValue() {
-    this.form.controls['editor'].patchValue(`${this.form.controls['editor'].value} patched!`)
+  getContent() {
+    // this.editor.quillEditor <-- quill.Quill()
+    return this.editor.quillEditor.getContents();
   }
 
-  toggleReadOnly() {
-    this.isReadOnly = !this.isReadOnly;
-  }
-
-  logChange($event: any) {
-    console.log($event);
-  }
-
-  logSelection($event: any) {
-    console.log($event);
+  addBindingCreated(quill) {
+    quill.keyboard.addBinding({
+      key: 'S',
+      ctrlKey: true
+    }, (range, context) => {
+      console.log('Save!', range, context);
+    });
   }
 }

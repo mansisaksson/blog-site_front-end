@@ -1,51 +1,9 @@
+<div>
 <h3>Default editor</h3>
-<quill-editor [style]="{height: '200px'}" (onEditorCreated)="setFocus($event)"></quill-editor>
-
-<h3>Reactive Forms and patch value</h3>
-<button type="button" (click)="hide=!(!!hide)">hide / show</button>
-<form [formGroup]="form">
-  {{form.controls.editor.value}}
-  <button type="button" (click)="patchValue()">patchValue</button>
-  <button type="button" (click)="setControl()">setControl</button>
-
-  <quill-editor #editor [style.display]="hide ? 'none' : 'block'" [formControl]="form.controls['editor']"></quill-editor>
-</form>
-
-<h3>Formula & image resize editor & Keybinding on 'b'</h3>
-<quill-editor #editor [modules]="modules" (onEditorCreated)="addBindingCreated($event)"></quill-editor>
-
-<h3>Bubble editor <button type="button" (click)="placeholder=placeholder + '!'">Change placeholder</button></h3>
-<quill-editor theme="bubble" [placeholder]="placeholder"></quill-editor>
-
-<h3>Editor without toolbar + required and ngModule</h3>
-<button (click)="toggleReadOnly()">Toggle ReadOnly</button>
-{{isReadOnly}}
-{{title}}
-<quill-editor [(ngModel)]="title" [maxLength]="5" [minLength]="3" [required]="true" [readOnly]="isReadOnly" [modules]="{toolbar: false}" (onContentChanged)="logChange($event);" (onSelectionChanged)="logSelection($event);"></quill-editor>
-<h3>Custom Toolbar with toolbar title-attributes + Word counter</h3>
-<quill-editor [modules]="{ counter: { container: '#counter', unit: 'word' } }">
-  <div quill-editor-toolbar>
-    <span class="ql-formats">
-      <select class="ql-font">
-        <option value="aref">Aref Ruqaa</option>
-        <option value="mirza">Mirza</option>
-        <option selected>Roboto</option>
-      </select>
-      <select class="ql-align" [title]="'Aligment'">
-        <option selected></option>
-        <option value="center"></option>
-        <option value="right"></option>
-        <option value="justify"></option>
-      </select>
-      <select class="ql-align" [title]="'Aligment2'">
-        <option selected></option>
-        <option value="center"></option>
-        <option value="right"></option>
-        <option value="justify"></option>
-      </select>
-    </span>
-    <span class="ql-formats">
-      <div id="counter"></div>
-    </span>
-  </div>
+<quill-editor #editor 
+  [style]="{height: '100%'}"
+  (onEditorCreated)="setFocus($event)"
+  (onEditorCreated)="addBindingCreated($event)"
+>
 </quill-editor>
+</div>
