@@ -1,12 +1,17 @@
 
-[ ] Mock up a story page
-	[ ] Story editor
-		[ ] Look at substance
+[ ] Create a story, send it to the server and save it in the database
+	[ ] Re-use current server for user authentication + file storage
+	[ ] Migrate to MongoDB
+
+[x] List stories on the main page
+
+[x] Mock up a story page
+	[x] Story editor
+		[x] Implement Quill
+		[-] Look at substance
 
 [x] Mock up a main page where stories are listed
 	[x] List all available stories
 	[x] Press the story link and enter the story viewer
 
-[ ] Tools for creating a story
-[ ] Create a story, send it to the server and save it in the database
-[ ] List stories on the main page
+[x] Tools for creating a story
