@@ -20,6 +20,8 @@ export class LoginComponent implements OnInit {
     this.sessionService.sendLoginRequest(username, password)
     .subscribe((data:any) => {
       console.log(data)
+    }, (errorMsg) => {
+      console.log(errorMsg.error)
     })
   }
 }
