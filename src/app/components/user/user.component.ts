@@ -31,7 +31,7 @@ export class UserComponent implements OnInit {
     }
     this.hobbies = ["thing1", "thing2", "thing3"]
 
-    this.dataService.getPosts().subscribe((posts) => {
+    this.dataService.getPosts().subscribe((posts: Post[]) => {
       this.posts = posts;
     });
   }

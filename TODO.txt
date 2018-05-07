@@ -1,14 +1,19 @@
 
+[ ] Login on this site.
+
 [ ] Create a story, send it to the server and save it in the database
-	[ ] Re-use current server for user authentication + file storage
-	[ ] Migrate to MongoDB
+
+[x] Setup server to support multiple web-pages
+	[x] Make sure all scripts return Json
+	[x] Fix up file-management-site to work with the returned JSON
+	[-] Migrate to MongoDB?
 
 [x] List stories on the main page
 
 [x] Mock up a story page
 	[x] Story editor
 		[x] Implement Quill
-		[-] Look at substance
+		[-] Look at substance (Used  Quill instead)
 
 [x] Mock up a main page where stories are listed
 	[x] List all available stories

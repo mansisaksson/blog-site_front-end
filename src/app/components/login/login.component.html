@@ -1,0 +1,6 @@
+<form>
+  <input name="username" ngModel #username="ngModel"><br>
+  <input type="password" name="password" ngModel #password="ngModel"><br>
+</form>
+
+<button (click)="login(username.value, password.value)">Submit</button>
