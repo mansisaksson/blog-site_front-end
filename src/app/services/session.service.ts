@@ -1,34 +1,63 @@
 import { Injectable } from '@angular/core'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json'
+  })
+};
 
 @Injectable()
 export class SessionService {
-
+  private serverOutput = "";
+  
   constructor(public http:HttpClient) {
-    
   }
 
-  sendLoginRequest(username:string, password:string): Observable<GenericServerResponse> {
+  sendLoginRequest(username:string, password:string): Observable<ServerResponse> {
     let loginRequest: LoginRequest = {
       username: username,
       password: password
     }
-    return this.http.get<GenericServerResponse>('//localhost:80/ws/php/Scripts/login.php');
+    let request = this.http.post<ServerResponse>('//localhost:80/ws/php/Scripts/login.php', loginRequest, httpOptions);
+    
+    request.subscribe((data:any) => {
+      console.log(data)
+      this.serverOutput = data.serverOutput;
+    }, (errorMsg) => {
+      console.log(errorMsg.error)
+    })
+
+    return request;
   }
 
-  sendLogoutRequest() {
-    return this.http.get('//todo')
+  sendLogoutRequest(): Observable<ServerResponse> {
+    let request = this.http.post<ServerResponse>('//localhost:80/ws/php/Scripts/login.php', {}, httpOptions);
+    
+    request.subscribe((data:any) => {
+      console.log(data)
+      this.serverOutput = data.serverOutput;
+    }, (errorMsg) => {
+      console.log(errorMsg.error)
+    })
+
+    return request;
+  }
+
+  getServerOutput():string {
+    return this.serverOutput;
   }
 }
 
-interface GenericServerResponse {
+export interface ServerResponse {
+  success: boolean
   message: string
+  payload: any
   serverOutput: string
 }
 
-interface LoginRequest {
+export interface LoginRequest {
   username: string
   password: string
 }

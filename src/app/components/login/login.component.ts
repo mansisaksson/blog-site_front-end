@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from '../../services/session.service'
+import { SessionService, ServerResponse } from '../../services/session.service'
 
 @Component({
   selector: 'app-login',
@@ -7,21 +7,18 @@ import { SessionService } from '../../services/session.service'
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  public message:string;
 
   constructor(private sessionService:SessionService) {
-
   }
 
   ngOnInit() {
-
   }
 
   login(username:string, password:string) {
     this.sessionService.sendLoginRequest(username, password)
-    .subscribe((data:any) => {
-      console.log(data)
-    }, (errorMsg) => {
-      console.log(errorMsg.error)
+    .subscribe((data:ServerResponse) => {
+      this.message = data.message;
     })
   }
 }
