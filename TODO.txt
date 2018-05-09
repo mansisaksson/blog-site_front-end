@@ -1,5 +1,6 @@
 
 [ ] Login on this site.
+	[ ] Copy login from example project
 
 [ ] Create a story, send it to the server and save it in the database
 
