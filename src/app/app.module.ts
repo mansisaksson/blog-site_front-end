@@ -1,55 +1,68 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { RouterModule, Routes } from '@angular/router'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { QuillModule } from 'ngx-quill';
+// used to create fake backend
+import { fakeBackendProvider } from './_helpers/index';
 
 import { AppComponent } from './app.component';
+import { routing }        from './app.routing';
+
+import { AlertComponent } from './_directives/index';
+import { AuthGuard } from './_guards/index';
+import { JwtInterceptor } from './_helpers/index';
+import { AlertService, AuthenticationService, UserService } from './_services/index';
+import { HomeComponent } from './components/home/index';
+import { LoginComponent } from './components/login/index';
+import { RegisterComponent } from './components/register/index';
+
 import { UserComponent } from './components/user/user.component';
 import { AboutComponent } from './components/about/about.component';
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
 import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
-import { LoginComponent } from './components/login/login.component';
 
-import { DataService } from './services/data.service';
-import { SessionService } from './services/session.service';
-
-
-const appRoutes: Routes = [
-  {path:'tutorial', component:UserComponent},
-  {path:'about', component:AboutComponent},
-  {path:'login', component:LoginComponent},
-  {path:'story-explorer', component:StoryExplorerComponent},
-  {path:'story-viewer/:story-id', component:StoryViewerComponent}
-]
+import { QuillModule } from 'ngx-quill';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    UserComponent,
-    AboutComponent,
-    StoryExplorerComponent,
-    StoryViewerComponent,
-    LoginComponent
-  ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(appRoutes),
-    QuillModule
+    routing,
+    QuillModule,
+    NgbModule.forRoot()
+  ],
+  declarations: [
+    AppComponent,
+    AlertComponent,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent,
+
+    UserComponent,
+    AboutComponent,
+    StoryExplorerComponent,
+    StoryViewerComponent
   ],
   providers: [
-    DataService,
-    SessionService
+    AuthGuard,
+    AlertService,
+    AuthenticationService,
+    UserService,
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: JwtInterceptor,
+        multi: true
+    },
+
+    // provider used to create fake backend
+    fakeBackendProvider
   ],
   bootstrap: [
     AppComponent
   ]
 })
-export class AppModule { 
-  isLoggedIn=true;
-}
+export class AppModule { }
