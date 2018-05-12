@@ -1,6 +1,9 @@
 
 [ ] Login on this site.
-	[ ] Copy login from example project
+	[x] Copy login from example project
+	[ ] Swap out fake backend to my backend
+
+[ ] Clean project (remove unused stuff)
 
 [ ] Create a story, send it to the server and save it in the database
 
