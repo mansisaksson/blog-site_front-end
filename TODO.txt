@@ -1,8 +1,9 @@
 
 [ ] Implement stories using the fake backend.
-	[ ] List stories (story page)
-	[ ] View story.
-	[ ] List my stories when logged in.
+	[x] List stories (story page)
+	[x] View story.
+	
+	[ ] My Stories.
 	[ ] Edit story
 
 [x] Login on this site.
