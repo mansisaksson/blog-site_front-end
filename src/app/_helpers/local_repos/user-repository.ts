@@ -22,7 +22,7 @@ export class UserRepository {
       });
   
       if (filteredUsers.length) {
-        resolve(filteredUsers[0]);
+        return resolve(filteredUsers[0]);
       }
   
       reject("Could not find user")
@@ -36,7 +36,7 @@ export class UserRepository {
       });
   
       if (filteredUsers.length > 0) {
-        resolve(filteredUsers[0]);
+        return resolve(filteredUsers[0]);
       }
 
       reject("Could not find user")
@@ -49,7 +49,7 @@ export class UserRepository {
       // validation
       let duplicateUser = this.users.filter(user => { return user.username === newUser.username; }).length;
       if (duplicateUser) {
-        reject('Username "' + newUser.username + '" is already taken');
+        return reject('Username "' + newUser.username + '" is already taken');
       }
 
       // save new user
@@ -68,7 +68,7 @@ export class UserRepository {
         if (user.id === userId) {
             this.users.splice(i, 1);
             localStorage.setItem('users', JSON.stringify(this.users));
-            resolve(true)
+            return resolve(true)
         }
       }
       reject("Could not find user")

@@ -15,7 +15,6 @@ const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     
-    { path: 'tutorial', component: UserComponent },
     { path: 'story-explorer', component: StoryExplorerComponent },
     { path: 'story-viewer/:story_id', component: StoryViewerComponent },
     { path: 'story-editor/:story_id', component: StoryEditorComponent },

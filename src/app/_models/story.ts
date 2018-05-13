@@ -1,15 +1,16 @@
 export class Story {
     storyId: number;
     authorId: number;
+    title:string;
     revision: number;
-    title: string;
     content: string;
 }
 
 export interface StoryMetaData {
-    title:string,
-    authorName:string,
     storyId:number,
+    authorId:number,
+    authorName:string,
+    title:string,
     upvotes:number,
     downvotes:number,
     thumbnail:string,
