@@ -16,7 +16,7 @@ export class StoryExplorerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.storyService.getAllStoriesMetaData()
+    this.storyService.getStoriesMetaData()
       .subscribe((data: StoryMetaData[]) => {
         this.storyMetaData = data;
       })

@@ -1,6 +1,10 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+
+import { User } from '../_models/user'
+import { UserRepository } from './local_repos/user-repository'
+
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/delay';
@@ -13,51 +17,47 @@ import * as story from './dummy_data/story.json';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
-
-    constructor() { }
+    private userRepo: UserRepository;
+    constructor() {
+        this.userRepo = new UserRepository();
+    }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // array in local storage for registered users
-        let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
+        let stories: any[] = JSON.parse(localStorage.getItem('stories')) || [];
         let storyMetaData: any[] = <any>storyMD;
 
-        // wrap in delayed observable to simulate server api call
-        return Observable.of(null).mergeMap(() => {
-
+        return new Observable<HttpEvent<any>>((observer) => {
             /* ***** Begin User ***** */
             // authenticate
             if (request.url.endsWith('/api/authenticate') && request.method === 'POST') {
-                // find if any user matches login credentials
-                let filteredUsers = users.filter(user => {
-                    return user.username === request.body.username && user.password === request.body.password;
-                });
-
-                if (filteredUsers.length) {
-                    // if login details are valid return 200 OK with user details and fake jwt token
-                    let user = filteredUsers[0];
-                    let body = {
-                        id: user.id,
-                        username: user.username,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        token: 'fake-jwt-token'
-                    };
-
-                    return Observable.of(new HttpResponse({ status: 200, body: body }));
-                } else {
-                    // else return 400 bad request
-                    return Observable.throw('Username or password is incorrect');
-                }
+                this.userRepo.findUserByName(request.body.username).then((user:User) => {
+                    if (user.password === request.body.password) {
+                        let body = {
+                            id: user.id,
+                            username: user.username,
+                            token: 'fake-jwt-token'
+                        };
+                        observer.next(new HttpResponse({ status: 200, body: body }));
+                    } else {
+                        observer.error('Incorrect Password')
+                    }
+                }, (error) => {
+                    observer.error(error)
+                })
             }
 
             // get users
             if (request.url.endsWith('/api/users') && request.method === 'GET') {
-                // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
                 if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-                    return Observable.of(new HttpResponse({ status: 200, body: users }));
-                } else {
-                    // return 401 not authorised if token is null or invalid
-                    return Observable.throw('Unauthorised');
+                    this.userRepo.getAllUsers().then((users:User[]) => {
+                        observer.next(new HttpResponse({ status: 200, body: users }));
+                    }, (error) => {
+                        observer.error(error);
+                    })
+                }
+                else {
+                    observer.error('Unauthorised');
                 }
             }
 
@@ -65,91 +65,99 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             if (request.url.match(/\/api\/users\/\d+$/) && request.method === 'GET') {
                 // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
                 if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-                    // find user by id in users array
                     let urlParts = request.url.split('/');
                     let id = parseInt(urlParts[urlParts.length - 1]);
-                    let matchedUsers = users.filter(user => { return user.id === id; });
-                    let user = matchedUsers.length ? matchedUsers[0] : null;
-
-                    return Observable.of(new HttpResponse({ status: 200, body: user }));
+                    this.userRepo.findUser(id).then((user:User) => {
+                        observer.next(new HttpResponse({ status: 200, body: user }));
+                    }, error => {
+                        observer.error(error);
+                    })
                 } else {
-                    // return 401 not authorised if token is null or invalid
-                    return Observable.throw('Unauthorised');
+                    observer.error('Unauthorised');
                 }
             }
 
             // create user
             if (request.url.endsWith('/api/users') && request.method === 'POST') {
-                // get new user object from post body
                 let newUser = request.body;
-
-                // validation
-                let duplicateUser = users.filter(user => { return user.username === newUser.username; }).length;
-                if (duplicateUser) {
-                    return Observable.throw('Username "' + newUser.username + '" is already taken');
-                }
-
-                // save new user
-                newUser.id = users.length + 1;
-                users.push(newUser);
-                localStorage.setItem('users', JSON.stringify(users));
-
-                // respond 200 OK
-                return Observable.of(new HttpResponse({ status: 200 }));
+                this.userRepo.addUser(newUser).then((user:User) => {
+                    observer.next(new HttpResponse({ status: 200 }));
+                }, error => {
+                    observer.error(error);
+                })
             }
 
             // delete user
             if (request.url.match(/\/api\/users\/\d+$/) && request.method === 'DELETE') {
                 // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
                 if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-                    // find user by id in users array
                     let urlParts = request.url.split('/');
                     let id = parseInt(urlParts[urlParts.length - 1]);
-                    for (let i = 0; i < users.length; i++) {
-                        let user = users[i];
-                        if (user.id === id) {
-                            // delete user
-                            users.splice(i, 1);
-                            localStorage.setItem('users', JSON.stringify(users));
-                            break;
-                        }
-                    }
-
-                    // respond 200 OK
-                    return Observable.of(new HttpResponse({ status: 200 }));
+                    this.userRepo.removeUser(id).then((success) => {
+                        observer.next(new HttpResponse({ status: 200 }));
+                    }, (error) => {
+                        observer.error(error)
+                    })
                 } else {
-                    // return 401 not authorised if token is null or invalid
-                    return Observable.throw('Unauthorised');
+                    observer.error('Unauthorised');
                 }
             }
             /* ***** End User ***** */
 
 
-            /* ***** Begin Stories ***** */
-            // get story meta data
-            if (request.url.match(/\/api\/stories\/\d+$/) && request.method === 'GET') {
-                return Observable.of(new HttpResponse({ status: 200, body: <any>story }));
-            }
-            /* ***** End Stories ***** */
-            
+            // /* ***** Begin Stories ***** */
+            // // create story
+            // if (request.url.endsWith('/api/stories') && request.method === 'POST') {
+            //     let userId = request.body;
 
-            /* ***** Begin Story Meta Data ***** */
-            // get all story meta data
-            if (request.url.endsWith('/api/stories_md') && request.method === 'GET') {
-                return Observable.of(new HttpResponse({ status: 200, body: storyMetaData }));
-            }
+            //     // get new user object from post body
+            //     let newStory = {
+            //         storyId: stories.length + 1,
+            //         title: "title",
+            //         authorId: userId,
+            //         content: ""
+            //     };
+            //     stories.push(newStory);
+            //     localStorage.setItem('stories', JSON.stringify(stories));
 
-            // get story meta data
-            if (request.url.match(/\/api\/stories_md\/\d+$/) && request.method === 'GET') {
-                return Observable.of(new HttpResponse({ status: 200, body: storyMetaData[0] }));
-            }
-            /* ***** End Story Meta Data ***** */
-            
-            
+            //     // respond 200 OK
+            //     return Observable.of(new HttpResponse({ status: 200, body: newStory }));
+            // }
+
+            // // get story meta data
+            // if (request.url.match(/\/api\/stories\/\d+$/) && request.method === 'GET') {
+            //     return Observable.of(new HttpResponse({ status: 200, body: <any>story }));
+            // }
+            // /* ***** End Stories ***** */
+
+
+            // /* ***** Begin Story Meta Data ***** */
+            // // get all story meta data
+            // if (request.url.endsWith('/api/stories_md') && request.method === 'GET') {
+            //     let userId = request.params.get("userId");
+            //     let searchQuery:string = request.params.get("searchQuery");
+
+            //     let metaData = storyMetaData;
+            //     if (userId) {
+            //         metaData.filter(obj => obj.userId != userId)
+            //     }
+            //     if (searchQuery) {
+            //         metaData.filter(obj => obj.title.indexOf(searchQuery) >= 0)
+            //     }
+
+            //     return Observable.of(new HttpResponse({ status: 200, body: storyMetaData }));
+            // }
+
+            // // get story meta data
+            // if (request.url.match(/\/api\/stories_md\/\d+$/) && request.method === 'GET') {
+            //     return Observable.of(new HttpResponse({ status: 200, body: storyMetaData[0] }));
+            // }
+            // /* ***** End Story Meta Data ***** */
+
+
             // pass through any requests not handled above
-            return next.handle(request);
+            //return next.handle(request);
         })
-
         // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
         .materialize()
         .delay(500)

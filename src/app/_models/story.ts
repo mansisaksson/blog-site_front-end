@@ -1,7 +1,8 @@
 export class Story {
     storyId: number;
+    authorId: number;
+    revision: number;
     title: string;
-    author: string;
     content: string;
 }
 
