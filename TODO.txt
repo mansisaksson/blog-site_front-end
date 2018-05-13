@@ -1,7 +1,7 @@
 
 [ ] Implement stories using the fake backend.
 	[ ] List stories (story page)
-	[ ] Click story.
+	[ ] View story.
 	[ ] List my stories when logged in.
 	[ ] Edit story
 

@@ -7,27 +7,23 @@ import { Story, StoryMetaData } from '../_models/index';
 export class StoryService {
     constructor(private http: HttpClient) { }
 
-    getAll() {
-        return this.http.get<Story[]>('/api/stories');
-    }
-
-    getById(id: number) {
+    getStoryById(id: number) {
         return this.http.get('/api/stories/' + id);
     }
 
-    create(story: Story) {
+    createStory(story: Story) {
         return this.http.post('/api/stories', story);
     }
 
-    update(story: Story) {
-        return this.http.put('/api/stories/' + story.id, story);
+    updateStory(story: Story) {
+        return this.http.put('/api/stories/' + story.storyId, story);
     }
 
-    delete(id: number) {
+    deleteStory(id: number) {
         return this.http.delete('/api/stories/' + id);
     }
 
-    getAllStoryMetaData() {
+    getAllStoriesMetaData() {
         return this.http.get<StoryMetaData[]>('/api/stories_md');
     }
 

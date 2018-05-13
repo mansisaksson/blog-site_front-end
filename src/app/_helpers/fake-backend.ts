@@ -8,6 +8,9 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/materialize';
 import 'rxjs/add/operator/dematerialize';
 
+import * as storyMD from './dummy_data/stories_md.json';
+import * as story from './dummy_data/story.json';
+
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
 
@@ -16,10 +19,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // array in local storage for registered users
         let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
+        let storyMetaData: any[] = <any>storyMD;
 
         // wrap in delayed observable to simulate server api call
         return Observable.of(null).mergeMap(() => {
 
+            /* ***** Begin User ***** */
             // authenticate
             if (request.url.endsWith('/api/authenticate') && request.method === 'POST') {
                 // find if any user matches login credentials
@@ -117,10 +122,32 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return Observable.throw('Unauthorised');
                 }
             }
+            /* ***** End User ***** */
 
+
+            /* ***** Begin Stories ***** */
+            // get story meta data
+            if (request.url.match(/\/api\/stories\/\d+$/) && request.method === 'GET') {
+                return Observable.of(new HttpResponse({ status: 200, body: <any>story }));
+            }
+            /* ***** End Stories ***** */
+            
+
+            /* ***** Begin Story Meta Data ***** */
+            // get all story meta data
+            if (request.url.endsWith('/api/stories_md') && request.method === 'GET') {
+                return Observable.of(new HttpResponse({ status: 200, body: storyMetaData }));
+            }
+
+            // get story meta data
+            if (request.url.match(/\/api\/stories_md\/\d+$/) && request.method === 'GET') {
+                return Observable.of(new HttpResponse({ status: 200, body: storyMetaData[0] }));
+            }
+            /* ***** End Story Meta Data ***** */
+            
+            
             // pass through any requests not handled above
             return next.handle(request);
-            
         })
 
         // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)

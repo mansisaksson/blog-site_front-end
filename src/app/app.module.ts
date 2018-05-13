@@ -23,6 +23,7 @@ import { StoryViewerComponent } from './components/story-viewer/story-viewer.com
 
 import { QuillModule } from 'ngx-quill';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { StoryEditorComponent } from './components/story-editor/story-editor.component';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
     UserComponent,
     StoryExplorerComponent,
-    StoryViewerComponent
+    StoryViewerComponent,
+    StoryEditorComponent
   ],
   providers: [
     AuthGuard,

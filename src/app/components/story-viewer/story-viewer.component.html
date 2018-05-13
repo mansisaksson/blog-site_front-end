@@ -1,9 +1,2 @@
-<div>
-<h3>Default editor</h3>
-<quill-editor #editor 
-  [style]="{height: '100%'}"
-  (onEditorCreated)="setFocus($event)"
-  (onEditorCreated)="addBindingCreated($event)"
->
-</quill-editor>
-</div>
+<h1>{{story.title}}</h1>
+<div [innerHtml]="story.content"></div>
