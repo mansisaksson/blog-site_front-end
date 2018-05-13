@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core'
-import { DataService } from '../../_services/data.service'
+import { StoryService } from '../../_services/story.service'
+
+import { Story, StoryMetaData } from '../../_models/index';
 
 @Component({
   selector: 'app-story-explorer',
@@ -9,15 +11,15 @@ import { DataService } from '../../_services/data.service'
 export class StoryExplorerComponent implements OnInit {
   storyMetaData:StoryMetaData[];
 
-  constructor(private dataService:DataService) {
+  constructor(private storyService:StoryService) {
 
   }
 
   ngOnInit() {
-    this.dataService.getStoryMetaData()
-    .subscribe((data: StoryMetaData[]) => {
-      this.storyMetaData = data;
-    })
+    this.storyService.getAllStoryMetaData()
+      .subscribe((data: StoryMetaData[]) => {
+        this.storyMetaData = data;
+      })
   }
 
   // unix time is measured in seconds (not milliseconds)
@@ -47,15 +49,4 @@ export class StoryExplorerComponent implements OnInit {
     return Math.floor(seconds) + " seconds";
   }
   
-}
-
-interface StoryMetaData {
-  title:string,
-  authorName:string,
-  storyId:number,
-  upvotes:number,
-  downvotes:number,
-  thumbnail:string,
-  submittedAt:number
-  lastUpdated:number
 }

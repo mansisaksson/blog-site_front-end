@@ -1,11 +1,14 @@
 
-[ ] Login on this site.
+[ ] Implement stories using the fake backend.
+	[ ] List stories (story page)
+	[ ] Click story.
+	[ ] List my stories when logged in.
+	[ ] Edit story
+
+[x] Login on this site.
 	[x] Copy login from example project
-	[ ] Swap out fake backend to my backend
-
-[ ] Clean project (remove unused stuff)
-
-[ ] Create a story, send it to the server and save it in the database
+	
+[x] Clean project (remove unused stuff)
 
 [x] Setup server to support multiple web-pages
 	[x] Make sure all scripts return Json

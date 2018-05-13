@@ -4,8 +4,8 @@
     <h3>All registered users:</h3>
     <ul>
         <li *ngFor="let user of users">
-            {{user.username}} ({{user.firstName}} {{user.lastName}})
-            - <a (click)="deleteUser(user.id)">Delete</a>
+            {{user.username}} ({{user.firstName}} {{user.lastName}}) 
+            - <a (click)="deleteUser(user.id)" class="btn btn-link">Delete</a>
         </li>
     </ul>
     <p><a [routerLink]="['/login']">Logout</a></p>
