@@ -22,8 +22,8 @@ import { StoryExplorerComponent } from './components/story-explorer/story-explor
 import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
 
 import { QuillModule } from 'ngx-quill';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StoryEditorComponent } from './components/story-editor/story-editor.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   imports: [
@@ -33,7 +33,6 @@ import { StoryEditorComponent } from './components/story-editor/story-editor.com
     HttpClientModule,
     routing,
     QuillModule,
-    NgbModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -45,7 +44,8 @@ import { StoryEditorComponent } from './components/story-editor/story-editor.com
     UserComponent,
     StoryExplorerComponent,
     StoryViewerComponent,
-    StoryEditorComponent
+    StoryEditorComponent,
+    NavbarComponent
   ],
   providers: [
     AuthGuard,
