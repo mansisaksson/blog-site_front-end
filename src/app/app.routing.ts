@@ -11,7 +11,7 @@ import { StoryViewerComponent } from './components/story-viewer/story-viewer.com
 import { StoryEditorComponent } from './components/story-editor/story-editor.component';
 
 const appRoutes: Routes = [
-    { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: '', component: HomeComponent /*, canActivate: [AuthGuard]*/ },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     

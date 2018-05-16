@@ -1,12 +1,27 @@
-﻿<div class="col-md-6 col-md-offset-3">
-    <h1>Hi {{currentUser.firstName}}!</h1>
-    <p>You're logged in with Angular 2!!</p>
-    <h3>All registered users:</h3>
-    <ul>
-        <li *ngFor="let user of users">
-            {{user.username}} ({{user.firstName}} {{user.lastName}}) 
-            - <a (click)="deleteUser(user.id)" class="btn btn-link">Delete</a>
-        </li>
-    </ul>
-    <p><a [routerLink]="['/login']">Logout</a></p>
+﻿<div *ngIf="isLoggedIn; then loggedInBlock else loggedOutBlock"></div>
+<!-- Sign Out -->
+<ng-template #loggedInBlock>
+    <div *ngIf="isLoggedIn" class="col-md-6 col-md-offset-3">
+        <h1>Hi {{currentUser.firstName}}!</h1>
+        <p>You're logged in with Angular 2!!</p>
+        <h3>All registered users:</h3>
+        <ul>
+            <li *ngFor="let user of users">
+                {{user.username}} ({{user.firstName}} {{user.lastName}}) 
+                - <a (click)="deleteUser(user.id)" class="btn btn-link">Delete</a>
+            </li>
+        </ul>
+    </div>
+</ng-template>
+
+<!-- Sign In -->
+<ng-template #loggedOutBlock>
+    <div>
+        <h1>Welcome to da best website</h1>
+        <button (click)="registerClick()" class="btn btn-primar">Register</button>
+    </div>
+</ng-template>
+
+<div>
+    <app-story-explorer></app-story-explorer>
 </div>
