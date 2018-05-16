@@ -24,12 +24,10 @@ export class StoryService {
     }
 
     getStoriesMetaData(userId?:number, searchQuery?:string) {
-        let params = new HttpParams();
-
-        if (userId !== undefined)
-            params.set("userId", userId.toString());
-        if (searchQuery !== undefined)
-            params.set("searchQuery", searchQuery.toString());
+        let params = {
+            userId: userId ? userId.toString() : undefined,
+            searchQuery: searchQuery
+        }
 
         return this.http.get<StoryMetaData[]>('/api/stories_md', {
             params: params

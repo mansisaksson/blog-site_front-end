@@ -16,7 +16,7 @@ const appRoutes: Routes = [
     { path: 'register', component: RegisterComponent },
     
     { path: 'story-explorer', component: StoryExplorerComponent },
-    { path: 'story-explorer/:user', component: StoryExplorerComponent },
+    { path: 'story-explorer/:user_id', component: StoryExplorerComponent },
     { path: 'story-viewer/:story_id', component: StoryViewerComponent },
     { path: 'story-editor/:story_id', component: StoryEditorComponent },
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
-import { ActivatedRoute, Params} from '@angular/router';
-import { StoryService } from '../../_services/story.service'
+import { ActivatedRoute, Params } from '@angular/router';
+import { StoryService, AuthenticationService } from '../../_services/index'
 
 import { Story, StoryMetaData, User } from '../../_models/index';
 
@@ -10,31 +10,44 @@ import { Story, StoryMetaData, User } from '../../_models/index';
   styleUrls: ['./story-explorer.component.css']
 })
 export class StoryExplorerComponent implements OnInit {
-  storyMetaData:StoryMetaData[];
-  user: User;
+  storyMetaData: StoryMetaData[];
+  userId: number;
+  currentUser: User;
 
   constructor(
-    private storyService:StoryService,
-    private activatedRoute: ActivatedRoute)
-  {
+    private storyService: StoryService,
+    private activatedRoute: ActivatedRoute,
+    private authService: AuthenticationService) {
   }
 
+  hasInit = false;
   ngOnInit() {
-    this.activatedRoute.params.subscribe((params: Params) => {
-      this.user = params['user'];
+    this.authService.getCurrentUser().subscribe(next => {
+      this.currentUser = next
+      this.refreshStoryList()
+    })
+    this.activatedRoute.params.subscribe(params => {
+      this.userId = params['user_id']
+      this.refreshStoryList()
+    })
 
-      this.storyService.getStoriesMetaData(this.user ? this.user.id : undefined)
-      .subscribe((data: StoryMetaData[]) => {
+    this.hasInit = true
+    this.refreshStoryList()
+  }
+
+  refreshStoryList() {
+    if (this.hasInit) {
+      this.storyService.getStoriesMetaData(this.userId).subscribe((data: StoryMetaData[]) => {
         this.storyMetaData = data;
       })
-    });
+    }
   }
 
   // unix time is measured in seconds (not milliseconds)
-  timeSince(date:number) {
+  timeSince(date: number) {
     let seconds = Math.floor(Date.now() / 1000 - date);
     let interval = Math.floor(seconds / 31536000);
-    
+
     if (interval > 1) {
       return interval + " years";
     }
@@ -56,5 +69,5 @@ export class StoryExplorerComponent implements OnInit {
     }
     return Math.floor(seconds) + " seconds";
   }
-  
+
 }

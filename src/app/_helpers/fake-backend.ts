@@ -134,6 +134,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			else if (request.url.endsWith('/api/stories_md') && request.method === 'GET') {
 				let userId = request.params.get("userId");
 				let searchQuery: string = request.params.get("searchQuery");
+
 				this.storyRepo.getAllStoryMetaData(userId ? +userId : undefined, searchQuery).then((storymd: StoryMetaData[]) => {
 					observer.next(new HttpResponse({ status: 200, body: storymd }))
 				}, (error) => {

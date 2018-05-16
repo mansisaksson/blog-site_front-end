@@ -14,6 +14,7 @@ export class StoryRepository {
     let metaDataArray = <any>storyMD
     metaDataArray.forEach(element => {
       let storyMetaData: StoryMetaData = element
+      storyMetaData.authorId = Math.floor(Math.random() * 6) + 1
       this.storiesMD.push(storyMetaData)
 
       let story = <Story>{
@@ -94,10 +95,10 @@ export class StoryRepository {
     })
   }
 
-  getAllStoryMetaData(userId?: number, searchQuery?: string): Promise<StoryMetaData[]> {
+  getAllStoryMetaData(userId?: number, searchQuery?: string): Promise<StoryMetaData[]> {   
     let metaData = this.storiesMD;
     if (userId) {
-      metaData = metaData.filter(obj => obj.authorId != userId)
+      metaData = metaData.filter(obj => obj.authorId === userId)
     }
     if (searchQuery) {
       metaData = metaData.filter(obj => obj.title.indexOf(searchQuery) >= 0)
