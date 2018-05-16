@@ -1,5 +1,4 @@
 import { User } from '../../_models/user'
-import { Observable } from 'rxjs/Observable';
 import { toPromise } from 'rxjs/operator/toPromise'
 
 export class UserRepository {

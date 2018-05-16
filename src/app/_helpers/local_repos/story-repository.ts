@@ -1,5 +1,4 @@
 import { Story, StoryMetaData } from '../../_models/index'
-import { Observable } from 'rxjs/Observable';
 import { toPromise } from 'rxjs/operator/toPromise'
 
 import * as storyMD from './../dummy_data/stories_md.json';

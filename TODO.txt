@@ -4,6 +4,7 @@
 	[x] View story.
 	
 	[ ] My Stories.
+	[ ] Create Story
 	[ ] Edit story
 
 [x] Login on this site.

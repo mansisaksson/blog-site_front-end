@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Params} from '@angular/router';
 import { StoryService } from '../../_services/story.service'
 
-import { Story, StoryMetaData } from '../../_models/index';
+import { Story, StoryMetaData, User } from '../../_models/index';
 
 @Component({
   selector: 'app-story-explorer',
@@ -10,16 +11,23 @@ import { Story, StoryMetaData } from '../../_models/index';
 })
 export class StoryExplorerComponent implements OnInit {
   storyMetaData:StoryMetaData[];
+  user: User;
 
-  constructor(private storyService:StoryService) {
-
+  constructor(
+    private storyService:StoryService,
+    private activatedRoute: ActivatedRoute)
+  {
   }
 
   ngOnInit() {
-    this.storyService.getStoriesMetaData()
+    this.activatedRoute.params.subscribe((params: Params) => {
+      this.user = params['user'];
+
+      this.storyService.getStoriesMetaData(this.user ? this.user.id : undefined)
       .subscribe((data: StoryMetaData[]) => {
         this.storyMetaData = data;
       })
+    });
   }
 
   // unix time is measured in seconds (not milliseconds)
