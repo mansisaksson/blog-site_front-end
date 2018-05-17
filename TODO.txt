@@ -1,11 +1,15 @@
 
-[ ] Implement stories using the fake backend.
+[ ] Layout changes
+	[ ] Add hamburger menu
+	[ ] Add sidebar
+	[ ] Add "Create  Story" to this sidebar
+
+[ ] Story Editor
+
+[x] Implement stories using the fake backend.
 	[x] List stories (story page)
 	[x] View story.
-	
-	[ ] My Stories.
-	[ ] Create Story
-	[ ] Edit story
+	[x] My Stories.
 
 [x] Login on this site.
 	[x] Copy login from example project
