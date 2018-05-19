@@ -1,4 +1,21 @@
 <app-navbar></app-navbar>
-<section id="container">
-    <router-outlet></router-outlet>
-</section>
+
+<div class="row no-gutters">
+    <div class="col-2 bg-dark">
+        <app-nav-menu></app-nav-menu>
+    </div>
+
+    <div class="col">
+        <app-toolbar></app-toolbar>
+        <div class="row">
+            <div class="col">
+                <div id="container">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+            <div class="col-2">
+                One of three columns
+            </div>
+        </div>
+    </div>
+</div>

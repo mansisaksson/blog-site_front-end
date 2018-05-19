@@ -17,13 +17,14 @@ import { HomeComponent } from './components/home/index';
 import { LoginComponent } from './components/login/index';
 import { RegisterComponent } from './components/register/index';
 
-import { UserComponent } from './components/user/user.component';
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
 import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
 
 import { QuillModule } from 'ngx-quill';
 import { StoryEditorComponent } from './components/story-editor/story-editor.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 
 @NgModule({
   imports: [
@@ -41,11 +42,12 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     LoginComponent,
     RegisterComponent,
 
-    UserComponent,
     StoryExplorerComponent,
     StoryViewerComponent,
     StoryEditorComponent,
-    NavbarComponent
+    NavbarComponent,
+    ToolbarComponent,
+    NavMenuComponent
   ],
   providers: [
     AuthGuard,
