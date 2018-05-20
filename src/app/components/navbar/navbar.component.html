@@ -22,24 +22,19 @@
     <div *ngIf="isLoggedIn; then loggedInBlock else loggedOutBlock"></div>
     <!-- Sign Out -->
     <ng-template #loggedInBlock>
-        <a (click)="signOut()" class="btn btn-outline-success my-2 my-sm-0">Sign Out</a>
+        <a (click)="signOut()" class="btn btn-info my-2 my-sm-0">Sign Out</a>
     </ng-template>
 
     <!-- Sign In -->
     <ng-template #loggedOutBlock>
-      <form class="form-inline my-2 my-lg-0">
-        <!-- Triggers the modal -->
-        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">Sign In</button>  
-      </form>
-      <form class="form-inline my-2 my-lg-0">
-          <button (click)="registerClick()" class="btn btn-primar">Register</button>
-        </form>
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#loginModal">Sign In</button>  
+        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#registerModal">Register</button>  
     </ng-template>
 </nav>
 
 
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
+<!-- Login Modal -->
+<div id="loginModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -48,6 +43,25 @@
       </div>
       <div class="modal-body">
         <app-login></app-login>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Register Modal -->
+<div id="registerModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Register</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <app-register></app-register>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

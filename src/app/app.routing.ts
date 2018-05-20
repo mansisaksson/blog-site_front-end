@@ -17,10 +17,6 @@ const appRoutes: Routes = [
         data: { /* navMenu: BuildingListToolbarComponent */ }
     },
     { 
-        path: 'login',
-        component: LoginComponent
-    },
-    { 
         path: 'register',
         component: RegisterComponent
     },
