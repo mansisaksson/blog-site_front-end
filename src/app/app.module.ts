@@ -26,7 +26,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { CommonToolsComponent } from './components/side-bars/common-tools/common-tools.component';
-import { SideBarsComponent } from './components/side-bars/side-bars.component';
+import { SideBarsComponent, SideBarComponent } from './components/side-bars/side-bars.component';
 
 @NgModule({
   imports: [
@@ -51,7 +51,11 @@ import { SideBarsComponent } from './components/side-bars/side-bars.component';
     ToolbarComponent,
     NavMenuComponent,
     CommonToolsComponent,
-    SideBarsComponent
+    SideBarsComponent,
+    SideBarComponent
+  ],
+  entryComponents: [
+    SideBarComponent
   ],
   providers: [
     AuthGuard,
