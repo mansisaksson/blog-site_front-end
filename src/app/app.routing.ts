@@ -15,27 +15,27 @@ const appRoutes: Routes = [
         path: '',
         component: HomeComponent,
         /*canActivate: [AuthGuard],*/
-        data: { sidebars: [ CommonToolsComponent, CommonToolsComponent ] }
+        data: { sidebars: [ CommonToolsComponent ] }
     },
     {
         path: 'story-explorer',
         component: StoryExplorerComponent,
-        data: { sidebars: [ CommonToolsComponent, CommonToolsComponent ] }
+        data: { sidebars: [ CommonToolsComponent ] }
     },
     {
         path: 'story-explorer/:user_id',
         component: StoryExplorerComponent,
-        data: { sidebars: [ CommonToolsComponent, CommonToolsComponent ] }
+        data: { sidebars: [ CommonToolsComponent ] }
     },
     { 
         path: 'story-viewer/:story_id',
         component: StoryViewerComponent,
-        data: { sidebars: [ CommonToolsComponent, CommonToolsComponent ] }
+        data: { sidebars: [ CommonToolsComponent ] }
     },
     { 
         path: 'story-editor/:story_id',
         component: StoryEditorComponent,
-        data: { sidebars: [ CommonToolsComponent, CommonToolsComponent ] }
+        data: { sidebars: [ CommonToolsComponent ] }
     },
 
     // otherwise redirect to home

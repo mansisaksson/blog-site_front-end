@@ -1,8 +1,9 @@
 
 [ ] Layout changes
 	[x] Add hamburger menu
-	[ ] Add right sidebar
-	[ ] Add "Create  Story" to this sidebar
+	[x] Add right sidebar
+	[x] Add "Create  Story" to this sidebar
+	[ ] Add Delete Story button
 
 [ ] Story Editor
 

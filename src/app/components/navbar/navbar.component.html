@@ -13,7 +13,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" routerLink="/story-explorer">All Stories</a>
           <div class="dropdown-divider"></div>
-          <a *ngIf="isLoggedIn" class="dropdown-item" routerLink="/story-explorer/{{currentUser.id}}">My Stories</a>
+          <a *ngIf="isLoggedIn" class="dropdown-item" routerLink="/story-explorer/{{getCurrentUserId()}}">My Stories</a>
         </div>
       </li>
 
@@ -22,13 +22,13 @@
     <div *ngIf="isLoggedIn; then loggedInBlock else loggedOutBlock"></div>
     <!-- Sign Out -->
     <ng-template #loggedInBlock>
-        <a (click)="signOut()" class="btn btn-info my-2 my-sm-0">Sign Out</a>
+      <a (click)="signOut()" class="btn btn-info my-2 my-sm-0">Sign Out</a>
     </ng-template>
 
     <!-- Sign In -->
     <ng-template #loggedOutBlock>
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#loginModal">Sign In</button>  
-        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#registerModal">Register</button>  
+      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#loginModal">Sign In</button>  
+      <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#registerModal">Register</button>  
     </ng-template>
 </nav>
 

@@ -37,7 +37,7 @@ export class StoryExplorerComponent implements OnInit {
 
   refreshStoryList() {
     if (this.hasInit) {
-      this.storyService.getStoriesMetaData(this.userId).subscribe((data: StoryMetaData[]) => {
+      this.storyService.getStoriesMetaData(this.userId).then((data: StoryMetaData[]) => {
         this.storyMetaData = data;
       })
     }

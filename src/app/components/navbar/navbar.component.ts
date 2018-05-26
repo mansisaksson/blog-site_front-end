@@ -10,6 +10,7 @@ import { User } from '../../_models';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  isLoggedIn: boolean;
   currentUser: User;
 
   constructor(
@@ -17,15 +18,11 @@ export class NavbarComponent implements OnInit {
     private router: Router
   ) { 
   }
-
-  isLoggedIn: boolean;
+  
   ngOnInit() {
-    this.authService.getIsLoggedIn().subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-    })
-
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user
+      this.isLoggedIn = user != undefined;
     })
   }
 
@@ -33,6 +30,12 @@ export class NavbarComponent implements OnInit {
     this.authService.logout().then(() => {
       this.router.navigate(['/'])
     })
+  }
+
+  getCurrentUserId():number {
+    if (this.currentUser != undefined) {
+      return this.currentUser.id
+    }
   }
 
 }

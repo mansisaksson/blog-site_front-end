@@ -17,7 +17,7 @@ import { unescapeIdentifier } from '@angular/compiler';
 @Component({
   template: `
   <div class="card" style="padding: 10px; margin-top: 10px">
-      <ng-container #sidebarContainer></ng-container>
+    <ng-container #sidebarContainer></ng-container>
   </div>`
 })
 export class SideBarComponent {
