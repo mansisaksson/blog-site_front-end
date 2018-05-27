@@ -1,8 +1,6 @@
 ﻿import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './components/home/index';
-import { LoginComponent } from './components/login/index';
-import { RegisterComponent } from './components/register/index';
 import { AuthGuard } from './_guards/index';
 
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';

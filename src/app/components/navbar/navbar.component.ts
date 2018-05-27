@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
-import { LoginComponent } from '../login/index'
 import { AuthenticationService } from '../../_services/index';
 import { User } from '../../_models';
 
@@ -24,6 +23,10 @@ export class NavbarComponent implements OnInit {
       this.currentUser = user
       this.isLoggedIn = user != undefined;
     })
+  }
+
+  signIn() {
+    this.authService.promptUserLogin('/');
   }
 
   signOut() {

@@ -1,17 +1,31 @@
 ﻿import { Injectable } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs/Rx';
+import { Observable, BehaviorSubject, Subject } from 'rxjs/Rx';
 import { toPromise } from 'rxjs/operator/toPromise'
 import { User } from '../_models/index'
 import 'rxjs/add/operator/map'
 
 @Injectable()
 export class AuthenticationService {
-	isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-	currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
+	private isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
+	private subject = new Subject<any>();
 
-	constructor(private http: HttpClient) {
+	constructor(
+		private http: HttpClient,
+		private router: Router) {
+		router.events.subscribe(event => {
+			if (event instanceof NavigationStart) {
+				this.subject.next({ event: 'close', url: '/' });
+			}
+		})
+
 		this.refreshLoginState()
+	}
+
+	promptUserLogin(successRoute: string) {
+		this.subject.next({ event: 'open', url: successRoute })
 	}
 
 	login(username: string, password: string): Promise<User> {
@@ -20,7 +34,6 @@ export class AuthenticationService {
 				if (user && user.token) {
 					localStorage.setItem('currentUser', JSON.stringify(user))
 				}
-
 				this.refreshLoginState()
 				resolve(user)
 			}, (e) => {
@@ -48,7 +61,11 @@ export class AuthenticationService {
 		return this.currentUser.asObservable()
 	}
 
-	refreshLoginState() {
+	getShowLoginPrompt(): Observable<any> {
+		return this.subject.asObservable();
+	}
+
+	private refreshLoginState() {
 		let localUser = JSON.parse(localStorage.getItem('currentUser'))
 		if (this.currentUser.getValue() !== localUser) {
 			this.currentUser.next(localUser)

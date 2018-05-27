@@ -1,3 +1,4 @@
+[ ] Create "With Logged In User" Service, (pop modal if user needs to log in)
 
 [ ] Layout changes
 	[x] Add hamburger menu
