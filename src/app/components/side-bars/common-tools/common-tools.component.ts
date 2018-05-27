@@ -4,8 +4,7 @@ import { StoryService, AuthenticationService, AlertService } from './../../../_s
 
 @Component({
   selector: 'app-common-tools',
-  templateUrl: './common-tools.component.html',
-  styleUrls: ['./common-tools.component.css']
+  templateUrl: './common-tools.component.html'
 })
 export class CommonToolsComponent implements OnInit {
   private isLoggedIn: boolean;

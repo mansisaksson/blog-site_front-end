@@ -35,8 +35,7 @@ export class SideBarComponent {
 
 @Component({
   selector: 'app-side-bars',
-  templateUrl: './side-bars.component.html',
-  styleUrls: ['./side-bars.component.css']
+  templateUrl: './side-bars.component.html'
 })
 export class SideBarsComponent implements OnInit, OnDestroy {
   @ViewChild("sidebarTarget", { read: ViewContainerRef })
