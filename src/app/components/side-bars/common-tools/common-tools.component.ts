@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { User } from './../../../_models'
+import { User, Story } from './../../../_models'
 import { StoryService, AuthenticationService, AlertService } from './../../../_services'
 
 @Component({
@@ -19,22 +19,20 @@ export class CommonToolsComponent implements OnInit {
 
   ngOnInit() {
     this.authenticationService.getCurrentUser().subscribe((user: User) => {
-      this.user = user;
-      this.isLoggedIn = user != undefined;
+      this.user = user
+      this.isLoggedIn = user ? true : false
     })
   }
 
   createStory() {
     this.authenticationService.withLoggedInUser().then((user: User) => {
-      this.storyService.createStory(this.user.id).then((story) => {
-        console.log("Story Created")
+      this.storyService.createStory(this.user.id).then((story: Story) => {
         this.alertService.success("Story Created!")
       }).catch((error) => {
-        console.error("Failed to create Story")
         this.alertService.error("failed to create story!")
       })
     }).catch(e => {
-      this.alertService.error(e);
+      this.alertService.error(e)
     })
   }
 
