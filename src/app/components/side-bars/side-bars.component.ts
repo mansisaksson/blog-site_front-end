@@ -50,13 +50,11 @@ export class SideBarsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.routerEventSubscription = this.router.events.subscribe(
-      (event: Event) => {
-        if (event instanceof NavigationEnd) {
-          this.updateSidebarContent(this.router.routerState.snapshot.root);
-        }
+    this.routerEventSubscription = this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationEnd) {
+        this.updateSidebarContent(this.router.routerState.snapshot.root);
       }
-    );
+    })
   }
 
   ngOnDestroy(): void {

@@ -4,6 +4,7 @@
 	[x] Add right sidebar
 	[x] Add "Create  Story" to this sidebar
 	[ ] Add Delete Story button
+	[ ] Add Edit Story button
 
 [ ] Story Editor
 

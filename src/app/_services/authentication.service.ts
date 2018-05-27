@@ -7,57 +7,56 @@ import 'rxjs/add/operator/map'
 
 @Injectable()
 export class AuthenticationService {
-    isLoggedIn:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    currentUser:BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
+	isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
 
-    constructor(private http: HttpClient) { 
-        this.refreshLoginState()
-    }
+	constructor(private http: HttpClient) {
+		this.refreshLoginState()
+	}
 
-    login(username: string, password: string): Observable<User> {
-        return this.http.post<any>('/api/authenticate', { username: username, password: password })
-            .map(user => {
-                // login successful if there's a jwt token in the response
-                if (user && user.token) {
-                    // store user details and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                }
-                
-                this.refreshLoginState()
-                return user;
-            }).catch(e => {
-                this.refreshLoginState()
-                return undefined;
-            });
-    }
+	login(username: string, password: string): Promise<User> {
+		return new Promise<User>((resolve, reject) => {
+			this.http.post<any>('/api/authenticate', { username: username, password: password }).subscribe(user => {
+				if (user && user.token) {
+					localStorage.setItem('currentUser', JSON.stringify(user))
+				}
 
-    logout(): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            localStorage.removeItem('currentUser');
-            this.refreshLoginState()
-            resolve(true)
-        })
-    }
+				this.refreshLoginState()
+				resolve(user)
+			}, (e) => {
+				this.refreshLoginState()
+				reject(e)
+			})
+		})
+	}
 
-    getIsLoggedIn(): Observable<boolean> {
-        this.refreshLoginState()
-        return this.isLoggedIn.asObservable();
-    }
+	logout(): Promise<boolean> {
+		return new Promise<boolean>((resolve, reject) => {
+			localStorage.removeItem('currentUser')
+			this.refreshLoginState()
+			resolve(true)
+		})
+	}
 
-    getCurrentUser(): Observable<User> {
-        this.refreshLoginState()
-        return this.currentUser.asObservable()
-    }
+	getIsLoggedIn(): Observable<boolean> {
+		this.refreshLoginState()
+		return this.isLoggedIn.asObservable()
+	}
 
-    refreshLoginState() {
-        let localUser = JSON.parse(localStorage.getItem('currentUser'))
-        if (this.currentUser.getValue() !== localUser) {
-            this.currentUser.next(localUser)
-        }
+	getCurrentUser(): Observable<User> {
+		this.refreshLoginState()
+		return this.currentUser.asObservable()
+	}
 
-        let isLoggedIn = localUser ? true : false;
-        if (this.isLoggedIn.getValue() !== isLoggedIn) {
-            this.isLoggedIn.next(isLoggedIn)
-        }
-    }
+	refreshLoginState() {
+		let localUser = JSON.parse(localStorage.getItem('currentUser'))
+		if (this.currentUser.getValue() !== localUser) {
+			this.currentUser.next(localUser)
+		}
+
+		let isLoggedIn = localUser ? true : false;
+		if (this.isLoggedIn.getValue() !== isLoggedIn) {
+			this.isLoggedIn.next(isLoggedIn)
+		}
+	}
 }
