@@ -81,7 +81,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			else if (request.url.endsWith('/api/users') && request.method === 'POST') {
 				let newUser = request.body;
 				this.userRepo.addUser(newUser).then((user: User) => {
-					observer.next(new HttpResponse({ status: 200 }));
+					observer.next(new HttpResponse({ status: 200, body: user }));
 				}, error => {
 					observer.error(error);
 				})

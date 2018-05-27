@@ -35,6 +35,10 @@ export class NavbarComponent implements OnInit {
     })
   }
 
+  register() {
+    this.authService.promptUserRegister('/');
+  }
+
   getCurrentUserId():number {
     if (this.currentUser != undefined) {
       return this.currentUser.id

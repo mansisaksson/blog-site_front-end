@@ -10,14 +10,16 @@ import 'rxjs/add/operator/map'
 export class AuthenticationService {
 	private isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
-	private subject = new Subject<any>();
+	private loginMessageSubject = new Subject<any>();
+	private registerMessageSubject = new Subject<any>();
 
 	constructor(
 		private http: HttpClient,
 		private router: Router) {
 		router.events.subscribe(event => {
 			if (event instanceof NavigationStart) {
-				this.subject.next({ event: 'close', url: '/' });
+				this.loginMessageSubject.next({ event: 'close', url: '/' });
+				this.registerMessageSubject.next({ event: 'close', url: '/' });
 			}
 		})
 
@@ -25,7 +27,11 @@ export class AuthenticationService {
 	}
 
 	promptUserLogin(successRoute: string) {
-		this.subject.next({ event: 'open', url: successRoute })
+		this.loginMessageSubject.next({ event: 'open', url: successRoute })
+	}
+
+	promptUserRegister(successRoute: string) {
+		this.registerMessageSubject.next({ event: 'open', url: successRoute })
 	}
 
 	login(username: string, password: string): Promise<User> {
@@ -62,7 +68,11 @@ export class AuthenticationService {
 	}
 
 	getShowLoginPrompt(): Observable<any> {
-		return this.subject.asObservable();
+		return this.loginMessageSubject.asObservable();
+	}
+
+	getShowRegisterPrompt(): Observable<any> {
+		return this.registerMessageSubject.asObservable();
 	}
 
 	private refreshLoginState() {
