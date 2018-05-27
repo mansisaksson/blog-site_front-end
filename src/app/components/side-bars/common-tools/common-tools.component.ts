@@ -25,7 +25,7 @@ export class CommonToolsComponent implements OnInit {
   }
 
   createStory() {
-    if (this.isLoggedIn) {
+    this.authenticationService.withLoggedInUser().then((user: User) => {
       this.storyService.createStory(this.user.id).then((story) => {
         console.log("Story Created")
         this.alertService.success("Story Created!")
@@ -33,9 +33,9 @@ export class CommonToolsComponent implements OnInit {
         console.error("Failed to create Story")
         this.alertService.error("failed to create story!")
       })
-    } else {
-      this.alertService.error("Not Logged In!")
-    }
+    }).catch(e => {
+      this.alertService.error(e);
+    })
   }
 
   deleteStory() {

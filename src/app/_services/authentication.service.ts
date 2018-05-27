@@ -26,6 +26,24 @@ export class AuthenticationService {
 		this.refreshLoginState()
 	}
 
+	withLoggedInUser(): Promise<User> {
+		return new Promise<User>((resolve, reject) => {
+			this.getCurrentUser().subscribe((user: User) => {
+				if (user) {
+					resolve(user)
+				}
+			})
+
+			let canceled = () => {
+				reject("Action Canceled")
+			}
+			this.loginMessageSubject.next({ 
+				event: 'open',
+				onCanceled: canceled
+			})
+		})
+	}
+
 	promptUserLogin(successRoute: string) {
 		this.loginMessageSubject.next({ event: 'open', url: successRoute })
 	}

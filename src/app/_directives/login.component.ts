@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
+﻿import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { AlertService, AuthenticationService } from '../_services';
@@ -9,7 +9,7 @@ declare let $: any;
 	templateUrl: 'login.component.html'
 })
 
-export class LoginComponent implements OnDestroy {
+export class LoginComponent implements OnDestroy, OnInit {
 	private subscription: Subscription;
 	private model: any = {};
 	private loading = false;
@@ -25,12 +25,20 @@ export class LoginComponent implements OnDestroy {
 		private alertService: AlertService
 	) {
 		this.authenticationService.getShowLoginPrompt().subscribe(message => {
+			if (this.message) {
+				this.closeModal()
+			}
+
 			this.message = message;
 			if (message.event === 'open') {
 				this.openModal()
-			} else {
-				this.closeModal()
 			}
+		})
+	}
+
+	ngOnInit(): void {
+		$(this.loginModal.nativeElement).on('hidden.bs.modal', () => {
+			this.onModalClosed()
 		})
 	}
 
@@ -41,7 +49,9 @@ export class LoginComponent implements OnDestroy {
 	login() {
 		this.loading = true;
 		this.authenticationService.login(this.model.username, this.model.password).then(user => {
-			this.router.navigate([this.message.url])
+			if (this.message.url) {
+				this.router.navigate([this.message.url])
+			}
 			this.closeModal()
 		}).catch(error => {
 			this.alertService.error(error);
@@ -57,5 +67,14 @@ export class LoginComponent implements OnDestroy {
 	closeModal() {
 		this.loading = false;
 		$(this.loginModal.nativeElement).modal('hide')
+		this.onModalClosed()
+	}
+
+	onModalClosed() {
+		if (this.message && this.message.onCanceled) {
+			this.message.onCanceled();
+		}
+
+		this.message = undefined;
 	}
 }
