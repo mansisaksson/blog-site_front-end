@@ -1,4 +1,4 @@
-[ ] Create "With Logged In User" Service, (pop modal if user needs to log in)
+[ ] Figure out how to show/hide the side menu buttons
 
 [ ] Layout changes
 	[x] Add hamburger menu
@@ -8,6 +8,8 @@
 	[ ] Add Edit Story button
 
 [ ] Story Editor
+
+[x] Create "With Logged In User" Service, (pop modal if user needs to log in)
 
 [x] Implement stories using the fake backend.
 	[x] List stories (story page)

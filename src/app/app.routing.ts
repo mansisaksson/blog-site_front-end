@@ -6,34 +6,34 @@ import { AuthGuard } from './_guards/index';
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
 import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
 import { StoryEditorComponent } from './components/story-editor/story-editor.component';
-import { CommonToolsComponent } from './components/side-bars/common-tools/common-tools.component';
+import { CreateStoryComponent, DeleteStoryComponent } from './components/side-bars/common-tools/';
 
 const appRoutes: Routes = [
     { 
         path: '',
         component: HomeComponent,
         /*canActivate: [AuthGuard],*/
-        data: { sidebars: [ CommonToolsComponent ] }
+        data: { sidebars: [ CreateStoryComponent ]}
     },
     {
         path: 'story-explorer',
         component: StoryExplorerComponent,
-        data: { sidebars: [ CommonToolsComponent ] }
+        data: { sidebars: [ CreateStoryComponent ] }
     },
     {
         path: 'story-explorer/:user_id',
         component: StoryExplorerComponent,
-        data: { sidebars: [ CommonToolsComponent ] }
+        data: { sidebars: [ CreateStoryComponent ] }
     },
     { 
         path: 'story-viewer/:story_id',
         component: StoryViewerComponent,
-        data: { sidebars: [ CommonToolsComponent ] }
+        data: { sidebars: [ [ CreateStoryComponent, DeleteStoryComponent ] ]}
     },
     { 
         path: 'story-editor/:story_id',
         component: StoryEditorComponent,
-        data: { sidebars: [ CommonToolsComponent ] }
+        data: { sidebars: [ [ CreateStoryComponent, DeleteStoryComponent ] ]}
     },
 
     // otherwise redirect to home

@@ -68,8 +68,15 @@ export class SideBarsComponent implements OnInit, OnDestroy {
       for (let sidebar of sidebars) {
         let factory: ComponentFactory<SideBarComponent> = this.componentFactoryResolver.resolveComponentFactory(SideBarComponent)
         let componentRef: ComponentRef<SideBarComponent> = this.sidebarTarget.createComponent(factory)
-        componentRef.instance.addComponent(sidebar)
         this.sidebarComponents.push(componentRef);
+        
+        if (sidebar instanceof Array) {
+          for (let sidebarComponent of sidebar) {
+            componentRef.instance.addComponent(sidebarComponent)
+          }
+        } else {
+          componentRef.instance.addComponent(sidebar)
+        }
       }
     }
 
