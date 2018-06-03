@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { User, StoryDocument, StoryMetaData } from './../../../_models'
+import { User, StoryMetaData } from './../../../_models'
 import { StoryService, AuthenticationService, AlertService } from './../../../_services'
 import { Router } from '@angular/router';
 
@@ -7,17 +7,18 @@ import { Router } from '@angular/router';
   selector: 'app-common-tools',
   template: `
   <div *ngIf="enabled">
-    <button (click)="deleteStory()" class="btn btn-primary">Delete Story</button>
+    <button (click)="editStory()" class="btn btn-primary">Edit Story</button>
   </div>`
 })
-export class DeleteStoryComponent implements OnInit {
+export class EditStoryComponent implements OnInit {
   private storyId: string
   private enabled: boolean
 
   constructor(
     private storyService: StoryService,
     private authenticationService: AuthenticationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -35,14 +36,10 @@ export class DeleteStoryComponent implements OnInit {
     })
   }
 
-  deleteStory() {
+  editStory() {
     if (this.enabled) {
       this.authenticationService.withLoggedInUser().then((user: User) => {
-        this.storyService.deleteStory(this.storyId).then(() => {
-          this.alertService.success("Story Deleted!")
-        }).catch(e => {
-          this.alertService.error(e)
-        })
+        this.router.navigate(['story-editor/' + this.storyId])
       }).catch(e => {
         this.alertService.error(e)
       })

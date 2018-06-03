@@ -23,7 +23,7 @@ import { StoryEditorComponent } from './components/story-editor/story-editor.com
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
-import { CreateStoryComponent, DeleteStoryComponent } from './components/side-bars/common-tools/';
+import { CreateStoryComponent, DeleteStoryComponent, EditStoryComponent } from './components/side-bars/common-tools/';
 import { SideBarsComponent, SideBarComponent } from './components/side-bars/side-bars.component';
 
 @NgModule({
@@ -50,6 +50,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     NavMenuComponent,
     CreateStoryComponent,
     DeleteStoryComponent,
+    EditStoryComponent,
     SideBarsComponent,
     SideBarComponent
   ],

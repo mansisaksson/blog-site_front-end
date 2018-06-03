@@ -1,13 +1,13 @@
-[ ] Edit Story
+[ ] Story Editor
 
 [x] Figure out how to show/hide the side menu buttons
 
-[ ] Layout changes
+[x] Layout changes
 	[x] Add hamburger menu
 	[x] Add right sidebar
 	[x] Add "Create  Story" to this sidebar
-	[ ] Add Delete Story button
-	[ ] Add Edit Story button
+	[x] Add Delete Story button
+	[x] Add Edit Story button
 
 [x] Create "With Logged In User" Service, (pop modal if user needs to log in)
 

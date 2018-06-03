@@ -6,7 +6,7 @@ import { AuthGuard } from './_guards/index';
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
 import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
 import { StoryEditorComponent } from './components/story-editor/story-editor.component';
-import { CreateStoryComponent, DeleteStoryComponent } from './components/side-bars/common-tools/';
+import { CreateStoryComponent, DeleteStoryComponent, EditStoryComponent } from './components/side-bars/common-tools/';
 
 const appRoutes: Routes = [
     { 
@@ -28,7 +28,7 @@ const appRoutes: Routes = [
     { 
         path: 'story-viewer/:story_id',
         component: StoryViewerComponent,
-        data: { sidebars: [ [ CreateStoryComponent, DeleteStoryComponent ] ]}
+        data: { sidebars: [ [ CreateStoryComponent, DeleteStoryComponent, EditStoryComponent ] ]}
     },
     { 
         path: 'story-editor/:story_id',
