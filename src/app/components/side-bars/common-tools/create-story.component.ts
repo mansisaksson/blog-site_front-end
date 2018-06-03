@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { User, Story } from './../../../_models'
+import { User, StoryMetaData } from './../../../_models'
 import { StoryService, AuthenticationService, AlertService } from './../../../_services'
 
 @Component({
@@ -19,10 +19,10 @@ export class CreateStoryComponent {
 
   createStory() {
     this.authenticationService.withLoggedInUser().then((user: User) => {
-      this.storyService.createStory(user.id).then((story: Story) => {
+      this.storyService.createStory(user.id).then((story: StoryMetaData) => {
         this.alertService.success("Story Created!")
       }).catch((error) => {
-        this.alertService.error("failed to create story!")
+        this.alertService.error(error)
       })
     }).catch(e => {
       this.alertService.error(e)

@@ -8,32 +8,32 @@ export class UserRepository {
     this.users = JSON.parse(localStorage.getItem('users')) || [];
   }
 
-  getAllUsers():Promise<User[]> {
+  getAllUsers(): Promise<User[]> {
     return new Promise<User[]>((resolve, reject) => {
       resolve(this.users);
     })
   }
 
-  findUser(userId:number):Promise<User> {
+  findUser(userId: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       let filteredUsers = this.users.filter(user => {
         return user.id === userId;
       });
-  
+
       if (filteredUsers.length) {
         return resolve(filteredUsers[0]);
       }
-  
+
       reject("Could not find user")
     })
   }
 
-  findUserByName(username:string):Promise<User> {
+  findUserByName(username: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       let filteredUsers = this.users.filter(user => {
         return user.username === username;
       });
-  
+
       if (filteredUsers.length > 0) {
         return resolve(filteredUsers[0]);
       }
@@ -42,8 +42,8 @@ export class UserRepository {
     })
   }
 
-  addUser(user:User):Promise<User> {
-    return new Promise<User>((resolve, reject) => { 
+  addUser(user: User): Promise<User> {
+    return new Promise<User>((resolve, reject) => {
       let newUser = user;
       // validation
       let duplicateUser = this.users.filter(user => { return user.username === newUser.username; }).length;
@@ -52,7 +52,7 @@ export class UserRepository {
       }
 
       // save new user
-      newUser.id = this.users.length + 1;
+      newUser.id = (this.users.length + 1).toString();
       this.users.push(newUser);
       localStorage.setItem('users', JSON.stringify(this.users));
 
@@ -60,14 +60,14 @@ export class UserRepository {
     })
   }
 
-  removeUser(userId:number):Promise<boolean> {
+  removeUser(userId: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       for (let i = 0; i < this.users.length; i++) {
         let user = this.users[i];
         if (user.id === userId) {
-            this.users.splice(i, 1);
-            localStorage.setItem('users', JSON.stringify(this.users));
-            return resolve(true)
+          this.users.splice(i, 1);
+          localStorage.setItem('users', JSON.stringify(this.users));
+          return resolve(true)
         }
       }
       reject("Could not find user")

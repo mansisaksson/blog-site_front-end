@@ -3,7 +3,7 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable } from 'rxjs/Observable';
 
 import { User } from '../_models/user'
-import { Story, StoryMetaData } from '../_models/story'
+import { StoryDocument, StoryMetaData } from '../_models/story'
 import { UserRepository } from './local_repos/user-repository'
 import { StoryRepository } from './local_repos/story-repository'
 
@@ -66,7 +66,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
 					let urlParts = request.url.split('/');
-					let id = parseInt(urlParts[urlParts.length - 1]);
+					let id = urlParts[urlParts.length - 1];
 					this.userRepo.findUser(id).then((user: User) => {
 						observer.next(new HttpResponse({ status: 200, body: user }));
 					}, error => {
@@ -92,7 +92,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
 					let urlParts = request.url.split('/');
-					let id = parseInt(urlParts[urlParts.length - 1]);
+					let id = urlParts[urlParts.length - 1];
 					this.userRepo.removeUser(id).then((success) => {
 						observer.next(new HttpResponse({ status: 200 }));
 					}, (error) => {
@@ -109,7 +109,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			// create story
 			else if (request.url.endsWith('/api/stories') && request.method === 'POST') {
 				let userId = request.body;
-				this.storyRepo.createStory("title", userId).then((story: Story) => {
+				this.storyRepo.createStory("title", userId).then((story: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: story }))
 				}, (error) => {
 					observer.error(error);
@@ -119,23 +119,36 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			// get story
 			else if (request.url.match(/\/api\/stories\/\d+$/) && request.method === 'GET') {
 				let urlParts = request.url.split('/');
-				let id = parseInt(urlParts[urlParts.length - 1]);
-				this.storyRepo.getStory(id).then((story: Story) => {
+				let id = urlParts[urlParts.length - 1];
+				this.storyRepo.getStory(id).then((story: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: story }))
 				}, (error) => {
 					observer.error(error);
 				})
 			}
-			// /* ***** End Stories ***** */
 
-
-			/* ***** Begin Story Meta Data ***** */
+			// delete user
+			else if (request.url.match(/\/api\/stories\/\d+$/) && request.method === 'DELETE') {
+				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+					let urlParts = request.url.split('/');
+					let id = urlParts[urlParts.length - 1];
+					this.storyRepo.removeStory(id).then((success) => {
+						observer.next(new HttpResponse({ status: 200 }));
+					}, (error) => {
+						observer.error(error)
+					})
+				} else {
+					observer.error('Unauthorised');
+				}
+			}
+		
 			// get all story meta data
 			else if (request.url.endsWith('/api/stories_md') && request.method === 'GET') {
 				let userId = request.params.get("userId");
 				let searchQuery: string = request.params.get("searchQuery");
 
-				this.storyRepo.getAllStoryMetaData(userId ? +userId : undefined, searchQuery).then((storymd: StoryMetaData[]) => {
+				this.storyRepo.getAllStories(userId ? userId : undefined, searchQuery).then((storymd: StoryMetaData[]) => {
 					observer.next(new HttpResponse({ status: 200, body: storymd }))
 				}, (error) => {
 					observer.error(error);
@@ -145,14 +158,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			// get story meta data
 			else if (request.url.match(/\/api\/stories_md\/\d+$/) && request.method === 'GET') {
 				let urlParts = request.url.split('/');
-				let storyId = parseInt(urlParts[urlParts.length - 1]);
-				this.storyRepo.getStoryMetaData(storyId).then((storymd: StoryMetaData) => {
+				let storyId = urlParts[urlParts.length - 1];
+				this.storyRepo.getStory(storyId).then((storymd: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: storymd }))
 				}, (error) => {
 					observer.error(error);
 				})
 			}
-			/* ***** End Story Meta Data ***** */
+			// /* ***** End Stories ***** */
+
 			// pass through any requests not handled above
 			//return next.handle(request);
 		})

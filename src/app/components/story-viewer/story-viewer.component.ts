@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
 import { StoryService, AlertService } from '../../_services/index'
-import { Story } from '../../_models/index'
+import { StoryDocument, StoryMetaData } from '../../_models/index'
 import { AlertComponent } from '../../_directives/index'
 
 @Component({
@@ -10,15 +10,19 @@ import { AlertComponent } from '../../_directives/index'
   styleUrls: ['./story-viewer.component.css']
 })
 export class StoryViewerComponent implements OnInit {
-  storyId: number;
-  story: Story;
+  storyId: string
+  story: StoryMetaData
+  storyDoc: StoryDocument
 
   constructor(
     private storyService: StoryService,
     private alertService: AlertService,
     private activatedRoute: ActivatedRoute
   ) {
-    this.story = new Story();
+    this.story = <StoryMetaData>{
+      title: "Title"
+    }
+    this.storyDoc = new StoryDocument()
   }
 
   ngOnInit() {
@@ -29,10 +33,11 @@ export class StoryViewerComponent implements OnInit {
   }
 
   refreshStory() {
-    this.storyService.getStoryById(this.storyId).then((story: Story) => {
+    this.storyService.getStory(this.storyId).then((story: StoryMetaData) => {
       this.story = story
+      this.storyService.setCurrentlyVievedStory(story)
     }).catch((error) => {
-      this.alertService.error(error.error)
+      this.alertService.error(error)
     })
   }
 }

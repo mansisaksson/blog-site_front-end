@@ -32,14 +32,15 @@ export class AuthenticationService {
 				if (user) {
 					resolve(user)
 				}
-			})
-
-			let canceled = () => {
-				reject("Action Canceled")
-			}
-			this.loginMessageSubject.next({ 
-				event: 'open',
-				onCanceled: canceled
+				else {
+					let canceled = () => {
+						reject("Action Canceled")
+					}
+					this.loginMessageSubject.next({ 
+						event: 'open',
+						onCanceled: canceled
+					})
+				}
 			})
 		})
 	}

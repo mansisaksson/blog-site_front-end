@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router';
 import { StoryService, AuthenticationService } from '../../_services/index'
 
-import { Story, StoryMetaData, User } from '../../_models/index';
+import { StoryDocument, StoryMetaData, User } from '../../_models/index';
 
 @Component({
   selector: 'app-story-explorer',
@@ -11,7 +11,7 @@ import { Story, StoryMetaData, User } from '../../_models/index';
 })
 export class StoryExplorerComponent implements OnInit {
   storyMetaData: StoryMetaData[];
-  userId: number;
+  userId: string;
   currentUser: User;
 
   constructor(
@@ -37,7 +37,7 @@ export class StoryExplorerComponent implements OnInit {
 
   refreshStoryList() {
     if (this.hasInit) {
-      this.storyService.getStoriesMetaData(this.userId).then((data: StoryMetaData[]) => {
+      this.storyService.getStories(this.userId).then((data: StoryMetaData[]) => {
         this.storyMetaData = data;
       })
     }

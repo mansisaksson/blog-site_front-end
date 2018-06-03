@@ -1,19 +1,15 @@
-export class Story {
-    storyId: number;
-    authorId: number;
-    title:string;
-    revision: number;
-    content: string;
+export class StoryDocument {
+    content: string
 }
 
 export interface StoryMetaData {
-    storyId:number,
-    authorId:number,
-    authorName:string,
-    title:string,
-    upvotes:number,
-    downvotes:number,
-    thumbnail:string,
-    submittedAt:number
-    lastUpdated:number
+    storyId: string
+    authorId: string
+    title: string
+    upvotes: number
+    downvotes: number
+    thumbnailURI: string
+    submittedAt: number
+    lastUpdated: number
+    revision: number
 }

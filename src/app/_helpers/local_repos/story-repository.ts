@@ -1,102 +1,125 @@
-import { Story, StoryMetaData } from '../../_models/index'
+import { StoryDocument, StoryMetaData } from '../../_models/index'
 import { toPromise } from 'rxjs/operator/toPromise'
 
 import * as storyMD from './../dummy_data/stories_md.json';
 
 export class StoryRepository {
-  stories: Story[];
-  storiesMD: StoryMetaData[];
+  stories: Map<string, StoryDocument> = new Map<string, StoryDocument>()
+  storiesMD: Map<string, StoryMetaData> = new Map<string, StoryMetaData>()
 
   constructor() {
-    this.stories = JSON.parse(localStorage.getItem('stories')) || [];
-    this.storiesMD = JSON.parse(localStorage.getItem('stories_md')) || [];
+    this.loadRepo()
 
-    let metaDataArray = <any>storyMD
-    metaDataArray.forEach(element => {
-      let storyMetaData: StoryMetaData = element
-      storyMetaData.authorId = Math.floor(Math.random() * 6) + 1
-      this.storiesMD.push(storyMetaData)
+    // let metaDataArray = <any>storyMD
+    // metaDataArray.forEach((element) => {
+    //   let storyMetaData: StoryMetaData = element;
+    //   storyMetaData.authorId = (Math.floor(Math.random() * 1000) + 500).toString()
+    //   this.storiesMD.set(storyMetaData.storyId, storyMetaData)
 
-      let story = <Story>{
-        storyId: storyMetaData.storyId,
-        authorId: storyMetaData.authorId,
-        title: storyMetaData.title,
-        revision: 0,
-        content: "Temp Content"
-      }
-      this.stories.push(story)
-    });
+    //   let story = <StoryDocument>{
+    //     title: storyMetaData.title,
+    //     content: "Temp Content"
+    //   }
+    //   this.stories.set(storyMetaData.storyId, story)
+    // })
   }
 
-  getAllStories(): Promise<Story[]> {
-    return new Promise<Story[]>((resolve, reject) => {
-      resolve(this.stories)
+  saveRepo() {
+    localStorage.setItem('stories_md', StoryRepository.mapToJson(this.storiesMD))
+    localStorage.setItem('stories', StoryRepository.mapToJson(this.stories))
+  }
+
+  loadRepo() {
+    let localStories = StoryRepository.mapFromJson<string, StoryDocument>(localStorage.getItem('stories'))
+    if (localStories != undefined && localStories.size > 0) {
+      this.stories = localStories
+    }
+
+    let localStoryMD = StoryRepository.mapFromJson<string, StoryMetaData>(localStorage.getItem('stories_md'))
+    if (localStoryMD != undefined && localStoryMD.size > 0) {
+      this.storiesMD = localStoryMD
+    }
+  }
+
+  static mapToJson(map: Map<any, any>): string {
+    let objectArray: any[] = []
+    map.forEach((value: any, key: any) => {
+      objectArray.push({ key: key, value: value })
     })
+
+    return JSON.stringify(objectArray)
   }
 
-  getStory(storyId: number): Promise<Story> {
-    return new Promise<Story>((resolve, reject) => {
-      let filteredStories = this.stories.filter(story => {
-        return (story.storyId === storyId);
-      });
+  static mapFromJson<key, value>(json: string): Map<key, value> {
+    let returnMap = new Map<key, value>()
+    let parsedArray: any[] = JSON.parse(json)
+    if (parsedArray != undefined) {
+      parsedArray.forEach(element => {
+        returnMap.set(element.key, element.value)
+      })
+    }
+    return returnMap
+  }
 
-      if (filteredStories.length > 0) {
-        return resolve(filteredStories[0]);
+  getStoryDocument(storyId: string): Promise<StoryDocument> {
+    return new Promise<StoryDocument>((resolve, reject) => {
+      let foundStory = this.stories[storyId]
+      if (foundStory != undefined) {
+        return resolve(foundStory);
       }
 
       reject("Could not find story")
     })
   }
 
-  createStory(title: string, authorId: number): Promise<Story> {
-    return new Promise<Story>((resolve, reject) => {
-      let storyId = this.stories.length + 1;
-      let newStory = <Story>{
-        storyId: storyId,
-        authorId: authorId,
+  createStory(title: string, authorId: string): Promise<StoryMetaData> {
+    return new Promise<StoryMetaData>((resolve, reject) => {
+      let storyId = (this.storiesMD.size + 1).toString()
+      let newStory = <StoryDocument>{
         title: title,
-        revision: 0,
-        content: ""
+        content: "Default Content"
       };
 
-      this.stories.push(newStory);
-      localStorage.setItem('stories', JSON.stringify(this.stories));
+      this.stories.set(storyId, newStory);
 
       let newStoryMetaData = <StoryMetaData>{
         storyId: storyId,
         authorId: authorId,
-        authorName: "UNRESOLVABLE",
         title: title,
         upvotes: 0,
         downvotes: 0,
-        thumbnail: "",
+        thumbnailURI: "",
         submittedAt: Date.now(),
-        lastUpdated: Date.now()
+        lastUpdated: Date.now(),
+        revision: 0
       };
 
-      this.storiesMD.push(newStoryMetaData);
-      localStorage.setItem('stories_md', JSON.stringify(this.storiesMD));
+      this.storiesMD.set(storyId, newStoryMetaData);
 
-      resolve(newStory);
+      this.saveRepo();
+      resolve(newStoryMetaData);
     })
   }
 
-  removeStory(storyId: number): Promise<boolean> {
+  removeStory(storyId: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      for (let i = 0; i < this.stories.length; i++) {
-        let story = this.stories[i];
-        if (story.storyId === storyId) {
-          this.stories.splice(i, 1);
-          localStorage.setItem('stories', JSON.stringify(this.stories));
-          return resolve(true)
-        }
+
+      if (this.stories.delete(storyId) &&
+        this.storiesMD.delete(storyId)) {
+        this.saveRepo();
+        return resolve(true)
       }
+
       reject("Could not find story")
     })
   }
 
-  getAllStoryMetaData(userId?: number, searchQuery?: string): Promise<StoryMetaData[]> {   
-    let metaData = this.storiesMD;
+  getAllStories(userId?: string, searchQuery?: string): Promise<StoryMetaData[]> {
+    let metaData: StoryMetaData[] = []
+    this.storiesMD.forEach((value: StoryMetaData, key: string) => {
+      metaData.push(value)
+    });
+
     if (userId) {
       metaData = metaData.filter(obj => obj.authorId === userId)
     }
@@ -109,17 +132,14 @@ export class StoryRepository {
     })
   }
 
-  getStoryMetaData(storyId: number): Promise<StoryMetaData> {
+  getStory(storyId: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
-      let filteredStoryMD = this.storiesMD.filter(storyMD => {
-        return storyMD.storyId === storyId;
-      });
-
-      if (filteredStoryMD.length > 0) {
-        return resolve(filteredStoryMD[0]);
+      let storyMD = this.storiesMD.get(storyId)
+      if (storyMD != undefined) {
+        return resolve(storyMD);
       }
 
-      reject("Could not find story meta data")
+      reject("Could not find story")
     })
   }
 
