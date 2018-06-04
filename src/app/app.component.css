@@ -4,6 +4,7 @@
 #container {
     padding: 10px;
 	min-height: 1000px;
+	height: 100%;
 	width: auto;
 	margin-left: 15px;
 	margin-right: 0px;
