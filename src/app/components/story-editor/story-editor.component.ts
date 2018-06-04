@@ -1,10 +1,10 @@
 import { Component, ElementRef, ViewChild, ViewEncapsulation, OnInit } from '@angular/core'
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-
+import { ActivatedRoute, Params } from '@angular/router'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
-import { Observable } from 'rxjs'
+import { StoryService, AlertService } from '../../_services'
+import { StoryDocument, StoryMetaData } from '../../_models'
 
-import {  QuillEditorComponent } from 'ngx-quill/src/quill-editor.component'
+import { QuillEditorComponent } from 'ngx-quill/src/quill-editor.component'
 
 import * as quill from 'quill'
 let Quill: any = quill // due to a bug in Quill we have to declare the import as an any
@@ -39,20 +39,49 @@ Quill.register(Font, true)
   styleUrls: ['./story-editor.component.css']
 })
 export class StoryEditorComponent implements OnInit {
+  private storyId: string
+  private story: StoryMetaData
+  private storyDoc: StoryDocument
 
-  constructor(fb: FormBuilder) {
-
+  constructor(
+    private storyService: StoryService,
+    private alertService: AlertService,
+    private activatedRoute: ActivatedRoute) {
+      this.story = <StoryMetaData>{
+        title: "..."
+      }
+      this.storyDoc = new StoryDocument()
   }
 
   @ViewChild('editor') editor: QuillEditorComponent
 
   ngOnInit() {
-    
     this.editor.onContentChanged.pipe(
       debounceTime(400),
       distinctUntilChanged()
     ).subscribe(data => {
       console.log(data)
+    })
+
+    this.activatedRoute.params.subscribe((params: Params) => {
+      this.storyId = params['story_id'];
+      this.refreshStory()
+    })
+  }
+
+  refreshStory() {
+    this.storyService.getStory(this.storyId).then((story: StoryMetaData) => {
+      this.story = story
+      this.storyService.setCurrentlyVievedStory(story)
+
+      this.storyService.getStoryDocument(story.storyId).then((storyDoc: StoryDocument) => {
+        this.storyDoc = storyDoc
+      }).catch(error => {
+        this.alertService.error(error)
+      })
+
+    }).catch((error) => {
+      this.alertService.error(error)
     })
   }
 

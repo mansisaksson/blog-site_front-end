@@ -10,9 +10,9 @@ import { AlertComponent } from '../../_directives/index'
   styleUrls: ['./story-viewer.component.css']
 })
 export class StoryViewerComponent implements OnInit {
-  storyId: string
-  story: StoryMetaData
-  storyDoc: StoryDocument
+  private storyId: string
+  private story: StoryMetaData
+  private storyDoc: StoryDocument
 
   constructor(
     private storyService: StoryService,
@@ -20,16 +20,16 @@ export class StoryViewerComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {
     this.story = <StoryMetaData>{
-      title: "Title"
+      title: "..."
     }
     this.storyDoc = new StoryDocument()
   }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.storyId = params['story_id'];
-      this.refreshStory();
-    });
+      this.storyId = params['story_id']
+      this.refreshStory()
+    })
   }
 
   refreshStory() {

@@ -5,18 +5,3 @@
 quill-editor {
     height: 100%;
 }
-
-.ng-invalid {
-    border: 1px dashed red;
-}
-
-/* Set content font-families */
-.ql-font-mirza {
-    font-family: "Mirza";
-}
-
-.ql-font-aref {
-    font-family: "Aref Ruqaa";
-}
-
-/* We do not set Aref Ruqaa since it is the default font */

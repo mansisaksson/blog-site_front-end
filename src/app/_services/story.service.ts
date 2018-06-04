@@ -18,7 +18,7 @@ export class StoryService {
 		return this.currentStory.asObservable();
 	}
 
-	getStoryDocumentById(id: number): Promise<StoryDocument> {
+	getStoryDocument(id: string): Promise<StoryDocument> {
 		return new Promise<StoryDocument>((resolve, reject) => {
 			this.http.get('/api/stories/' + id).subscribe((data) => {
 				resolve(<StoryDocument>data)
