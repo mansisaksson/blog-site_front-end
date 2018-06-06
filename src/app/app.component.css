@@ -1,6 +1,16 @@
 @charset "utf-8";
 /* CSS Document */
 
+.body-container {
+	height: calc(100vh - 55px);
+}
+
+#main-container {
+	height: calc(100vh - 105px);
+	overflow-y: scroll;
+}
+
+/*
 #container {
     padding: 10px;
 	min-height: 1000px;
@@ -13,4 +23,4 @@
 	box-shadow: 0px 0px 15px #000;
 	background-color:#FFF;
 }
-
+*/

@@ -41,7 +41,7 @@ Quill.register(Font, true)
 export class StoryEditorComponent implements OnInit {
   private storyId: string
   private story: StoryMetaData
-  private storyDoc: StoryDocument
+  private storyDocs: StoryDocument[] = []
 
   constructor(
     private storyService: StoryService,
@@ -50,18 +50,19 @@ export class StoryEditorComponent implements OnInit {
       this.story = <StoryMetaData>{
         title: "..."
       }
-      this.storyDoc = new StoryDocument()
+      this.storyDocs.push(new StoryDocument())
+      this.storyDocs.push(new StoryDocument())
   }
 
   @ViewChild('editor') editor: QuillEditorComponent
 
   ngOnInit() {
-    this.editor.onContentChanged.pipe(
-      debounceTime(400),
-      distinctUntilChanged()
-    ).subscribe(data => {
-      console.log(data)
-    })
+    // this.editor.onContentChanged.pipe(
+    //   debounceTime(400),
+    //   distinctUntilChanged()
+    // ).subscribe(data => {
+    //   console.log(data)
+    // })
 
     this.activatedRoute.params.subscribe((params: Params) => {
       this.storyId = params['story_id'];
@@ -74,8 +75,8 @@ export class StoryEditorComponent implements OnInit {
       this.story = story
       this.storyService.setCurrentlyVievedStory(story)
 
-      this.storyService.getStoryDocument(story.storyId).then((storyDoc: StoryDocument) => {
-        this.storyDoc = storyDoc
+      this.storyService.getStoryDocument(story.storyURIs[0]).then((storyDoc: StoryDocument) => {
+        //this.storyDocs.push(storyDoc)
       }).catch(error => {
         this.alertService.error(error)
       })
@@ -91,7 +92,7 @@ export class StoryEditorComponent implements OnInit {
 
   getContent() {
     // this.editor.quillEditor <-- quill.Quill()
-    return this.editor.quillEditor.getContents()
+    //return this.editor.quillEditor.getContents()
   }
 
   addBindingCreated(quill) {

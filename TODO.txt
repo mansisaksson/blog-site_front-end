@@ -1,4 +1,11 @@
 [ ] Story Editor
+	[ ] Same toolbar for multiple documents
+
+[ ] Misc nav stuff
+	[ ] Need a reusable pop-up from
+	[ ] Delete should re-direct
+	[ ] Create story sould ask for a title
+	[ ] Sign out should re-direct
 
 [x] Figure out how to show/hide the side menu buttons
 

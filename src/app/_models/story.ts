@@ -1,4 +1,5 @@
 export class StoryDocument {
+    title: string
     content: string
 }
 
@@ -12,4 +13,5 @@ export interface StoryMetaData {
     submittedAt: number
     lastUpdated: number
     revision: number
+    storyURIs: string[]
 }

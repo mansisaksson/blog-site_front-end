@@ -25,8 +25,10 @@ export class DeleteStoryComponent implements OnInit {
     this.storyService.getCurrentlyViewedStory().subscribe((story: StoryMetaData) => {
       if (story != undefined) {
         this.authenticationService.getCurrentUser().subscribe((user: User) => {
-          this.enabled = (user.id == story.authorId) ? true : false
-          this.storyId = story.storyId
+          if (user != undefined) {
+            this.enabled = (user.id == story.authorId) ? true : false
+            this.storyId = story.storyId
+          }
         })
       } else {
         this.enabled = false

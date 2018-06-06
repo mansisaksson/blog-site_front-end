@@ -4,7 +4,7 @@ import { toPromise } from 'rxjs/operator/toPromise'
 import * as storyMD from './../dummy_data/stories_md.json';
 
 export class StoryRepository {
-  stories: Map<string, StoryDocument> = new Map<string, StoryDocument>()
+  storyDocuments: Map<string, StoryDocument> = new Map<string, StoryDocument>()
   storiesMD: Map<string, StoryMetaData> = new Map<string, StoryMetaData>()
 
   constructor() {
@@ -26,13 +26,13 @@ export class StoryRepository {
 
   saveRepo() {
     localStorage.setItem('stories_md', StoryRepository.mapToJson(this.storiesMD))
-    localStorage.setItem('stories', StoryRepository.mapToJson(this.stories))
+    localStorage.setItem('story_documents', StoryRepository.mapToJson(this.storyDocuments))
   }
 
   loadRepo() {
     let localStories = StoryRepository.mapFromJson<string, StoryDocument>(localStorage.getItem('stories'))
     if (localStories != undefined && localStories.size > 0) {
-      this.stories = localStories
+      this.storyDocuments = localStories
     }
 
     let localStoryMD = StoryRepository.mapFromJson<string, StoryMetaData>(localStorage.getItem('stories_md'))
@@ -61,9 +61,9 @@ export class StoryRepository {
     return returnMap
   }
 
-  getStoryDocument(storyId: string): Promise<StoryDocument> {
+  getStoryDocument(docURI: string): Promise<StoryDocument> {
     return new Promise<StoryDocument>((resolve, reject) => {
-      let foundStory = this.stories[storyId]
+      let foundStory = this.storyDocuments[docURI]
       if (foundStory != undefined) {
         return resolve(foundStory);
       }
@@ -75,12 +75,13 @@ export class StoryRepository {
   createStory(title: string, authorId: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
       let storyId = (this.storiesMD.size + 1).toString()
+      let storyDocURI = storyId + "/1";
       let newStory = <StoryDocument>{
         title: title,
         content: "Default Content"
       };
 
-      this.stories.set(storyId, newStory);
+      this.storyDocuments.set(storyDocURI, newStory);
 
       let newStoryMetaData = <StoryMetaData>{
         storyId: storyId,
@@ -91,7 +92,8 @@ export class StoryRepository {
         thumbnailURI: "",
         submittedAt: Date.now(),
         lastUpdated: Date.now(),
-        revision: 0
+        revision: 0,
+        storyURIs: [storyDocURI]
       };
 
       this.storiesMD.set(storyId, newStoryMetaData);
@@ -104,8 +106,7 @@ export class StoryRepository {
   removeStory(storyId: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
 
-      if (this.stories.delete(storyId) &&
-        this.storiesMD.delete(storyId)) {
+      if (this.storyDocuments.delete(storyId) && this.storiesMD.delete(storyId)) {
         this.saveRepo();
         return resolve(true)
       }
