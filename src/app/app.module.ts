@@ -19,7 +19,7 @@ import { StoryExplorerComponent } from './components/story-explorer/story-explor
 import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
 
 import { QuillModule } from 'ngx-quill';
-import { StoryEditorComponent, StoryEditorToolbarComponent } from './components/story-editor';
+import { StoryEditorComponent, StoryEditorToolbarComponent, StoryNavMenuComponent } from './components/story-editor';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
@@ -46,6 +46,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     StoryViewerComponent,
     StoryEditorComponent,
     StoryEditorToolbarComponent,
+    StoryNavMenuComponent,
     NavbarComponent,
     ToolbarComponent,
     NavMenuComponent,
