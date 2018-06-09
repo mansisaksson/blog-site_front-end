@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { User, StoryDocument, StoryMetaData } from './../../../_models'
-import { StoryService, AuthenticationService, AlertService } from './../../../_services'
+import { StoryEditorService, StoryService, AuthenticationService, AlertService } from './../../../_services'
 import { Router } from '@angular/router';
 
 @Component({

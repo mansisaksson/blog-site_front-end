@@ -61,14 +61,17 @@ export class StoryRepository {
     return returnMap
   }
 
-  getStoryDocument(docURI: string): Promise<StoryDocument> {
-    return new Promise<StoryDocument>((resolve, reject) => {
-      let foundStory = this.storyDocuments[docURI]
-      if (foundStory != undefined) {
-        return resolve(foundStory);
-      }
+  getStoryDocuments(docURIs: string[]): Promise<StoryDocument[]> {
+    return new Promise<StoryDocument[]>((resolve, reject) => {
+      let result: StoryDocument[] = [];
+      docURIs.forEach(docURI => {
+        let foundStory = this.storyDocuments[docURI]
+        if (foundStory != undefined) {
+          result.push(foundStory)
+        }
+      });
 
-      reject("Could not find story")
+      resolve(result)
     })
   }
 
@@ -111,7 +114,7 @@ export class StoryRepository {
         return resolve(true)
       }
 
-      reject("Could not find story")
+      reject("Could not remove - Could not find story")
     })
   }
 
@@ -140,7 +143,7 @@ export class StoryRepository {
         return resolve(storyMD);
       }
 
-      reject("Could not find story")
+      reject("getStory- Could not find story")
     })
   }
 

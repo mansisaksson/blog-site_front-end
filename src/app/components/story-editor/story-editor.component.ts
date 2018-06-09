@@ -1,7 +1,7 @@
-import { Component, ElementRef, ViewChild, ViewEncapsulation, OnInit } from '@angular/core'
+import { Component, ElementRef, ViewEncapsulation, OnInit, AfterViewInit, ViewChildren, QueryList } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
-import { StoryService, AlertService } from '../../_services'
+import { StoryEditorService, AlertService } from '../../_services'
 import { StoryDocument, StoryMetaData } from '../../_models'
 
 import { QuillEditorComponent } from 'ngx-quill/src/quill-editor.component'
@@ -38,51 +38,52 @@ Quill.register(Font, true)
   templateUrl: './story-editor.component.html',
   styleUrls: ['./story-editor.component.css']
 })
-export class StoryEditorComponent implements OnInit {
+export class StoryEditorComponent implements OnInit, AfterViewInit {
   private storyId: string
   private story: StoryMetaData
   private storyDocs: StoryDocument[] = []
 
   constructor(
-    private storyService: StoryService,
+    private storyEditorService: StoryEditorService,
     private alertService: AlertService,
     private activatedRoute: ActivatedRoute) {
-      this.story = <StoryMetaData>{
-        title: "..."
-      }
-      this.storyDocs.push(new StoryDocument())
-      this.storyDocs.push(new StoryDocument())
+    this.story = <StoryMetaData>{
+      title: "..."
+    }
+    this.storyDocs.push(new StoryDocument())
+    this.storyDocs.push(new StoryDocument())
   }
 
-  @ViewChild('editor') editor: QuillEditorComponent
+  @ViewChildren(QuillEditorComponent) editors: QueryList<QuillEditorComponent>
 
   ngOnInit() {
-    // this.editor.onContentChanged.pipe(
-    //   debounceTime(400),
-    //   distinctUntilChanged()
-    // ).subscribe(data => {
-    //   console.log(data)
-    // })
-
     this.activatedRoute.params.subscribe((params: Params) => {
       this.storyId = params['story_id'];
       this.refreshStory()
     })
   }
 
-  refreshStory() {
-    this.storyService.getStory(this.storyId).then((story: StoryMetaData) => {
-      this.story = story
-      this.storyService.setCurrentlyVievedStory(story)
+  ngAfterViewInit() {
+    this.editors.changes.subscribe((any) => {
+      this.subscribeToChanges()
+    })
+    this.subscribeToChanges()
+  }
 
-      this.storyService.getStoryDocument(story.storyURIs[0]).then((storyDoc: StoryDocument) => {
-        //this.storyDocs.push(storyDoc)
-      }).catch(error => {
-        this.alertService.error(error)
+  subscribeToChanges() {
+    this.editors.forEach((editor, index) => {
+      editor.onContentChanged.pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      ).subscribe(data => {
+        this.storyEditorService.updateDocumentContent(this.story.storyURIs[index], data.html)
       })
+    })
+  }
 
-    }).catch((error) => {
-      this.alertService.error(error)
+  refreshStory() {
+    this.storyEditorService.loadStory(this.storyId).then((story) => {
+      this.story = story;
     })
   }
 
@@ -90,16 +91,12 @@ export class StoryEditorComponent implements OnInit {
     $event.focus()
   }
 
-  getContent() {
-    // this.editor.quillEditor <-- quill.Quill()
-    //return this.editor.quillEditor.getContents()
-  }
-
   addBindingCreated(quill) {
     quill.keyboard.addBinding({
       key: 'S',
       ctrlKey: true
     }, (range, context) => {
+      //this.storyEditorService.updateStoryDocument()
       console.log('Save!', range, context)
     })
   }

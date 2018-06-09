@@ -1,4 +1,5 @@
 export class StoryDocument {
+    URI: string
     title: string
     content: string
 }

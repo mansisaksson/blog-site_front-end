@@ -12,7 +12,7 @@ import { AlertComponent } from '../../_directives/index'
 export class StoryViewerComponent implements OnInit {
   private storyId: string
   private story: StoryMetaData
-  private storyDoc: StoryDocument
+  private storyDocs: StoryDocument[] = []
 
   constructor(
     private storyService: StoryService,
@@ -22,7 +22,6 @@ export class StoryViewerComponent implements OnInit {
     this.story = <StoryMetaData>{
       title: "..."
     }
-    this.storyDoc = new StoryDocument()
   }
 
   ngOnInit() {
@@ -33,11 +32,12 @@ export class StoryViewerComponent implements OnInit {
   }
 
   refreshStory() {
-    this.storyService.getStory(this.storyId).then((story: StoryMetaData) => {
+    this.storyService.getStory(this.storyId).then((story) => {
       this.story = story
-      this.storyService.setCurrentlyVievedStory(story)
-    }).catch((error) => {
-      this.alertService.error(error)
-    })
+      this.storyService.setCurrentlyViewedStory(story)
+      this.storyService.getStoryDocuments(story.storyURIs).then((storyDocs: StoryDocument[]) => {
+        this.storyDocs = storyDocs
+      }).catch((e) => console.log(e))
+    }).catch((e) => console.log(e))
   }
 }

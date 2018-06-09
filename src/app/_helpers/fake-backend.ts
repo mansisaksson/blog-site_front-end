@@ -116,18 +116,20 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				})
 			}
 
-			// get story
-			else if (request.url.match(/\/api\/stories\/\d+$/) && request.method === 'GET') {
-				let urlParts = request.url.split('/');
-				let id = urlParts[urlParts.length - 1];
-				this.storyRepo.getStory(id).then((story: StoryMetaData) => {
-					observer.next(new HttpResponse({ status: 200, body: story }))
+			// get story document
+			else if (request.url.endsWith('/api/stories') && request.method === 'GET') {
+				let URIs: string[] = JSON.parse(request.params.get("URIs"));
+				if (!URIs) {
+					return observer.error("Invalid Story URIs");
+				}
+				this.storyRepo.getStoryDocuments(URIs).then((storyDocs: StoryDocument[]) => {
+					observer.next(new HttpResponse({ status: 200, body: storyDocs }))
 				}, (error) => {
 					observer.error(error);
 				})
 			}
 
-			// delete user
+			// delete story
 			else if (request.url.match(/\/api\/stories\/\d+$/) && request.method === 'DELETE') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {

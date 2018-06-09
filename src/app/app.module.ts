@@ -12,7 +12,7 @@ import { routing } from './app.routing';
 import { AlertComponent, LoginComponent, RegisterComponent } from './_directives/index';
 import { AuthGuard } from './_guards/index';
 import { JwtInterceptor } from './_helpers/index';
-import { AlertService, AuthenticationService, UserService, StoryService } from './_services/index';
+import { AlertService, AuthenticationService, UserService, StoryService, StoryEditorService } from './_services/index';
 import { HomeComponent } from './components/home/index';
 
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
@@ -63,6 +63,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     AuthGuard,
     AlertService,
     AuthenticationService,
+    StoryEditorService,
     UserService,
     {
       provide: HTTP_INTERCEPTORS,

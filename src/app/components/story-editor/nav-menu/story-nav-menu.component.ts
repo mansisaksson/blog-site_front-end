@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, ContentChild } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { StoryEditorComponent } from './../story-editor.component'
 
 @Component({
@@ -7,14 +7,10 @@ import { StoryEditorComponent } from './../story-editor.component'
   styleUrls: ['./story-nav-menu.component.css']
 })
 export class StoryNavMenuComponent implements OnInit {
-  @ContentChild("routerOutlet") storyEditors : any
-
   constructor() {
   }
 
   ngOnInit() {
-    console.log(this.storyEditors)
-    
     //this.storyEditors.changes.subscribe((r) => { this.refresh(); });
   }
 

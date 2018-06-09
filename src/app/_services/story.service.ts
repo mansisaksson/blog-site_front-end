@@ -6,22 +6,37 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 export class StoryService {
-	private currentStory: BehaviorSubject<StoryMetaData> = new BehaviorSubject<StoryMetaData>(undefined);
+	private currentStory: BehaviorSubject<StoryMetaData> = new BehaviorSubject<StoryMetaData>(undefined)
 
 	constructor(private http: HttpClient) { }
 
-	setCurrentlyVievedStory(story: StoryMetaData) {
+	setCurrentlyViewedStory(story: StoryMetaData) {
 		this.currentStory.next(story)
 	}
 
 	getCurrentlyViewedStory(): Observable<StoryMetaData> {
-		return this.currentStory.asObservable();
+		return this.currentStory.asObservable()
 	}
 
 	getStoryDocument(docURI: string): Promise<StoryDocument> {
 		return new Promise<StoryDocument>((resolve, reject) => {
-			this.http.get('/api/stories/' + docURI).subscribe((data) => {
-				resolve(<StoryDocument>data)
+			let uriArray = [docURI]
+
+			this.getStoryDocuments(uriArray).then((data) => {
+				resolve(data[0])
+			}).catch((e) => {
+				reject(e)
+			})
+		})
+	}
+
+	getStoryDocuments(docURIs: string[]): Promise<StoryDocument[]> {
+		return new Promise<StoryDocument[]>((resolve, reject) => {
+			let params = {
+				URIs: JSON.stringify(docURIs)
+			}
+			this.http.get('/api/stories', { params: params }).subscribe((data) => {
+				resolve(<StoryDocument[]>data)
 			}, (error) => {
 				reject(error)
 			})
