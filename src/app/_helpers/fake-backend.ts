@@ -116,7 +116,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				})
 			}
 
-			// get story document
+			// get story documents
 			else if (request.url.endsWith('/api/stories') && request.method === 'GET') {
 				let URIs: string[] = JSON.parse(request.params.get("URIs"));
 				if (!URIs) {

@@ -1,9 +1,11 @@
 <h3>{{story.title}}</h3>
 
-<div *ngFor="let storyDoc of storyDocs; index as i;" class="container">
-  <quill-editor #editor{{i}}
+<div *ngFor="let key of uriKeys; index as i;" class="container">
+  <quill-editor #{{key}}
+  [(ngModel)]="storyDocs[key].content"
   (onEditorCreated)="setFocus($event)" 
   (onEditorCreated)="addBindingCreated($event)" 
-  [modules]="{ toolbar: { container: '#quill-toolbar' } }">
+  [modules]="{ toolbar: { container: '#quill-toolbar' } }"
+  >
   </quill-editor>
 </div>

@@ -41,7 +41,10 @@ Quill.register(Font, true)
 export class StoryEditorComponent implements OnInit, AfterViewInit {
   private storyId: string
   private story: StoryMetaData
-  private storyDocs: StoryDocument[] = []
+  private storyDocs: { [key: string]: StoryDocument } = {}
+  private uriKeys: string[] = []
+
+  private test = 'test text'
 
   constructor(
     private storyEditorService: StoryEditorService,
@@ -50,8 +53,6 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
     this.story = <StoryMetaData>{
       title: "..."
     }
-    this.storyDocs.push(new StoryDocument())
-    this.storyDocs.push(new StoryDocument())
   }
 
   @ViewChildren(QuillEditorComponent) editors: QueryList<QuillEditorComponent>
@@ -73,10 +74,12 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
   subscribeToChanges() {
     this.editors.forEach((editor, index) => {
       editor.onContentChanged.pipe(
-        debounceTime(400),
+        debounceTime(1000),
         distinctUntilChanged()
-      ).subscribe(data => {
-        this.storyEditorService.updateDocumentContent(this.story.storyURIs[index], data.html)
+      ).subscribe(() => {
+        let uri = this.story.storyURIs[index]
+        console.log(this.storyDocs[uri])
+        this.storyEditorService.updateDocument(this.story.storyURIs[index], this.storyDocs[uri])
       })
     })
   }
@@ -84,6 +87,18 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
   refreshStory() {
     this.storyEditorService.loadStory(this.storyId).then((story) => {
       this.story = story;
+      if (story) {
+        story.storyURIs.forEach((uri, index) => {
+          this.storyEditorService.getStoryDocument(uri).subscribe((doc) => {
+            if (doc == undefined) {
+              delete this.storyDocs[uri]
+            } else {
+              this.storyDocs[uri] = doc
+            }
+            this.uriKeys = Object.keys(this.storyDocs);
+          })
+        })
+      }
     })
   }
 

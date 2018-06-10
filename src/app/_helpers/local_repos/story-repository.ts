@@ -3,9 +3,11 @@ import { toPromise } from 'rxjs/operator/toPromise'
 
 import * as storyMD from './../dummy_data/stories_md.json';
 
+// We do not save the URI to disc since it could potentially change
 export class StoryRepository {
-  storyDocuments: Map<string, StoryDocument> = new Map<string, StoryDocument>()
-  storiesMD: Map<string, StoryMetaData> = new Map<string, StoryMetaData>()
+
+  private storiesMD: { [key: string]: StoryMetaData } = {}
+  private storyDocuments: { [key: string]: StoryDocument } = {}
 
   constructor() {
     this.loadRepo()
@@ -25,51 +27,25 @@ export class StoryRepository {
   }
 
   saveRepo() {
-    localStorage.setItem('stories_md', StoryRepository.mapToJson(this.storiesMD))
-    localStorage.setItem('story_documents', StoryRepository.mapToJson(this.storyDocuments))
+    localStorage.setItem('stories_md', JSON.stringify(this.storiesMD))
+    localStorage.setItem('story_documents', JSON.stringify(this.storyDocuments))
   }
 
   loadRepo() {
-    let localStories = StoryRepository.mapFromJson<string, StoryDocument>(localStorage.getItem('stories'))
-    if (localStories != undefined && localStories.size > 0) {
-      this.storyDocuments = localStories
-    }
-
-    let localStoryMD = StoryRepository.mapFromJson<string, StoryMetaData>(localStorage.getItem('stories_md'))
-    if (localStoryMD != undefined && localStoryMD.size > 0) {
-      this.storiesMD = localStoryMD
-    }
-  }
-
-  static mapToJson(map: Map<any, any>): string {
-    let objectArray: any[] = []
-    map.forEach((value: any, key: any) => {
-      objectArray.push({ key: key, value: value })
-    })
-
-    return JSON.stringify(objectArray)
-  }
-
-  static mapFromJson<key, value>(json: string): Map<key, value> {
-    let returnMap = new Map<key, value>()
-    let parsedArray: any[] = JSON.parse(json)
-    if (parsedArray != undefined) {
-      parsedArray.forEach(element => {
-        returnMap.set(element.key, element.value)
-      })
-    }
-    return returnMap
+    this.storiesMD = JSON.parse(localStorage.getItem('stories_md'))
+    this.storyDocuments = JSON.parse(localStorage.getItem('story_documents'))
   }
 
   getStoryDocuments(docURIs: string[]): Promise<StoryDocument[]> {
     return new Promise<StoryDocument[]>((resolve, reject) => {
       let result: StoryDocument[] = [];
       docURIs.forEach(docURI => {
-        let foundStory = this.storyDocuments[docURI]
-        if (foundStory != undefined) {
-          result.push(foundStory)
+        let foundStoryDoc = this.storyDocuments[docURI]
+        if (foundStoryDoc != undefined) {
+          //foundStoryDoc["URI"] = docURI; // update the URI in case it has changed
+          result.push(<StoryDocument>foundStoryDoc)
         }
-      });
+      })
 
       resolve(result)
     })
@@ -77,14 +53,15 @@ export class StoryRepository {
 
   createStory(title: string, authorId: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
-      let storyId = (this.storiesMD.size + 1).toString()
+      let storyId = (Object.keys(this.storiesMD).length + 1).toString()
       let storyDocURI = storyId + "/1";
       let newStory = <StoryDocument>{
+        URI: storyDocURI, //We should not save the URI since it could change without us knowing
         title: title,
         content: "Default Content"
       };
 
-      this.storyDocuments.set(storyDocURI, newStory);
+      this.storyDocuments[storyDocURI] = newStory;
 
       let newStoryMetaData = <StoryMetaData>{
         storyId: storyId,
@@ -99,7 +76,7 @@ export class StoryRepository {
         storyURIs: [storyDocURI]
       };
 
-      this.storiesMD.set(storyId, newStoryMetaData);
+      this.storiesMD[storyId] = newStoryMetaData;
 
       this.saveRepo();
       resolve(newStoryMetaData);
@@ -108,19 +85,24 @@ export class StoryRepository {
 
   removeStory(storyId: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-
-      if (this.storyDocuments.delete(storyId) && this.storiesMD.delete(storyId)) {
-        this.saveRepo();
-        return resolve(true)
+      let storyMD = this.storiesMD[storyId]
+      if (!storyMD) {
+        return reject(reject("Could not remove - Could not find story"))
       }
 
-      reject("Could not remove - Could not find story")
+      storyMD.storyURIs.forEach(uri => {
+        delete this.storyDocuments[storyId]
+      });
+      delete this.storiesMD[storyId]
+
+      this.saveRepo();
+      resolve(true)
     })
   }
 
   getAllStories(userId?: string, searchQuery?: string): Promise<StoryMetaData[]> {
     let metaData: StoryMetaData[] = []
-    this.storiesMD.forEach((value: StoryMetaData, key: string) => {
+    Object.values(this.storiesMD).forEach((value: StoryMetaData) => {
       metaData.push(value)
     });
 
@@ -138,12 +120,13 @@ export class StoryRepository {
 
   getStory(storyId: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
-      let storyMD = this.storiesMD.get(storyId)
+      let storyMD = this.storiesMD[storyId]
       if (storyMD != undefined) {
-        return resolve(storyMD);
+        resolve(storyMD);
       }
-
-      reject("getStory- Could not find story")
+      else {
+        reject("getStory - Could not find story")
+      }
     })
   }
 

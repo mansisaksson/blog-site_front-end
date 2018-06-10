@@ -1,2 +1,5 @@
 <h1>{{story.title}}</h1>
-<!--<div [innerHtml]="storyDoc.content"></div>-->
+<div *ngFor="let storyDoc of storyDocs" class="container">
+  <div [innerHtml]="storyDoc.content"></div>
+</div>
+
