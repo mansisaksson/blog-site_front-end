@@ -13,17 +13,6 @@ let Quill: any = quill // due to a bug in Quill we have to declare the import as
 import ImageResize from 'quill-image-resize-module'
 Quill.register('modules/imageResize', ImageResize)
 
-// add mention module
-import 'quill-mention'
-
-// override p with div tag
-const Parchment = Quill.import('parchment')
-let Block = Parchment.query('block')
-
-Block.tagName = 'DIV'
-// or class NewBlock extends Block {}; NewBlock.tagName = 'DIV'
-Quill.register(Block /* or NewBlock */, true)
-
 import Counter from './counter'
 Quill.register('modules/counter', Counter)
 
@@ -43,8 +32,6 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
   private story: StoryMetaData
   private storyDocs: { [key: string]: StoryDocument } = {}
   private uriKeys: string[] = []
-
-  private test = 'test text'
 
   constructor(
     private storyEditorService: StoryEditorService,

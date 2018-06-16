@@ -1,5 +1,8 @@
 [ ] Story Editor
+	[ ] Save changes
 	[ ] Same toolbar for multiple documents
+	[x] HTML title parser
+		[ ] Press title to scroll into view
 
 [ ] Misc nav stuff
 	[ ] Need a reusable pop-up from
