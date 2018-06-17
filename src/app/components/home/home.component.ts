@@ -15,8 +15,7 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private userService: UserService,
-        private authService: AuthenticationService,
-        private router: Router) {
+        private authService: AuthenticationService) {
     }
 
     ngOnInit() {
@@ -29,7 +28,7 @@ export class HomeComponent implements OnInit {
         })
     }
 
-    deleteUser(id: number) {
+    deleteUser(id: string) {
         this.userService.delete(id).then(() => { this.loadAllUsers() });
     }
 

@@ -27,6 +27,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
 		return new Observable<HttpEvent<any>>((observer) => {
+		//console.log(request)
+
 			/* ***** Begin User ***** */
 			// authenticate
 			if (request.url.endsWith('/api/authenticate') && request.method === 'POST') {
@@ -47,7 +49,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			}
 
 			// get users
-			else if (request.url.endsWith('/api/users') && request.method === 'GET') {
+			else if (request.url.endsWith('/api/users/query') && request.method === 'GET') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
 					this.userRepo.getAllUsers().then((users: User[]) => {
@@ -62,12 +64,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			}
 
 			// get user by id
-			else if (request.url.match(/\/api\/users\/\d+$/) && request.method === 'GET') {
+			else if (request.url.endsWith('/api/users') && request.method === 'GET') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-					let urlParts = request.url.split('/');
-					let id = urlParts[urlParts.length - 1];
-					this.userRepo.findUser(id).then((user: User) => {
+					let userId: string = request.params.get("userId");
+					this.userRepo.findUser(userId).then((user: User) => {
 						observer.next(new HttpResponse({ status: 200, body: user }));
 					}, error => {
 						observer.error(error);
@@ -88,12 +89,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			}
 
 			// delete user
-			else if (request.url.match(/\/api\/users\/\d+$/) && request.method === 'DELETE') {
+			else if (request.url.endsWith('/api/users') && request.method === 'DELETE') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-					let urlParts = request.url.split('/');
-					let id = urlParts[urlParts.length - 1];
-					this.userRepo.removeUser(id).then((success) => {
+					let userId: string = request.params.get("userId");
+					this.userRepo.removeUser(userId).then((success) => {
 						observer.next(new HttpResponse({ status: 200 }));
 					}, (error) => {
 						observer.error(error)
@@ -130,12 +130,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			}
 
 			// delete story
-			else if (request.url.match(/\/api\/stories\/\d+$/) && request.method === 'DELETE') {
+			else if (request.url.endsWith('/api/stories') && request.method === 'DELETE') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-					let urlParts = request.url.split('/');
-					let id = urlParts[urlParts.length - 1];
-					this.storyRepo.removeStory(id).then((success) => {
+					let storyId: string = request.params.get("storyId");
+					this.storyRepo.removeStory(storyId).then((success) => {
 						observer.next(new HttpResponse({ status: 200 }));
 					}, (error) => {
 						observer.error(error)
@@ -144,9 +143,24 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 					observer.error('Unauthorised');
 				}
 			}
-		
+
+			// upate story
+			else if (request.url.endsWith('/api/stories') && request.method === 'PUT') {
+				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+					let uri = request.params.get("uri");
+					this.storyRepo.updateStoryDocument(uri, <StoryDocument>request.body).then((success) => {
+						observer.next(new HttpResponse({ status: 200 }));
+					}, (error) => {
+						observer.error(error)
+					})
+				} else {
+					observer.error('Unauthorised');
+				}
+			}
+
 			// get all story meta data
-			else if (request.url.endsWith('/api/stories_md') && request.method === 'GET') {
+			else if (request.url.endsWith('/api/stories_md/query') && request.method === 'GET') {
 				let userId = request.params.get("userId");
 				let searchQuery: string = request.params.get("searchQuery");
 
@@ -158,9 +172,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			}
 
 			// get story meta data
-			else if (request.url.match(/\/api\/stories_md\/\d+$/) && request.method === 'GET') {
-				let urlParts = request.url.split('/');
-				let storyId = urlParts[urlParts.length - 1];
+			else if (request.url.endsWith('/api/stories_md') && request.method === 'GET')  {
+				let storyId = request.params.get("storyId");
 				this.storyRepo.getStory(storyId).then((storymd: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: storymd }))
 				}, (error) => {

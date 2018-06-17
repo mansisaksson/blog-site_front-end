@@ -59,6 +59,26 @@ export class StoryEditorService {
 		})
 	}
 
+	public saveAll(): Promise<any> {
+		return new Promise((resolve, reject) => {
+			let story = this.currentStory.getValue()
+			if (story)
+			{
+				story.storyURIs.forEach(uri => {
+					let document = this.currentStoryDocs[uri]
+					if (document) {
+						this.storyService.updateStoryDocument(uri, document.getValue()).then(() => {
+							// TODO: check for failure 
+						}).catch(e => console.log(e))
+					}
+				})
+				resolve()
+			} else {
+				reject("saveAll - No story being edited")
+			}
+		})
+	}
+
 	public updateDocument(uri: string, document: StoryDocument) {
 		let storyDocBehaviour = this.currentStoryDocs[uri]
 		if (storyDocBehaviour) {

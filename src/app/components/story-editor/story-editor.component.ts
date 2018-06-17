@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewEncapsulation, OnInit, AfterViewInit, ViewChildren, QueryList } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
-import { StoryEditorService, AlertService } from '../../_services'
+import { StoryEditorService, AlertService, StoryService} from '../../_services'
 import { StoryDocument, StoryMetaData } from '../../_models'
 
 import { QuillEditorComponent } from 'ngx-quill/src/quill-editor.component'
@@ -34,6 +34,7 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
   private uriKeys: string[] = []
 
   constructor(
+    private storyService: StoryService,
     private storyEditorService: StoryEditorService,
     private alertService: AlertService,
     private activatedRoute: ActivatedRoute) {
@@ -61,11 +62,11 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
   subscribeToChanges() {
     this.editors.forEach((editor, index) => {
       editor.onContentChanged.pipe(
-        debounceTime(1000),
+        debounceTime(500),
         distinctUntilChanged()
       ).subscribe(() => {
         let uri = this.story.storyURIs[index]
-        console.log(this.storyDocs[uri])
+        //console.log(this.storyDocs[uri])
         this.storyEditorService.updateDocument(this.story.storyURIs[index], this.storyDocs[uri])
       })
     })
@@ -74,6 +75,7 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
   refreshStory() {
     this.storyEditorService.loadStory(this.storyId).then((story) => {
       this.story = story;
+      this.storyService.setCurrentlyViewedStory(story)
       if (story) {
         story.storyURIs.forEach((uri, index) => {
           this.storyEditorService.getStoryDocument(uri).subscribe((doc) => {

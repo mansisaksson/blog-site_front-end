@@ -1,7 +1,4 @@
 import { StoryDocument, StoryMetaData } from '../../_models/index'
-import { toPromise } from 'rxjs/operator/toPromise'
-
-import * as storyMD from './../dummy_data/stories_md.json';
 
 // We do not save the URI to disc since it could potentially change
 export class StoryRepository {
@@ -26,14 +23,29 @@ export class StoryRepository {
     // })
   }
 
+  static createGuid(): string {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
   saveRepo() {
     localStorage.setItem('stories_md', JSON.stringify(this.storiesMD))
     localStorage.setItem('story_documents', JSON.stringify(this.storyDocuments))
   }
 
   loadRepo() {
-    this.storiesMD = JSON.parse(localStorage.getItem('stories_md'))
-    this.storyDocuments = JSON.parse(localStorage.getItem('story_documents'))
+    let storiesMD = JSON.parse(localStorage.getItem('stories_md'))
+    if (storiesMD) {
+      this.storiesMD = storiesMD;
+    }
+    let storyDocuments = JSON.parse(localStorage.getItem('story_documents'))
+    if (storyDocuments) {
+      this.storyDocuments = storyDocuments;
+    }
   }
 
   getStoryDocuments(docURIs: string[]): Promise<StoryDocument[]> {
@@ -53,8 +65,8 @@ export class StoryRepository {
 
   createStory(title: string, authorId: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
-      let storyId = (Object.keys(this.storiesMD).length + 1).toString()
-      let storyDocURI = storyId + "/1";
+      let storyId = StoryRepository.createGuid()
+      let storyDocURI = StoryRepository.createGuid()
       let newStory = <StoryDocument>{
         URI: storyDocURI, //We should not save the URI since it could change without us knowing
         title: title,
@@ -80,6 +92,19 @@ export class StoryRepository {
 
       this.saveRepo();
       resolve(newStoryMetaData);
+    })
+  }
+
+  updateStoryDocument(uri: string, doc: StoryDocument): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      if (this.storyDocuments[uri]) {
+        this.storyDocuments[uri] = doc
+        console.log(doc)
+        this.saveRepo()
+        resolve(true)
+      } else {
+        reject()
+      }
     })
   }
 

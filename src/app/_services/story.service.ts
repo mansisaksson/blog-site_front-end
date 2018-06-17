@@ -53,9 +53,12 @@ export class StoryService {
 		})
 	}
 
-	updateStoryDocument(storyId: string, story: StoryDocument): Promise<boolean> {
+	updateStoryDocument(uri: string, story: StoryDocument): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
-			this.http.put('/api/stories/' + storyId, story).subscribe((data) => {
+			let params = {
+				uri: uri
+			}
+			this.http.put('/api/stories', story, { params: params }).subscribe((data) => {
 				resolve(<boolean>data)
 			}, (error) => {
 				reject(error)
@@ -65,7 +68,10 @@ export class StoryService {
 
 	deleteStory(id: string): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
-			this.http.delete('/api/stories/' + id).subscribe((data) => {
+			let params = {
+				storyId: id
+			}
+			this.http.delete('/api/stories', { params: params }).subscribe((data) => {
 				resolve(<boolean>data)
 			}, (error) => {
 				reject(error)
@@ -81,7 +87,7 @@ export class StoryService {
 				searchQuery: searchQuery
 			}
 
-			this.http.get<StoryMetaData[]>('/api/stories_md', { params: params }).subscribe((data) => {
+			this.http.get<StoryMetaData[]>('/api/stories_md/query', { params: params }).subscribe((data) => {
 				resolve(data)
 			}, (error) => {
 				reject(error)
@@ -91,7 +97,10 @@ export class StoryService {
 
 	getStory(id: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
-			this.http.get<StoryMetaData>('/api/stories_md/' + id).subscribe((data) => {
+			let params = {
+				storyId: id
+			}
+			this.http.get<StoryMetaData>('/api/stories_md', { params: params }).subscribe((data) => {
 				resolve(<StoryMetaData>data)
 			}, (error) => {
 				reject(error)

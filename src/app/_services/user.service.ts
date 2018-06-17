@@ -9,7 +9,10 @@ export class UserService {
 
 	getAll(): Promise<User[]> {
 		return new Promise<User[]>((resolve, reject) => {
-			this.http.get<User[]>('/api/users').subscribe((data) => {
+			let params = {
+				// TODO: add search functionality
+			}
+			this.http.get<User[]>('/api/users/query', { params: params }).subscribe((data) => {
 				resolve(data)
 			}, (error) => {
 				reject(error)
@@ -17,9 +20,12 @@ export class UserService {
 		})
 	}
 
-	getById(id: number): Promise<User> {
+	getById(id: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
-			this.http.get('/api/users/' + id).subscribe((data) => {
+			let params = {
+				userId: id
+			}
+			this.http.get('/api/users', { params: params }).subscribe((data) => {
 				resolve(<User>data)
 			}, (error) => {
 				reject(error)
@@ -38,18 +44,23 @@ export class UserService {
 	}
 
 	update(user: User): Promise<boolean> {
+		console.log("update user - NOT YET IMPLEMENTED")
 		return new Promise<boolean>((resolve, reject) => {
-			this.http.put('/api/users/' + user.id, user).subscribe((data) => {
-				resolve(<boolean>data)
-			}, (error) => {
-				reject(error)
-			})
+			return reject("not yet implemented")
+			// this.http.put('/api/users', JSON.stringify(user)).subscribe((data) => {
+			// 	resolve(<boolean>data)
+			// }, (error) => {
+			// 	reject(error)
+			// })
 		})
 	}
 
-	delete(id: number): Promise<boolean> {
+	delete(id: string): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
-			this.http.delete('/api/users/' + id).subscribe((data) => {
+			let params = {
+				userId: id
+			}
+			this.http.delete('/api/users', { params: params }).subscribe((data) => {
 				resolve(<boolean>data)
 			}, (error) => {
 				reject(error)
