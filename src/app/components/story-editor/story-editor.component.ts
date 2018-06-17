@@ -9,6 +9,11 @@ import { QuillEditorComponent } from 'ngx-quill/src/quill-editor.component'
 import * as quill from 'quill'
 let Quill: any = quill // due to a bug in Quill we have to declare the import as an any
 
+/*
+ TODO: 
+ "Quill.register('modules/imageResize', ImageResize)"
+ is called in image-resize.min.js which causes a double register, it seams to work anyways but it causes a warning.
+ */
 // add image resize module
 import ImageResize from 'quill-image-resize-module'
 Quill.register('modules/imageResize', ImageResize)
