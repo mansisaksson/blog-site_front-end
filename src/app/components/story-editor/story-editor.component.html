@@ -5,7 +5,7 @@
   <quill-editor
   [(ngModel)]="storyDocs[key].content"
   (onEditorCreated)="addBindingCreated($event)" 
-  [modules]="{ toolbar: { container: '#quill-toolbar' } }"
+  [modules]="{ toolbar: { container: '#quill-toolbar' }, imageResize: {} }"
   [scrollingContainer]="'#scrolling-container'"
   >
   </quill-editor>

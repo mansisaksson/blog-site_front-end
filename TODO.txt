@@ -1,15 +1,17 @@
+[ ] Make story viewer display documents correctly
+
 [ ] Story Editor
 	[x] Save changes
 	[ ] Same toolbar for multiple documents
 	[x] HTML title parser
 		[ ] Press title to scroll into view
-	[ ] Add document
+	[ ] Add document/update
 
 [ ] Misc nav stuff
 	[ ] Need a reusable pop-up form
-	[ ] Delete should re-direct
+	[ ] Delete story should re-direct to home
 	[ ] Create story sould ask for a title
-	[ ] Sign out should re-direct
+	[ ] Sign out should re-direct to home
 
 [x] Figure out how to show/hide the side menu buttons
 
