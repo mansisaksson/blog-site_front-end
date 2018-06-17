@@ -99,7 +99,6 @@ export class StoryRepository {
     return new Promise<boolean>((resolve, reject) => {
       if (this.storyDocuments[uri]) {
         this.storyDocuments[uri] = doc
-        console.log(doc)
         this.saveRepo()
         resolve(true)
       } else {

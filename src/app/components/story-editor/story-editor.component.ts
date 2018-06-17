@@ -91,10 +91,6 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
     })
   }
 
-  setFocus($event) {
-    $event.focus()
-  }
-
   addBindingCreated(quill) {
     quill.keyboard.addBinding({
       key: 'S',

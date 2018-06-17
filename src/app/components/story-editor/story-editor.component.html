@@ -1,11 +1,14 @@
+<div id="scrolling-container">
+<div id="quill-container">
 <h3>{{story.title}}</h3>
-
-<div *ngFor="let key of uriKeys; index as i;" class="container">
-  <quill-editor #{{key}}
+<div *ngFor="let key of uriKeys; index as i;">
+  <quill-editor
   [(ngModel)]="storyDocs[key].content"
-  (onEditorCreated)="setFocus($event)" 
   (onEditorCreated)="addBindingCreated($event)" 
   [modules]="{ toolbar: { container: '#quill-toolbar' } }"
+  [scrollingContainer]="'#scrolling-container'"
   >
   </quill-editor>
+</div>
+</div>
 </div>

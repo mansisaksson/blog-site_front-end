@@ -3,8 +3,6 @@ import { StoryService } from './story.service'
 
 import { StoryDocument, StoryMetaData } from '../_models/index';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { reject } from 'q';
-import { QueryList } from '@angular/core/src/render3';
 
 @Injectable()
 export class StoryEditorService {

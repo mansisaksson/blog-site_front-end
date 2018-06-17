@@ -1,11 +1,12 @@
 [ ] Story Editor
-	[ ] Save changes
+	[x] Save changes
 	[ ] Same toolbar for multiple documents
 	[x] HTML title parser
 		[ ] Press title to scroll into view
+	[ ] Add document
 
 [ ] Misc nav stuff
-	[ ] Need a reusable pop-up from
+	[ ] Need a reusable pop-up form
 	[ ] Delete should re-direct
 	[ ] Create story sould ask for a title
 	[ ] Sign out should re-direct
