@@ -18,7 +18,6 @@ import { HomeComponent } from './components/home/index';
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
 import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
 
-import { QuillModule } from 'ngx-quill';
 import { StoryEditorComponent, StoryEditorToolbarComponent, StoryNavMenuComponent } from './components/story-editor';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
@@ -32,8 +31,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    routing,
-    QuillModule,
+    routing
   ],
   declarations: [
     AppComponent,

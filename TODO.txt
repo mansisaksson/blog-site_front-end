@@ -1,4 +1,8 @@
+[ ] Quill stores documents in deltas, this can be used to track edits.
+	[ ] Store deltas instead of documents
+
 [ ] Make story viewer display documents correctly
+[ ] Centered images are not saved
 
 [ ] Story Editor
 	[x] Save changes

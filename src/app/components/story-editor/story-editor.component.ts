@@ -1,10 +1,7 @@
-import { Component, ElementRef, ViewEncapsulation, OnInit, AfterViewInit, ViewChildren, QueryList } from '@angular/core'
+import { Component, OnInit, AfterViewInit } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
 import { StoryEditorService, AlertService, StoryService} from '../../_services'
 import { StoryDocument, StoryMetaData } from '../../_models'
-
-import { QuillEditorComponent } from 'ngx-quill/src/quill-editor.component'
 
 import * as quill from 'quill'
 let Quill: any = quill // due to a bug in Quill we have to declare the import as an any
@@ -36,6 +33,7 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
   private storyId: string
   private story: StoryMetaData
   private storyDocs: { [key: string]: StoryDocument } = {}
+  private editor : quill.Quill;
   private uriKeys: string[] = []
 
   constructor(
@@ -48,8 +46,6 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  @ViewChildren(QuillEditorComponent) editors: QueryList<QuillEditorComponent>
-
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
       this.storyId = params['story_id'];
@@ -58,22 +54,43 @@ export class StoryEditorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.editors.changes.subscribe((any) => {
-      this.subscribeToChanges()
-    })
+    this.editor = new Quill('#quillEditor', {
+      modules: { toolbar: { container: '#quill-toolbar' }, imageResize: {} },
+      scrollingContainer: '#scrolling-container',
+      theme: 'snow'
+    });
+
+    let test : quill.DeltaStatic
+    this.editor.setContents(test) // TODO: Set proper content
+
     this.subscribeToChanges()
   }
 
   subscribeToChanges() {
-    this.editors.forEach((editor, index) => {
-      editor.onContentChanged.pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      ).subscribe(() => {
-        let uri = this.story.storyURIs[index]
-        //console.log(this.storyDocs[uri])
-        this.storyEditorService.updateDocument(this.story.storyURIs[index], this.storyDocs[uri])
-      })
+      this.editor.on("text-change", (content) => {
+        console.log(content)
+        
+        // TODO: Move quill editor into story-editor.service and expose some helper functions.
+        // I'm not sure weather the quill editor should be owned by the story editor service.
+        // This means that I would have a unified way of interacting with the edited document.
+        // Right now I am keeping copies and am working with a propriatary format
+        // Maybe allowing the editor to be owned by the service is a better idea.
+
+        // The problem is that I would be letting the service handle UI (creating and displaying the editor)
+        // but that might be ok, after all, the alert service handles some UI of its own. So does the login/register services
+        let uri = this.story.storyURIs[0]
+        this.storyEditorService.updateDocument(uri, this.storyDocs[uri]) 
+        
+      // editor.onContentChanged.pipe(
+      //   debounceTime(500),
+      //   distinctUntilChanged()
+      // ).subscribe(() => {
+      //   let quillEditor = <quill.Quill>editor.quillEditor;
+      //   console.log(quillEditor.getContents()) // <--- use this?
+      //   let uri = this.story.storyURIs[index]
+      //   //console.log(this.storyDocs[uri])
+      //   this.storyEditorService.updateDocument(this.story.storyURIs[index], this.storyDocs[uri])
+      // })
     })
   }
 
