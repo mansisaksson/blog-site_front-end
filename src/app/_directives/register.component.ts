@@ -1,7 +1,7 @@
 ﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { AlertService, UserService, AuthenticationService } from '../_services/index';
+import { AlertService, UserService, AuthenticationService, UIService } from '../_services/index';
 declare let $: any;
 
 @Component({
@@ -21,9 +21,10 @@ export class RegisterComponent implements OnDestroy {
 		private router: Router,
 		private userService: UserService,
 		private alertService: AlertService,
-		private authenticationService: AuthenticationService
+		private authenticationService: AuthenticationService,
+		private uiService: UIService
 	) {
-		this.authenticationService.getShowRegisterPrompt().subscribe(message => {
+		this.uiService.getShowRegisterPrompt().subscribe(message => {
 			this.message = message;
 			if (message.event === 'open') {
 				this.openModal()

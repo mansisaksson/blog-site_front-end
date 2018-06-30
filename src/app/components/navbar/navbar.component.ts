@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
-import { AuthenticationService } from '../../_services/index';
+import { AuthenticationService, UIService } from '../../_services/index';
 import { User } from '../../_models';
 
 @Component({
@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
+    private uiService: UIService,
     private router: Router
   ) { 
   }
@@ -26,7 +27,7 @@ export class NavbarComponent implements OnInit {
   }
 
   signIn() {
-    this.authService.promptUserLogin('/');
+    this.uiService.promptUserLogin('/');
   }
 
   signOut() {
@@ -36,7 +37,7 @@ export class NavbarComponent implements OnInit {
   }
 
   register() {
-    this.authService.promptUserRegister('/');
+    this.uiService.promptUserRegister('/');
   }
 
   getCurrentUserId(): string {

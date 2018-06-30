@@ -1,28 +1,18 @@
 ﻿import { Injectable } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, Subject } from 'rxjs/Rx';
-import { toPromise } from 'rxjs/operator/toPromise'
+import { HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { User } from '../_models/index'
 import 'rxjs/add/operator/map'
+import { UIService } from './ui.service';
 
 @Injectable()
 export class AuthenticationService {
 	private isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
-	private loginMessageSubject = new Subject<any>();
-	private registerMessageSubject = new Subject<any>();
 
 	constructor(
 		private http: HttpClient,
-		private router: Router) {
-		router.events.subscribe(event => {
-			if (event instanceof NavigationStart) {
-				this.loginMessageSubject.next({ event: 'close', url: '/' });
-				this.registerMessageSubject.next({ event: 'close', url: '/' });
-			}
-		})
-
+		private uiService: UIService) {
 		this.refreshLoginState()
 	}
 
@@ -33,24 +23,13 @@ export class AuthenticationService {
 					resolve(user)
 				}
 				else {
-					let canceled = () => {
+					let onCanceled = () => {
 						reject("Action Canceled")
 					}
-					this.loginMessageSubject.next({ 
-						event: 'open',
-						onCanceled: canceled
-					})
+					this.uiService.promptUserLogin('', onCanceled)
 				}
 			})
 		})
-	}
-
-	promptUserLogin(successRoute: string) {
-		this.loginMessageSubject.next({ event: 'open', url: successRoute })
-	}
-
-	promptUserRegister(successRoute: string) {
-		this.registerMessageSubject.next({ event: 'open', url: successRoute })
 	}
 
 	login(username: string, password: string): Promise<User> {
@@ -84,14 +63,6 @@ export class AuthenticationService {
 	getCurrentUser(): Observable<User> {
 		this.refreshLoginState()
 		return this.currentUser.asObservable()
-	}
-
-	getShowLoginPrompt(): Observable<any> {
-		return this.loginMessageSubject.asObservable();
-	}
-
-	getShowRegisterPrompt(): Observable<any> {
-		return this.registerMessageSubject.asObservable();
 	}
 
 	private refreshLoginState() {

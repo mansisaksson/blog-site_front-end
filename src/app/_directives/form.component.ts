@@ -1,30 +1,30 @@
 ﻿import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 import { Subscription } from 'rxjs/Subscription'
-import { AlertService, AuthenticationService, UIService } from '../_services'
+import { AlertService } from '../_services'
+import { UIService } from '../_services/ui.service';
 declare let $: any
 
 @Component({
-	selector: 'app-login',
-	templateUrl: 'login.component.html'
+	selector: 'app-form',
+	templateUrl: 'form.component.html'
 })
 
-export class LoginComponent implements OnDestroy, OnInit {
+export class FormComponent implements OnDestroy, OnInit {
 	private subscription: Subscription
 	private model: any = {}
 	private loading = false
 	private returnUrl: string
 	private message: any
 
-	@ViewChild('loginModal') loginModal
+	@ViewChild('formModal') formModal
 
 	constructor(
 		private router: Router,
-		private authenticationService: AuthenticationService,
 		private uiService: UIService,
 		private alertService: AlertService
 	) {
-		this.uiService.getShowLoginPrompt().subscribe(message => {
+		this.uiService.getFormPrompt().subscribe(message => {
 			if (this.message) {
 				this.closeModal()
 			}
@@ -37,7 +37,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 	}
 
 	ngOnInit(): void {
-		$(this.loginModal.nativeElement).on('hidden.bs.modal', () => {
+		$(this.formModal.nativeElement).on('hidden.bs.modal', () => {
 			this.onModalClosed()
 		})
 	}
@@ -46,28 +46,28 @@ export class LoginComponent implements OnDestroy, OnInit {
 		this.subscription.unsubscribe()
 	}
 
-	login() {
+	submit() {
 		this.loading = true
-		this.authenticationService.login(this.model.username, this.model.password).then(user => {
-			if (this.message && this.message.url) {
-				this.router.navigate([this.message.url])
-				this.message = undefined
-			}
-			this.closeModal()
-		}).catch(error => {
-			this.alertService.error(error)
-			this.loading = false
-		})
+		// this.authenticationService.login(this.model.username, this.model.password).then(user => {
+		// 	if (this.message && this.message.url) {
+		// 		this.router.navigate([this.message.url])
+		// 		this.message = undefined
+		// 	}
+		// 	this.closeModal()
+		// }).catch(error => {
+		// 	this.alertService.error(error)
+		// 	this.loading = false
+		// })
 	}
 
 	openModal() {
 		this.loading = false
-		$(this.loginModal.nativeElement).modal('show')
+		$(this.formModal.nativeElement).modal('show')
 	}
 
 	closeModal() {
 		this.loading = false
-		$(this.loginModal.nativeElement).modal('hide')
+		$(this.formModal.nativeElement).modal('hide')
 	}
 
 	onModalClosed() {
