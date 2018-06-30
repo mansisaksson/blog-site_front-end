@@ -4,49 +4,72 @@ import { StoryService } from './story.service'
 import { StoryDocument, StoryMetaData } from '../_models/index';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+// for some reason the @types/quill are broken, have to use this instead
+import * as Quill from 'quill'
+import * as Delta from 'quill-delta'
+/*
+ TODO: 
+ "Quill.register('modules/imageResize', ImageResize)"
+ is called in image-resize.min.js which causes a double register, it seams to work anyways but it causes a warning.
+ */
+// add image resize module
+import ImageResize from 'quill-image-resize-module'
+Quill.register('modules/imageResize', ImageResize)
+
+// Add fonts to whitelist
+var Font = Quill.import('formats/font')
+// We do not add Aref Ruqaa since it is the default
+Font.whitelist = ['mirza', 'aref', 'sans-serif', 'monospace', 'serif']
+Quill.register(Font, true)
+
 @Injectable()
 export class StoryEditorService {
 	private currentStory: BehaviorSubject<StoryMetaData> = new BehaviorSubject<StoryMetaData>(undefined);
-	private currentStoryDocs: { [key: string]: BehaviorSubject<StoryDocument> } = {}
+	private currentDocURI: string
+  private editor: Quill
 
 	constructor(private storyService: StoryService) {
 
 	}
 
-	private updateStoryDocs(newDocs: StoryDocument[]) {
-		newDocs.forEach(newDoc => {
-			if (this.currentStoryDocs[newDoc.URI] != undefined) {
-				this.currentStoryDocs[newDoc.URI].next(newDoc)
-			}
-			else {
-				this.currentStoryDocs[newDoc.URI] = new BehaviorSubject<StoryDocument>(newDoc)
-			}
-		})
-
-		Object.keys(this.currentStoryDocs).forEach((key: string) => {
-			if (!newDocs.find((value) => { return value.URI == key })) {
-				this.currentStoryDocs[key] = undefined
-			}
-		})
-	}
-
-	public loadStory(storyId: string): Promise<StoryMetaData> {
+	public createEditor(
+		storyId: string,
+		editorContainer: string,
+		toolbarContainer: string,
+		scrollingContainer: string
+	): Promise<StoryMetaData> {
 		return new Promise((resolve, reject) => {
 			this.storyService.getStory(storyId).then((story) => {
-				this.storyService.getStoryDocuments(story.storyURIs).then((documents: StoryDocument[]) => {
-					this.updateStoryDocs(documents)
-					this.currentStory.next(story)
-					resolve(story)
-				}).catch(e => reject(e))
+				this.editor = new Quill(editorContainer, {
+					modules: { toolbar: { container: toolbarContainer }, imageResize: {} },
+					scrollingContainer: scrollingContainer,
+					theme: 'snow'
+				});
+		
+				this.editor.on("text-change", (delta: Delta) => {
+					//console.log(delta)
+					//this.storyEditorService.updateDocumentContent(this.editor.getContents())
+				})
+
+				this.currentStory.next(story)
+				resolve(story)
 			}).catch(e => reject(e))
 		})
 	}
 
-	public saveDocument(uri: string): Promise<any> {
+	public destroyEditor() {
+		delete this.editor
+		this.currentDocURI = undefined
+	}
+
+	public saveDocument(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			let document = this.currentStoryDocs[uri]
-			if (document) {
-				this.storyService.updateStoryDocument(uri, document.getValue()).then(() => {
+			if (this.editor) {
+				let newDoc = <StoryDocument>{
+					URI: this.currentDocURI,
+					content: JSON.stringify(this.editor.getContents())
+				}
+				this.storyService.updateStoryDocument(newDoc).then(() => {
 					resolve()
 				}).catch(e => {
 					reject(e)
@@ -57,49 +80,23 @@ export class StoryEditorService {
 		})
 	}
 
-	public saveAll(): Promise<any> {
-		return new Promise((resolve, reject) => {
-			let story = this.currentStory.getValue()
-			if (story)
-			{
-				story.storyURIs.forEach(uri => {
-					let document = this.currentStoryDocs[uri]
-					if (document) {
-						this.storyService.updateStoryDocument(uri, document.getValue()).then(() => {
-							// TODO: check for failure 
-						}).catch(e => console.log(e))
-					}
-				})
-				resolve()
-			} else {
-				reject("saveAll - No story being edited")
-			}
-		})
-	}
-
-	public updateDocument(uri: string, document: StoryDocument) {
-		let storyDocBehaviour = this.currentStoryDocs[uri]
-		if (storyDocBehaviour) {
-			let storyDoc = storyDocBehaviour.getValue()
-			if (storyDoc) {
-				storyDocBehaviour.next(document)
-			} else {
-				console.error("UpdateDocumentContent - Document is invalid")
-			}
-		}
-		else {
-			console.error("UpdateDocumentContent - Document does not exist")
-		}
-	}
-
 	public getStory(): Observable<StoryMetaData> {
 		return this.currentStory.asObservable()
 	}
 
-	public getStoryDocument(storyURI: string): Observable<StoryDocument> {
-		if (this.currentStoryDocs[storyURI] == undefined) {
-			this.currentStoryDocs[storyURI] = new BehaviorSubject<StoryDocument>(undefined)
-		}
-		return this.currentStoryDocs[storyURI].asObservable()
+	public editDocument(storyURI: string): Promise<StoryDocument> {
+		this.currentDocURI = undefined // Clear current document
+		return new Promise<StoryDocument>((resolve, reject) => {
+			this.storyService.getStoryDocument(storyURI).then((document) => {
+				if (this.editor) {
+					this.currentDocURI = document.URI
+					this.editor.setContents(JSON.parse(document.content))
+					resolve(document)
+				}
+				else {
+					reject()
+				}
+			}).catch(e => console.log(e))
+		})
 	}
 }

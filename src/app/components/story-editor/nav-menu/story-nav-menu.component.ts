@@ -29,28 +29,28 @@ export class StoryNavMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.storyEditor.getStory().subscribe((story) => {
-      if (story) {
-        this.story = story
-        story.storyURIs.forEach((uri) => {
-          this.storyEditor.getStoryDocument(uri).subscribe((document) => {
-            this.parseDocument(document)
-          })
-        })
-      }
-    })
+    // this.storyEditor.getStory().subscribe((story) => {
+    //   if (story) {
+    //     this.story = story
+    //     story.storyURIs.forEach((uri) => {
+    //       this.storyEditor.getStoryDocument(uri).subscribe((document) => {
+    //         this.parseDocument(document)
+    //       })
+    //     })
+    //   }
+    // })
   }
 
   parseDocument(document: StoryDocument) {
-    let parser = new DOMParser()
-    let htmlDoc = parser.parseFromString(document.content, "text/html")
-    let elements = htmlDoc.querySelectorAll('h1, h2, h3')
-    this.titleElements = []
-    for (let index = 0; index < elements.length; index++) {
-      const element = elements[index]
-      if (this.navTitles[element.tagName.toLowerCase()]) {
-        this.titleElements.push(element)
-      }
-    }
+    // let parser = new DOMParser()
+    // let htmlDoc = parser.parseFromString(document.content, "text/html")
+    // let elements = htmlDoc.querySelectorAll('h1, h2, h3')
+    // this.titleElements = []
+    // for (let index = 0; index < elements.length; index++) {
+    //   const element = elements[index]
+    //   if (this.navTitles[element.tagName.toLowerCase()]) {
+    //     this.titleElements.push(element)
+    //   }
+    // }
   }
 }

@@ -53,12 +53,12 @@ export class StoryService {
 		})
 	}
 
-	updateStoryDocument(uri: string, story: StoryDocument): Promise<boolean> {
+	updateStoryDocument(storyDoc: StoryDocument): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
 			let params = {
-				uri: uri
+				uri: storyDoc.URI
 			}
-			this.http.put('/api/stories', story, { params: params }).subscribe((data) => {
+			this.http.put('/api/stories', storyDoc, { params: params }).subscribe((data) => {
 				resolve(<boolean>data)
 			}, (error) => {
 				reject(error)

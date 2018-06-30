@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
 import { StoryService, AlertService } from '../../_services/index'
 import { StoryDocument, StoryMetaData } from '../../_models/index'
-import { AlertComponent } from '../../_directives/index'
+import QuillDeltaToHtmlConverter = require('quill-delta-to-html');
 
 @Component({
   selector: 'app-story-viewer',
@@ -12,7 +12,6 @@ import { AlertComponent } from '../../_directives/index'
 export class StoryViewerComponent implements OnInit {
   private storyId: string
   private story: StoryMetaData
-  private storyDocs: StoryDocument[] = []
 
   constructor(
     private storyService: StoryService,
@@ -36,7 +35,16 @@ export class StoryViewerComponent implements OnInit {
       this.story = story
       this.storyService.setCurrentlyViewedStory(story)
       this.storyService.getStoryDocuments(story.storyURIs).then((storyDocs: StoryDocument[]) => {
-        this.storyDocs = storyDocs
+        let storyHTML = ""
+        let cfg = {};
+        storyDocs.forEach(doc => {
+          storyHTML += '<div class="storyDocument">' 
+          let deltaObject = JSON.parse(doc.content)
+          let converter = new QuillDeltaToHtmlConverter(deltaObject.ops, cfg);
+          storyHTML += converter.convert(); 
+          storyHTML += '</div>' 
+        });
+        document.getElementById('documentContainer').innerHTML = storyHTML;
       }).catch((e) => console.log(e))
     }).catch((e) => console.log(e))
   }
