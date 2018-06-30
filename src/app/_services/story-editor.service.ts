@@ -40,6 +40,8 @@ export class StoryEditorService {
 	): Promise<StoryMetaData> {
 		return new Promise((resolve, reject) => {
 			this.storyService.getStory(storyId).then((story) => {
+				this.storyService.setCurrentlyViewedStory(story)
+
 				this.editor = new Quill(editorContainer, {
 					modules: { toolbar: { container: toolbarContainer }, imageResize: {} },
 					scrollingContainer: scrollingContainer,
@@ -90,7 +92,9 @@ export class StoryEditorService {
 			this.storyService.getStoryDocument(storyURI).then((document) => {
 				if (this.editor) {
 					this.currentDocURI = document.URI
-					this.editor.setContents(JSON.parse(document.content))
+					try {
+						this.editor.setContents(JSON.parse(document.content))	
+					} catch (error) {	}
 					resolve(document)
 				}
 				else {

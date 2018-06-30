@@ -67,7 +67,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			else if (request.url.endsWith('/api/users') && request.method === 'GET') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-					let userId: string = request.params.get("userId");
+					let userId: string = request.params.get("userId")
 					this.userRepo.findUser(userId).then((user: User) => {
 						observer.next(new HttpResponse({ status: 200, body: user }));
 					}, error => {
@@ -92,14 +92,14 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			else if (request.url.endsWith('/api/users') && request.method === 'DELETE') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-					let userId: string = request.params.get("userId");
+					let userId: string = request.params.get("userId")
 					this.userRepo.removeUser(userId).then((success) => {
 						observer.next(new HttpResponse({ status: 200 }));
 					}, (error) => {
 						observer.error(error)
 					})
 				} else {
-					observer.error('Unauthorised');
+					observer.error('Unauthorised')
 				}
 			}
 			/* ***** End User ***** */
@@ -108,8 +108,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			/* ***** Begin Stories ***** */
 			// create story
 			else if (request.url.endsWith('/api/stories') && request.method === 'POST') {
-				let userId = request.body;
-				this.storyRepo.createStory("title", userId).then((story: StoryMetaData) => {
+				let userId = request.params.get("userId")
+				let title = request.params.get("title")
+				this.storyRepo.createStory(title, userId).then((story: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: story }))
 				}, (error) => {
 					observer.error(error);
@@ -120,7 +121,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			else if (request.url.endsWith('/api/stories') && request.method === 'GET') {
 				let URIs: string[] = JSON.parse(request.params.get("URIs"));
 				if (!URIs) {
-					return observer.error("Invalid Story URIs");
+					return observer.error("Invalid Story URIs")
 				}
 				this.storyRepo.getStoryDocuments(URIs).then((storyDocs: StoryDocument[]) => {
 					observer.next(new HttpResponse({ status: 200, body: storyDocs }))
@@ -133,7 +134,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			else if (request.url.endsWith('/api/stories') && request.method === 'DELETE') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-					let storyId: string = request.params.get("storyId");
+					let storyId: string = request.params.get("storyId")
 					this.storyRepo.removeStory(storyId).then((success) => {
 						observer.next(new HttpResponse({ status: 200 }));
 					}, (error) => {
@@ -148,7 +149,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			else if (request.url.endsWith('/api/stories') && request.method === 'PUT') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-					let uri = request.params.get("uri");
+					let uri = request.params.get("uri")
 					this.storyRepo.updateStoryDocument(uri, <StoryDocument>request.body).then((success) => {
 						observer.next(new HttpResponse({ status: 200 }));
 					}, (error) => {
@@ -161,7 +162,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
 			// get all story meta data
 			else if (request.url.endsWith('/api/stories_md/query') && request.method === 'GET') {
-				let userId = request.params.get("userId");
+				let userId = request.params.get("userId")
 				let searchQuery: string = request.params.get("searchQuery");
 
 				this.storyRepo.getAllStories(userId ? userId : undefined, searchQuery).then((storymd: StoryMetaData[]) => {
@@ -173,7 +174,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
 			// get story meta data
 			else if (request.url.endsWith('/api/stories_md') && request.method === 'GET')  {
-				let storyId = request.params.get("storyId");
+				let storyId = request.params.get("storyId")
 				this.storyRepo.getStory(storyId).then((storymd: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: storymd }))
 				}, (error) => {

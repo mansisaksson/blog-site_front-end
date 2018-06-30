@@ -43,9 +43,13 @@ export class StoryService {
 		})
 	}
 
-	createStory(userId: string): Promise<StoryMetaData> {
+	createStory(userId: string, title: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
-			this.http.post('/api/stories', userId).subscribe((data) => {
+			let params = {
+				userId: userId,
+				title: title
+			}
+			this.http.post('/api/stories', {}, { params: params }).subscribe((data) => {
 				resolve(<StoryMetaData>data)
 			}, (error) => {
 				reject(error)

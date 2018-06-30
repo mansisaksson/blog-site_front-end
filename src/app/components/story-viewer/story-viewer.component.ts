@@ -39,9 +39,11 @@ export class StoryViewerComponent implements OnInit {
         let cfg = {};
         storyDocs.forEach(doc => {
           storyHTML += '<div class="storyDocument">' 
-          let deltaObject = JSON.parse(doc.content)
-          let converter = new QuillDeltaToHtmlConverter(deltaObject.ops, cfg);
-          storyHTML += converter.convert(); 
+          try {
+            let deltaObject = JSON.parse(doc.content)
+            let converter = new QuillDeltaToHtmlConverter(deltaObject.ops, cfg);
+            storyHTML += converter.convert(); 
+          } catch {}
           storyHTML += '</div>' 
         });
         document.getElementById('documentContainer').innerHTML = storyHTML;

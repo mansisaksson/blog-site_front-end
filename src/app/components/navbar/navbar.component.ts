@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit {
 
   signOut() {
     this.authService.logout().then(() => {
-      this.router.navigate(['/'])
+      this.router.navigate([''])
     })
   }
 

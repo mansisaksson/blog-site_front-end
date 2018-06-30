@@ -6,11 +6,11 @@
 [ ] Editor sidebar navigator
 	[ ] Press title to scroll into view
 
-[ ] Misc nav stuff
-	[ ] Need a reusable pop-up form
-	[ ] Delete story should re-direct to home
-	[ ] Create story sould ask for a title
-	[ ] Sign out should re-direct to home
+[x] Misc nav stuff
+	[x] Need a reusable pop-up form
+	[x] Delete story should re-direct to home
+	[x] Create story sould ask for a title
+	[x] Sign out should re-direct to home
 
 [x] Story Editor
 	[x] Save changes
