@@ -9,7 +9,7 @@ import { fakeBackendProvider } from './_helpers/index';
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
-import { AlertComponent, LoginComponent, RegisterComponent } from './_directives/index';
+import { AlertComponent, LoginComponent, RegisterComponent, FormComponent } from './_directives/index';
 import { AuthGuard } from './_guards/index';
 import { JwtInterceptor } from './_helpers/index';
 import { AlertService, AuthenticationService, UserService, StoryService, StoryEditorService, UIService } from './_services/index';
@@ -39,7 +39,8 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-
+    FormComponent,
+    
     StoryExplorerComponent,
     StoryViewerComponent,
     StoryEditorComponent,

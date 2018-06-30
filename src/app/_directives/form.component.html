@@ -1,6 +1,31 @@
-﻿<ng-template #modalContent>
-<form name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+﻿<!-- Text Input -->
+<ng-template #textInput let-label="label" let-key="key" let-value="value">
+    <label>{{label}}</label>
+    <input type="text" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" required />
+</ng-template>
 
+<!-- Boolean Input -->
+<ng-template #boolInput let-label="label" let-key="key" let-value="value">
+    <label>{{label}}</label>
+    <input type="checkbox" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" />
+</ng-template>
+
+<ng-template #modalContent>
+<form name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+    <div class="modal-body">
+        <div class="form-group" *ngFor="let entry of form.values()">
+            <div [ngSwitch]="entry.type">
+                <div *ngSwitchCase="'text'"><ng-container *ngTemplateOutlet="textInput; context: entry"></ng-container></div>
+                <div *ngSwitchCase="'bool'"><ng-container *ngTemplateOutlet="boolInput; context: entry"></ng-container></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" [disabled]="loading" class="btn btn-primary">{{form.submitText}}</button>
+        <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        <button [disabled]="loading" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </div>
 </form>
 </ng-template>
 
@@ -8,15 +33,10 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">TITLE HERE</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">{{form.title}}</h4>
+            <button class="close" data-dismiss="modal">&times;</button>
         </div>
-        <div class="modal-body">
-            <ng-container *ngTemplateOutlet="modalContent"></ng-container>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+        <ng-container *ngTemplateOutlet="modalContent"></ng-container>
     </div>
 </div>
 </div>

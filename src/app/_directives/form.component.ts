@@ -1,8 +1,7 @@
 ﻿import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
-import { Router } from '@angular/router'
 import { Subscription } from 'rxjs/Subscription'
 import { AlertService } from '../_services'
-import { UIService } from '../_services/ui.service';
+import { UIService, DynamicFormElement, DynamicForm } from '../_services/ui.service';
 declare let $: any
 
 @Component({
@@ -12,15 +11,13 @@ declare let $: any
 
 export class FormComponent implements OnDestroy, OnInit {
 	private subscription: Subscription
-	private model: any = {}
+	private form: DynamicForm = new DynamicForm("Form")
 	private loading = false
-	private returnUrl: string
 	private message: any
 
 	@ViewChild('formModal') formModal
 
 	constructor(
-		private router: Router,
 		private uiService: UIService,
 		private alertService: AlertService
 	) {
@@ -31,7 +28,12 @@ export class FormComponent implements OnDestroy, OnInit {
 
 			this.message = message
 			if (message.event === 'open') {
-				this.openModal()
+				if (message.form != undefined) {
+					this.form = this.message.form
+					this.openModal()
+				} else {
+					console.error("Tried to open invalid form")
+				}
 			}
 		})
 	}
@@ -48,20 +50,19 @@ export class FormComponent implements OnDestroy, OnInit {
 
 	submit() {
 		this.loading = true
-		// this.authenticationService.login(this.model.username, this.model.password).then(user => {
-		// 	if (this.message && this.message.url) {
-		// 		this.router.navigate([this.message.url])
-		// 		this.message = undefined
-		// 	}
-		// 	this.closeModal()
-		// }).catch(error => {
-		// 	this.alertService.error(error)
-		// 	this.loading = false
-		// })
+		if (this.message && this.message.onSubmitted) {
+			this.form.keys().forEach(key => {
+				let element = <HTMLInputElement>document.getElementById(this.generateKeyId(key))
+				this.form.updateElementValue(key, element.value)
+			});
+			this.message.onSubmitted(this.form.entries())
+		}
+		this.closeModal()
 	}
 
 	openModal() {
 		this.loading = false
+
 		$(this.formModal.nativeElement).modal('show')
 	}
 
@@ -72,8 +73,12 @@ export class FormComponent implements OnDestroy, OnInit {
 
 	onModalClosed() {
 		if (this.message && this.message.onCanceled) {
-			this.message.onCanceled()
+			this.message.onCanceled("Form Canceled")
 		}
 		this.message = undefined
+	}
+
+	generateKeyId(key: string) {
+		return "generatedFormElement-" + key
 	}
 }

@@ -13,7 +13,6 @@ export class LoginComponent implements OnDestroy, OnInit {
 	private subscription: Subscription
 	private model: any = {}
 	private loading = false
-	private returnUrl: string
 	private message: any
 
 	@ViewChild('loginModal') loginModal
