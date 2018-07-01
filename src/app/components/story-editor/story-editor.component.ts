@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
 import { StoryEditorService, StoryService } from '../../_services'
-import { StoryDocument, StoryMetaData } from '../../_models'
+import { StoryChapter, StoryMetaData, ChapterMetaData } from '../../_models'
 
 @Component({
   selector: 'app-story-editor',
@@ -11,13 +11,19 @@ import { StoryDocument, StoryMetaData } from '../../_models'
 export class StoryEditorComponent implements AfterViewInit, OnDestroy {
   private storyId: string
   private story: StoryMetaData
+  private chapter: ChapterMetaData
   private currentURI: string = ""
 
   constructor(
     private storyService: StoryService,
     private storyEditorService: StoryEditorService,
     private activatedRoute: ActivatedRoute) {
+    
+      // Default values to avout NULL reads
     this.story = <StoryMetaData>{
+      title: "..."
+    }
+    this.chapter = <ChapterMetaData>{
       title: "..."
     }
   }
@@ -32,7 +38,9 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
           this.story = story
           if (story) {
             this.currentURI = story.storyURIs[0]
-            this.storyEditorService.editDocument(this.currentURI)
+            this.storyEditorService.editChapter(this.currentURI).then((chapterMetaData: ChapterMetaData) => {
+              this.chapter = chapterMetaData
+            })
           }
         })
     })
@@ -42,13 +50,4 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
     this.storyEditorService.destroyEditor()
   }
 
-  addBindingCreated(quill) {
-    quill.keyboard.addBinding({
-      key: 'S',
-      ctrlKey: true
-    }, (range, context) => {
-      //this.storyEditorService.updateStoryDocument()
-      console.log('Save!', range, context)
-    })
-  }
 }

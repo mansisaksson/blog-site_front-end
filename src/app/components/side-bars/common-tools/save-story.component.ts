@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { User, StoryDocument, StoryMetaData } from './../../../_models'
+import { User, StoryChapter, StoryMetaData } from './../../../_models'
 import { StoryEditorService, StoryService, AuthenticationService, AlertService } from './../../../_services'
 import { Router } from '@angular/router';
 
@@ -39,11 +39,11 @@ export class SaveStoryComponent implements OnInit {
   saveStory() {
     if (this.enabled) {
       this.authenticationService.withLoggedInUser().then((user: User) => {
-        if (this.story) {
-          this.storyEditorService.saveDocument().then(() => {
-            this.alertService.success("Document(s) saved!")
+        if (this.story != undefined) {
+          this.storyEditorService.saveChapter().then(() => {
+            this.alertService.success("Chapter saved!")
           }).catch(e => this.alertService.error(e))
-        }else {
+        } else {
           this.alertService.error("No Valid story currently being edited")
         }
       }).catch(e => {

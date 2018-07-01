@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StoryService } from './story.service'
 
-import { StoryDocument, StoryMetaData } from '../_models/index';
+import { StoryChapter, StoryMetaData, ChapterMetaData } from '../_models/index';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 // for some reason the @types/quill are broken, have to use this instead
@@ -25,7 +25,7 @@ Quill.register(Font, true)
 @Injectable()
 export class StoryEditorService {
 	private currentStory: BehaviorSubject<StoryMetaData> = new BehaviorSubject<StoryMetaData>(undefined);
-	private currentDocURI: string
+	private chapterMetaData: ChapterMetaData
   private editor: Quill
 
 	constructor(private storyService: StoryService) {
@@ -61,23 +61,23 @@ export class StoryEditorService {
 
 	public destroyEditor() {
 		delete this.editor
-		this.currentDocURI = undefined
+		this.chapterMetaData = undefined
 	}
 
-	public saveDocument(): Promise<any> {
+	public saveChapter(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			if (this.editor) {
-				let newDoc = <StoryDocument>{
-					URI: this.currentDocURI,
+			if (this.editor && this.chapterMetaData) {
+				let newChapter = <StoryChapter>{
+					metaData: this.chapterMetaData,
 					content: JSON.stringify(this.editor.getContents())
 				}
-				this.storyService.updateStoryDocument(newDoc).then(() => {
+				this.storyService.updateStoryChapter(newChapter).then(() => {
 					resolve()
 				}).catch(e => {
 					reject(e)
 				})
 			} else {
-				reject("Failed to save doc - Could not find document")
+				reject("Failed to save doc - Could not find chapter")
 			}
 		})
 	}
@@ -86,16 +86,16 @@ export class StoryEditorService {
 		return this.currentStory.asObservable()
 	}
 
-	public editDocument(storyURI: string): Promise<StoryDocument> {
-		this.currentDocURI = undefined // Clear current document
-		return new Promise<StoryDocument>((resolve, reject) => {
-			this.storyService.getStoryDocument(storyURI).then((document) => {
+	public editChapter(storyURI: string): Promise<ChapterMetaData> {
+		this.chapterMetaData = undefined // Clear current chapter
+		return new Promise<ChapterMetaData>((resolve, reject) => {
+			this.storyService.getStoryChapter(storyURI).then((chapter) => {
 				if (this.editor) {
-					this.currentDocURI = document.URI
+					this.chapterMetaData = chapter.metaData
 					try {
-						this.editor.setContents(JSON.parse(document.content))	
+						this.editor.setContents(JSON.parse(chapter.content))	
 					} catch (error) {	}
-					resolve(document)
+					resolve(chapter.metaData)
 				}
 				else {
 					reject()

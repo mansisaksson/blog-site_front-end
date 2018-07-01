@@ -9,6 +9,10 @@ export interface DynamicFormElement {
 	value: any
 }
 
+export interface FormValues {
+	[key: string]: any
+}
+
 export interface DynamicFormElements {
 	[key: string]: DynamicFormElement
 }
@@ -48,12 +52,12 @@ export class DynamicForm {
 			type: "bool",
 			label: label,
 			key: key,
-			value: DynamicForm.getBoolValue(defaultValue)
+			value: defaultValue ? defaultValue : false
 		}
 		this._entries[key] = textElem;
 	}
 
-	updateElementValue(key: string, value: any) {
+	updateElementValue(key: string, value: string): any {
 		if (this._entries[key] != undefined && value != undefined) {
 			switch (this._entries[key].type) {
 				case "text": {
@@ -66,14 +70,16 @@ export class DynamicForm {
 				}
 			}
 		}
+
+		return this._entries[key].value
 	}
 
-	private static getTextValue(value: any): string {
+	private static getTextValue(value: string): string {
 		return value ? value : ""
 	}
 
-	private static getBoolValue(value: any): string {
-		return value != undefined ? (value ? "true" : "false") : "false"
+	private static getBoolValue(value: string): boolean {
+		return value != undefined ? (value == "true" ? true : false) : false
 	}
 }
 
@@ -103,9 +109,9 @@ export class UIService {
 		this.registerMessageSubject.next({ event: 'open', url: successRoute })
 	}
 
-	promptForm(successRoute: string, formContent: DynamicForm): Promise<DynamicFormElements> {
-		return new Promise<DynamicFormElements>((resolve, reject) => {
-			let onSubmitted = (elements: DynamicFormElements) => { resolve(elements) }
+	promptForm(successRoute: string, formContent: DynamicForm): Promise<FormValues> {
+		return new Promise<FormValues>((resolve, reject) => {
+			let onSubmitted = (values: FormValues) => { resolve(values) }
 			let onCanceled = (error) => { reject(error) }
 			this.formMessageSubject.next({
 				event: 'open',

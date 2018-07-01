@@ -1,6 +1,10 @@
-export class StoryDocument {
-    URI: string
+export interface ChapterMetaData {
     title: string
+    URI: string
+}
+
+export class StoryChapter {
+    metaData: ChapterMetaData
     content: string
 }
 

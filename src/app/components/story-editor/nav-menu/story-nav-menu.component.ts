@@ -1,7 +1,7 @@
 import { Component, OnInit, } from '@angular/core';
 import { StoryEditorComponent } from './../story-editor.component'
 import { StoryEditorService } from './../../../_services'
-import { StoryDocument, StoryMetaData } from '../../../_models';
+import { StoryChapter, StoryMetaData } from '../../../_models';
 
 interface NavTitle {
   fontSize: number,
@@ -21,7 +21,7 @@ export class StoryNavMenuComponent implements OnInit {
   }
 
   private story: StoryMetaData = <StoryMetaData>{ title: "..." }
-  private storyDocs: { [key: string]: StoryDocument } = {}
+  private storyChapters: { [key: string]: StoryChapter } = {}
   private titleElements: Element[] = []
 
   constructor(private storyEditor: StoryEditorService) {
@@ -33,17 +33,17 @@ export class StoryNavMenuComponent implements OnInit {
     //   if (story) {
     //     this.story = story
     //     story.storyURIs.forEach((uri) => {
-    //       this.storyEditor.getStoryDocument(uri).subscribe((document) => {
-    //         this.parseDocument(document)
+    //       this.storyEditor.getStoryChapter(uri).subscribe((chapter) => {
+    //         this.parseChapter(chapter)
     //       })
     //     })
     //   }
     // })
   }
 
-  parseDocument(document: StoryDocument) {
+  parseChapter(chapter: StoryChapter) {
     // let parser = new DOMParser()
-    // let htmlDoc = parser.parseFromString(document.content, "text/html")
+    // let htmlDoc = parser.parseFromString(chapter.content, "text/html")
     // let elements = htmlDoc.querySelectorAll('h1, h2, h3')
     // this.titleElements = []
     // for (let index = 0; index < elements.length; index++) {

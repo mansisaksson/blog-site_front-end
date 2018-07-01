@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-import { StoryDocument, StoryMetaData } from '../_models/index';
+import { StoryChapter, StoryMetaData } from '../_models/index';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
@@ -18,11 +18,11 @@ export class StoryService {
 		return this.currentStory.asObservable()
 	}
 
-	getStoryDocument(docURI: string): Promise<StoryDocument> {
-		return new Promise<StoryDocument>((resolve, reject) => {
-			let uriArray = [docURI]
+	getStoryChapter(chapterURI: string): Promise<StoryChapter> {
+		return new Promise<StoryChapter>((resolve, reject) => {
+			let uriArray = [chapterURI]
 
-			this.getStoryDocuments(uriArray).then((data) => {
+			this.getStoryChapters(uriArray).then((data) => {
 				resolve(data[0])
 			}).catch((e) => {
 				reject(e)
@@ -30,24 +30,25 @@ export class StoryService {
 		})
 	}
 
-	getStoryDocuments(docURIs: string[]): Promise<StoryDocument[]> {
-		return new Promise<StoryDocument[]>((resolve, reject) => {
+	getStoryChapters(chaptersURIs: string[]): Promise<StoryChapter[]> {
+		return new Promise<StoryChapter[]>((resolve, reject) => {
 			let params = {
-				URIs: JSON.stringify(docURIs)
+				URIs: JSON.stringify(chaptersURIs)
 			}
 			this.http.get('/api/stories', { params: params }).subscribe((data) => {
-				resolve(<StoryDocument[]>data)
+				resolve(<StoryChapter[]>data)
 			}, (error) => {
 				reject(error)
 			})
 		})
 	}
 
-	createStory(userId: string, title: string): Promise<StoryMetaData> {
+	createStory(userId: string, title: string, chapter1Title: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let params = {
 				userId: userId,
-				title: title
+				title: title,
+				chapter1Title: chapter1Title
 			}
 			this.http.post('/api/stories', {}, { params: params }).subscribe((data) => {
 				resolve(<StoryMetaData>data)
@@ -57,12 +58,12 @@ export class StoryService {
 		})
 	}
 
-	updateStoryDocument(storyDoc: StoryDocument): Promise<boolean> {
+	updateStoryChapter(storyChapter: StoryChapter): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
 			let params = {
-				uri: storyDoc.URI
+				uri: storyChapter.metaData.URI
 			}
-			this.http.put('/api/stories', storyDoc, { params: params }).subscribe((data) => {
+			this.http.put('/api/stories', storyChapter, { params: params }).subscribe((data) => {
 				resolve(<boolean>data)
 			}, (error) => {
 				reject(error)

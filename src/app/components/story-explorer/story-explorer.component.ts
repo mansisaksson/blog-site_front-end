@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router';
 import { StoryService, AuthenticationService } from '../../_services/index'
 
-import { StoryDocument, StoryMetaData, User } from '../../_models/index';
+import { StoryChapter, StoryMetaData, User } from '../../_models/index';
 
 @Component({
   selector: 'app-story-explorer',

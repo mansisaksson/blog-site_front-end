@@ -1,10 +1,10 @@
-import { StoryDocument, StoryMetaData } from '../../_models/index'
+import { StoryChapter, StoryMetaData, ChapterMetaData } from '../../_models/index'
 
 // We do not save the URI to disc since it could potentially change
 export class StoryRepository {
 
   private storiesMD: { [key: string]: StoryMetaData } = {}
-  private storyDocuments: { [key: string]: StoryDocument } = {}
+  private storyChapters: { [key: string]: StoryChapter } = {}
 
   constructor() {
     this.loadRepo()
@@ -15,7 +15,7 @@ export class StoryRepository {
     //   storyMetaData.authorId = (Math.floor(Math.random() * 1000) + 500).toString()
     //   this.storiesMD.set(storyMetaData.storyId, storyMetaData)
 
-    //   let story = <StoryDocument>{
+    //   let story = <StoryChapter>{
     //     title: storyMetaData.title,
     //     content: "Temp Content"
     //   }
@@ -34,7 +34,7 @@ export class StoryRepository {
 
   saveRepo() {
     localStorage.setItem('stories_md', JSON.stringify(this.storiesMD))
-    localStorage.setItem('story_documents', JSON.stringify(this.storyDocuments))
+    localStorage.setItem('story_chapters', JSON.stringify(this.storyChapters))
   }
 
   loadRepo() {
@@ -42,20 +42,20 @@ export class StoryRepository {
     if (storiesMD) {
       this.storiesMD = storiesMD;
     }
-    let storyDocuments = JSON.parse(localStorage.getItem('story_documents'))
-    if (storyDocuments) {
-      this.storyDocuments = storyDocuments;
+    let storyChapters = JSON.parse(localStorage.getItem('story_chapters'))
+    if (storyChapters) {
+      this.storyChapters = storyChapters;
     }
   }
 
-  getStoryDocuments(docURIs: string[]): Promise<StoryDocument[]> {
-    return new Promise<StoryDocument[]>((resolve, reject) => {
-      let result: StoryDocument[] = [];
+  getStoryChapters(docURIs: string[]): Promise<StoryChapter[]> {
+    return new Promise<StoryChapter[]>((resolve, reject) => {
+      let result: StoryChapter[] = []
       docURIs.forEach(docURI => {
-        let foundStoryDoc = this.storyDocuments[docURI]
+        let foundStoryDoc = this.storyChapters[docURI]
         if (foundStoryDoc != undefined) {
           //foundStoryDoc["URI"] = docURI; // update the URI in case it has changed
-          result.push(<StoryDocument>foundStoryDoc)
+          result.push(<StoryChapter>foundStoryDoc)
         }
       })
 
@@ -63,17 +63,22 @@ export class StoryRepository {
     })
   }
 
-  createStory(title: string, authorId: string): Promise<StoryMetaData> {
+  createStory(title: string, authorId: string, chapter1Title: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
       let storyId = StoryRepository.createGuid()
       let storyDocURI = StoryRepository.createGuid()
-      let newStory = <StoryDocument>{
-        URI: storyDocURI, //We should not save the URI since it could change without us knowing
-        title: title,
-        content: "Default Content"
-      };
 
-      this.storyDocuments[storyDocURI] = newStory;
+      let chapterMetaData = <ChapterMetaData>{
+        URI: storyDocURI, //We should not save the URI since it could change without us knowing
+        title: chapter1Title,
+      }
+
+      let newStory = <StoryChapter>{
+        metaData: chapterMetaData,
+        content: ""
+      }
+
+      this.storyChapters[storyDocURI] = newStory;
 
       let newStoryMetaData = <StoryMetaData>{
         storyId: storyId,
@@ -86,19 +91,19 @@ export class StoryRepository {
         lastUpdated: Date.now(),
         revision: 0,
         storyURIs: [storyDocURI]
-      };
+      }
 
-      this.storiesMD[storyId] = newStoryMetaData;
+      this.storiesMD[storyId] = newStoryMetaData
 
-      this.saveRepo();
-      resolve(newStoryMetaData);
+      this.saveRepo()
+      resolve(newStoryMetaData)
     })
   }
 
-  updateStoryDocument(uri: string, doc: StoryDocument): Promise<boolean> {
+  updateStoryChapter(uri: string, chapter: StoryChapter): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      if (this.storyDocuments[uri]) {
-        this.storyDocuments[uri] = doc
+      if (this.storyChapters[uri]) {
+        this.storyChapters[uri] = chapter
         this.saveRepo()
         resolve(true)
       } else {
@@ -115,7 +120,7 @@ export class StoryRepository {
       }
 
       storyMD.storyURIs.forEach(uri => {
-        delete this.storyDocuments[storyId]
+        delete this.storyChapters[storyId]
       });
       delete this.storiesMD[storyId]
 
@@ -128,7 +133,7 @@ export class StoryRepository {
     let metaData: StoryMetaData[] = []
     Object.values(this.storiesMD).forEach((value: StoryMetaData) => {
       metaData.push(value)
-    });
+    })
 
     if (userId) {
       metaData = metaData.filter(obj => obj.authorId === userId)

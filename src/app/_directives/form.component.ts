@@ -1,7 +1,7 @@
 ﻿import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { Subscription } from 'rxjs/Subscription'
 import { AlertService } from '../_services'
-import { UIService, DynamicFormElement, DynamicForm } from '../_services/ui.service';
+import { UIService, DynamicFormElement, DynamicForm, FormValues } from '../_services/ui.service';
 declare let $: any
 
 @Component({
@@ -51,11 +51,12 @@ export class FormComponent implements OnDestroy, OnInit {
 	submit() {
 		this.loading = true
 		if (this.message && this.message.onSubmitted) {
+			let formValues: FormValues = {}
 			this.form.keys().forEach(key => {
 				let element = <HTMLInputElement>document.getElementById(this.generateKeyId(key))
-				this.form.updateElementValue(key, element.value)
+				formValues[key] = this.form.updateElementValue(key, element.value)
 			});
-			this.message.onSubmitted(this.form.entries())
+			this.message.onSubmitted(formValues)
 		}
 		this.closeModal()
 	}

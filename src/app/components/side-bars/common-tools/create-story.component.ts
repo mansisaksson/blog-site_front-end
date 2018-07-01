@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { User, StoryMetaData } from './../../../_models'
-import { StoryService, AuthenticationService, AlertService, UIService, DynamicForm, DynamicFormElements } from './../../../_services'
+import { StoryService, AuthenticationService, AlertService, UIService, DynamicForm, FormValues } from './../../../_services'
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,10 +23,11 @@ export class CreateStoryComponent {
   createStory() {
     this.authenticationService.withLoggedInUser().then((user: User) => {
       let form: DynamicForm = new DynamicForm("Create Story", "Create!")
-      form.addTextInput("Title", "title", "Title Here")
+      form.addTextInput("Story Title", "title", "Title Here")
+      form.addTextInput("Chapter 1 Title", "chapter_title", "Chapter 1")
 
-      this.uiService.promptForm('', form).then((entries: DynamicFormElements) => {
-        this.storyService.createStory(user.id, entries["title"].value).then((story: StoryMetaData) => {
+      this.uiService.promptForm('', form).then((values: FormValues) => {
+        this.storyService.createStory(user.id, values["title"], values["chapter_title"]).then((story: StoryMetaData) => {
           this.router.navigate(['story-editor/'+story.storyId])
         }).catch((error) => {
           this.alertService.error(error)

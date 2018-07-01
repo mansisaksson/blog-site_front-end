@@ -1,7 +1,7 @@
 [ ] Centered images are not saved
 
-[ ] Add document/update
-	[ ] Need to be able to swap current document in editor
+[ ] Add chapter
+	[ ] Need to be able to swap current chapter in editor
 
 [ ] Editor sidebar navigator
 	[ ] Press title to scroll into view

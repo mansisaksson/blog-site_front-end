@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { User, StoryMetaData } from './../../../_models'
-import { StoryService, AuthenticationService, AlertService, UIService, DynamicForm } from './../../../_services'
+import { StoryService, AuthenticationService, AlertService, UIService, DynamicForm, FormValues } from './../../../_services'
 import { Router } from '@angular/router';
 
 @Component({
@@ -45,8 +45,8 @@ export class DeleteStoryComponent implements OnInit {
         let form: DynamicForm = new DynamicForm("Create Story", "Delete Story")
         form.addTextInput("Type DELETE", "delete", "")
 
-        this.uiService.promptForm('', form).then((entries) => {
-          if (entries["delete"].value == "DELETE") {
+        this.uiService.promptForm('', form).then((entries: FormValues) => {
+          if (entries["delete"] === "DELETE") {
             this.storyService.deleteStory(this.storyId).then(() => {
               this.router.navigate([''])
             }).catch(e => {

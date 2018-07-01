@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
 import { StoryService, AlertService } from '../../_services/index'
-import { StoryDocument, StoryMetaData } from '../../_models/index'
+import { StoryChapter, StoryMetaData } from '../../_models/index'
 import QuillDeltaToHtmlConverter = require('quill-delta-to-html');
 
 @Component({
@@ -34,20 +34,22 @@ export class StoryViewerComponent implements OnInit {
     this.storyService.getStory(this.storyId).then((story) => {
       this.story = story
       this.storyService.setCurrentlyViewedStory(story)
-      this.storyService.getStoryDocuments(story.storyURIs).then((storyDocs: StoryDocument[]) => {
+      this.storyService.getStoryChapters(story.storyURIs).then((chapters: StoryChapter[]) => {
         let storyHTML = ""
         let cfg = {};
-        storyDocs.forEach(doc => {
-          storyHTML += '<div class="storyDocument">' 
+        chapters.forEach((chapter: StoryChapter) => {
+          storyHTML += '<div class="storyChapter">'
+          storyHTML += '<h2>' + chapter.metaData.title + '</h2>'
           try {
-            let deltaObject = JSON.parse(doc.content)
-            let converter = new QuillDeltaToHtmlConverter(deltaObject.ops, cfg);
-            storyHTML += converter.convert(); 
+            let deltaObject = JSON.parse(chapter.content)
+            let converter = new QuillDeltaToHtmlConverter(deltaObject.ops, cfg)
+            storyHTML += converter.convert()
           } catch {}
-          storyHTML += '</div>' 
+          storyHTML += '</div>'
         });
         document.getElementById('documentContainer').innerHTML = storyHTML;
       }).catch((e) => console.log(e))
     }).catch((e) => console.log(e))
   }
+
 }

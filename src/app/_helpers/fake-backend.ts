@@ -3,7 +3,7 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable } from 'rxjs/Observable';
 
 import { User } from '../_models/user'
-import { StoryDocument, StoryMetaData } from '../_models/story'
+import { StoryChapter, StoryMetaData } from '../_models/story'
 import { UserRepository } from './local_repos/user-repository'
 import { StoryRepository } from './local_repos/story-repository'
 
@@ -110,21 +110,22 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			else if (request.url.endsWith('/api/stories') && request.method === 'POST') {
 				let userId = request.params.get("userId")
 				let title = request.params.get("title")
-				this.storyRepo.createStory(title, userId).then((story: StoryMetaData) => {
+				let chapter1Title = request.params.get("chapter1Title")
+				this.storyRepo.createStory(title, userId, chapter1Title).then((story: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: story }))
 				}, (error) => {
 					observer.error(error);
 				})
 			}
 
-			// get story documents
+			// get story chapters
 			else if (request.url.endsWith('/api/stories') && request.method === 'GET') {
 				let URIs: string[] = JSON.parse(request.params.get("URIs"));
 				if (!URIs) {
 					return observer.error("Invalid Story URIs")
 				}
-				this.storyRepo.getStoryDocuments(URIs).then((storyDocs: StoryDocument[]) => {
-					observer.next(new HttpResponse({ status: 200, body: storyDocs }))
+				this.storyRepo.getStoryChapters(URIs).then((chapters: StoryChapter[]) => {
+					observer.next(new HttpResponse({ status: 200, body: chapters }))
 				}, (error) => {
 					observer.error(error);
 				})
@@ -150,7 +151,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
 					let uri = request.params.get("uri")
-					this.storyRepo.updateStoryDocument(uri, <StoryDocument>request.body).then((success) => {
+					this.storyRepo.updateStoryChapter(uri, <StoryChapter>request.body).then((success) => {
 						observer.next(new HttpResponse({ status: 200 }));
 					}, (error) => {
 						observer.error(error)

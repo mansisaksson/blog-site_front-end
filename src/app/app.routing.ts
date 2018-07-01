@@ -34,7 +34,7 @@ const appRoutes: Routes = [
         path: 'story-editor/:story_id',
         component: StoryEditorComponent,
         data: { 
-            sidebars: [ [ CreateStoryComponent, DeleteStoryComponent, SaveStoryComponent ] ],
+            sidebars: [ [ CreateStoryComponent, DeleteStoryComponent, SaveStoryComponent ], [SaveStoryComponent] ],
             toolbar: StoryEditorToolbarComponent,
             navMenu: StoryNavMenuComponent
         }
