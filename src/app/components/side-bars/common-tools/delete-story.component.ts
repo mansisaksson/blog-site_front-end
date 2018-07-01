@@ -42,7 +42,7 @@ export class DeleteStoryComponent implements OnInit {
   deleteStory() {
     if (this.enabled) {
       this.authenticationService.withLoggedInUser().then((user: User) => {
-        let form: DynamicForm = new DynamicForm("Create Story", "Delete Story")
+        let form: DynamicForm = new DynamicForm("Delete Story", "Delete")
         form.addTextInput("Type DELETE", "delete", "")
 
         this.uiService.promptForm('', form).then((entries: FormValues) => {

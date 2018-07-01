@@ -14,7 +14,6 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
   private chapter: ChapterMetaData
 
   constructor(
-    private storyService: StoryService,
     private storyEditorService: StoryEditorService,
     private activatedRoute: ActivatedRoute) {
     
@@ -35,10 +34,18 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
         '#quill-toolbar',
         '#scrolling-container').then((story: StoryMetaData) => {
           this.story = story
-          if (story) {
-            this.storyEditorService.editChapter(this.story.chapters[0].URI).then((chapterMetaData: ChapterMetaData) => {
-              this.chapter = chapterMetaData
+          if (story && this.story.chapters.length > 0) {
+            this.storyEditorService.editChapter(this.story.chapters[0].URI).subscribe((chapterMetaData: ChapterMetaData) => {
+              if (chapterMetaData) {
+                this.chapter = chapterMetaData  
+              } else {
+                this.chapter = <ChapterMetaData>{
+                  title: "..."
+                }
+              }
             })
+          } else {
+            
           }
         })
     })

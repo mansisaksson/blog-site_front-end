@@ -11,6 +11,7 @@ interface NavTitle {
 class DrawableElem {
   public tagName: string
   public content: string
+  public payload: any
 }
 
 @Component({
@@ -33,19 +34,24 @@ export class StoryNavMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.storyEditor.getStory().subscribe((story) => {
+    this.storyEditor.getCurrentStory().subscribe((story) => {
       this.titleElements = []
       if (story) {
         this.story = story
         this.story.chapters.forEach((chapter: ChapterMetaData) => {
           let elem = <DrawableElem> {
             tagName: 'h2',
-            content: chapter.title
+            content: chapter.title,
+            payload: chapter.URI
           }
           this.titleElements.push(elem)
         })
       }
     })
+  }
+
+  editChapter(chapterURI: string) {
+    this.storyEditor.editChapter(chapterURI)
   }
 
   parseChapter(chapter: StoryChapter) {

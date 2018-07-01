@@ -22,7 +22,7 @@ import { StoryEditorComponent, StoryEditorToolbarComponent, StoryNavMenuComponen
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
-import { CreateStoryComponent, DeleteStoryComponent, EditStoryComponent, SaveStoryComponent, AddChapterComponent } from './components/side-bars/common-tools/';
+import { CreateStoryComponent, DeleteStoryComponent, DeleteChapterComponent, EditStoryComponent, SaveStoryComponent, AddChapterComponent } from './components/side-bars/common-tools/';
 import { SideBarsComponent, SideBarComponent } from './components/side-bars/side-bars.component';
 
 @NgModule({
@@ -51,6 +51,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     NavMenuComponent,
     CreateStoryComponent,
     DeleteStoryComponent,
+    DeleteChapterComponent,
     EditStoryComponent,
     SaveStoryComponent,
     AddChapterComponent,

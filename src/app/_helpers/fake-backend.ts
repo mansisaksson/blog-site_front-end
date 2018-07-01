@@ -168,7 +168,18 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 					observer.error(error);
 				})
 			}
-			
+
+			// delete chapter
+			else if (request.url.endsWith('/api/stories/chapters') && request.method === 'DELETE') {
+				let storyId = request.params.get("storyId")
+				let uri = request.params.get("uri")
+				this.storyRepo.removeChapter(storyId, uri).then((newStory: StoryMetaData) => {
+					observer.next(new HttpResponse({ status: 200, body: newStory }))
+				}, (error) => {
+					observer.error(error);
+				})
+			}
+
 			// get chapters
 			else if (request.url.endsWith('/api/stories/chapters') && request.method === 'GET') {
 				let URIs: string[] = JSON.parse(request.params.get("URIs"));

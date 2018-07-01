@@ -21,7 +21,7 @@ export class SaveStoryComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.storyEditorService.getStory().subscribe((story: StoryMetaData) => {
+    this.storyEditorService.getCurrentStory().subscribe((story: StoryMetaData) => {
       this.enabled = false;
       this.story = story;
       if (story != undefined) {

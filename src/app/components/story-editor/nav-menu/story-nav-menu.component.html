@@ -3,13 +3,13 @@
 </div>
 
 <div *ngFor="let element of titleElements">
-<p 
+<button class="btn btn-primary"
+(click)="editChapter(element.payload)"
 [style.padding.px]="0"
 [style.margin.px]="0"
 [style.font-size.px]="navTitles[element.tagName.toLowerCase()].fontSize" 
 [style.marginLeft.px]="navTitles[element.tagName.toLowerCase()].padding" 
 [style.color]="'white'" 
 [innerHtml]="'<'+element.tagName+'>'+element.content+'</'+element.tagName+'>'"
->
-</p>
+></button>
 </div>

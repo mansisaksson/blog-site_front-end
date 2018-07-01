@@ -101,6 +101,20 @@ export class StoryService {
 		})
 	}
 
+	deleteChapter(storyId: string, chapterURI: string): Promise<StoryMetaData> {
+		return new Promise<StoryMetaData>((resolve, reject) => {
+			let params = {
+				storyId: storyId,
+				uri: chapterURI,
+			}
+			this.http.delete('/api/stories/chapters', { params: params }).subscribe((data) => {
+				resolve(<StoryMetaData>data)
+			}, (error) => {
+				reject(error)
+			})
+		})
+	}
+
 	getChapters(chaptersURIs: string[]): Promise<StoryChapter[]> {
 		return new Promise<StoryChapter[]>((resolve, reject) => {
 			let params = {

@@ -61,6 +61,24 @@ export class StoryRepository {
     })
   }
 
+  removeChapter(storyId: string, uri: string): Promise<StoryMetaData> {
+    return new Promise<StoryMetaData>((resolve, reject) => {
+      this.getStory(storyId).then((story: StoryMetaData) => {
+        if (!this.chapterMetaData[uri]) {
+          return reject(reject("Could not remove - Could not find chapter"))
+        }
+
+        delete this.chapterMetaData[uri]
+        delete this.chapterContents[uri]
+
+        story.chapters = story.chapters.filter(value => { return value.URI != uri })
+        this.updateStory(story).then(() => {
+          resolve(story)
+        }).catch(e => reject(e))
+      }).catch(e => reject(e))
+    })
+  }
+
   updateChapter(uri: string, chapter: StoryChapter): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       if (this.chapterMetaData[uri] != undefined) {
