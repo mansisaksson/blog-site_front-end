@@ -1,10 +1,17 @@
+[ ] Implement server backend
+	[ ] Migrate to MongoDB
+
+[ ] Edit story/chapter meta data
+	[ ] Edit title
+
 [ ] Centered images are not saved
 
-[ ] Add chapter
-	[ ] Need to be able to swap current chapter in editor
-
 [ ] Editor sidebar navigator
-	[ ] Press title to scroll into view
+	[x] Display chapters
+	[ ] Display document preview
+
+[x] Add chapter
+	[x] Need to be able to swap current chapter in editor
 
 [x] Misc nav stuff
 	[x] Need a reusable pop-up form
