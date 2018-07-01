@@ -3,7 +3,7 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable } from 'rxjs/Observable';
 
 import { User } from '../_models/user'
-import { StoryChapter, StoryMetaData } from '../_models/story'
+import { StoryChapter, StoryMetaData, ChapterMetaData } from '../_models/story'
 import { UserRepository } from './local_repos/user-repository'
 import { StoryRepository } from './local_repos/story-repository'
 
@@ -27,7 +27,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
 		return new Observable<HttpEvent<any>>((observer) => {
-		//console.log(request)
+			//console.log(request)
 
 			/* ***** Begin User ***** */
 			// authenticate
@@ -105,6 +105,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			/* ***** End User ***** */
 
 
+
 			/* ***** Begin Stories ***** */
 			// create story
 			else if (request.url.endsWith('/api/stories') && request.method === 'POST') {
@@ -113,19 +114,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				let chapter1Title = request.params.get("chapter1Title")
 				this.storyRepo.createStory(title, userId, chapter1Title).then((story: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: story }))
-				}, (error) => {
-					observer.error(error);
-				})
-			}
-
-			// get story chapters
-			else if (request.url.endsWith('/api/stories') && request.method === 'GET') {
-				let URIs: string[] = JSON.parse(request.params.get("URIs"));
-				if (!URIs) {
-					return observer.error("Invalid Story URIs")
-				}
-				this.storyRepo.getStoryChapters(URIs).then((chapters: StoryChapter[]) => {
-					observer.next(new HttpResponse({ status: 200, body: chapters }))
 				}, (error) => {
 					observer.error(error);
 				})
@@ -146,23 +134,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				}
 			}
 
-			// upate story
-			else if (request.url.endsWith('/api/stories') && request.method === 'PUT') {
-				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
-				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-					let uri = request.params.get("uri")
-					this.storyRepo.updateStoryChapter(uri, <StoryChapter>request.body).then((success) => {
-						observer.next(new HttpResponse({ status: 200 }));
-					}, (error) => {
-						observer.error(error)
-					})
-				} else {
-					observer.error('Unauthorised');
-				}
-			}
-
 			// get all story meta data
-			else if (request.url.endsWith('/api/stories_md/query') && request.method === 'GET') {
+			else if (request.url.endsWith('/api/stories/query') && request.method === 'GET') {
 				let userId = request.params.get("userId")
 				let searchQuery: string = request.params.get("searchQuery");
 
@@ -174,7 +147,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			}
 
 			// get story meta data
-			else if (request.url.endsWith('/api/stories_md') && request.method === 'GET')  {
+			else if (request.url.endsWith('/api/stories') && request.method === 'GET') {
 				let storyId = request.params.get("storyId")
 				this.storyRepo.getStory(storyId).then((storymd: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: storymd }))
@@ -183,6 +156,47 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				})
 			}
 			// /* ***** End Stories ***** */
+
+			/* ***** Begin Chapters ***** */
+			// create chapter
+			else if (request.url.endsWith('/api/stories/chapters') && request.method === 'POST') {
+				let storyId = request.params.get("storyId")
+				let chapterTitle = request.params.get("chapterTitle")
+				this.storyRepo.createChapter(storyId, chapterTitle).then((chapter: StoryMetaData) => {
+					observer.next(new HttpResponse({ status: 200, body: chapter }))
+				}, (error) => {
+					observer.error(error);
+				})
+			}
+			
+			// get chapters
+			else if (request.url.endsWith('/api/stories/chapters') && request.method === 'GET') {
+				let URIs: string[] = JSON.parse(request.params.get("URIs"));
+				if (!URIs) {
+					return observer.error("Invalid Story URIs")
+				}
+				this.storyRepo.getChapters(URIs).then((chapters: StoryChapter[]) => {
+					observer.next(new HttpResponse({ status: 200, body: chapters }))
+				}, (error) => {
+					observer.error(error);
+				})
+			}
+
+			// upate chapter
+			else if (request.url.endsWith('/api/stories/chapters') && request.method === 'PUT') {
+				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+					let uri = request.params.get("uri")
+					this.storyRepo.updateChapter(uri, <StoryChapter>request.body).then((success) => {
+						observer.next(new HttpResponse({ status: 200 }));
+					}, (error) => {
+						observer.error(error)
+					})
+				} else {
+					observer.error('Unauthorised');
+				}
+			}
+			/* ***** End Chapters ***** */
 
 			// pass through any requests not handled above
 			//return next.handle(request);

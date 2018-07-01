@@ -41,7 +41,40 @@ export class StoryRepository {
     }
   }
 
-  getStoryChapters(chapterURIs: string[]): Promise<StoryChapter[]> {
+  createChapter(storyId: string, chapterTitle: string): Promise<StoryMetaData> {
+    return new Promise<StoryMetaData>((resolve, reject) => {
+      this.getStory(storyId).then((story: StoryMetaData) => {
+        let chapterURI = StoryRepository.createGuid()
+        let chapterMetaData = <ChapterMetaData>{
+          URI: chapterURI, //We should not save the URI since it could change without us knowing
+          title: chapterTitle,
+        }
+
+        this.chapterMetaData[chapterURI] = chapterMetaData
+        this.chapterContents[chapterURI] = "";
+
+        story.chapters.push(chapterMetaData)
+        this.updateStory(story).then(() => {
+          resolve(story)
+        }).catch(e => reject(e))
+      }).catch(e => reject(e))
+    })
+  }
+
+  updateChapter(uri: string, chapter: StoryChapter): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      if (this.chapterMetaData[uri] != undefined) {
+        this.chapterMetaData[uri] = chapter.metaData
+        this.chapterContents[uri] = chapter.content
+        this.saveRepo()
+        resolve(true)
+      } else {
+        reject("Could not find story chapter")
+      }
+    })
+  }
+
+  getChapters(chapterURIs: string[]): Promise<StoryChapter[]> {
     return new Promise<StoryChapter[]>((resolve, reject) => {
       let result: StoryChapter[] = []
       chapterURIs.forEach(uri => {
@@ -84,41 +117,6 @@ export class StoryRepository {
     })
   }
 
-  createChapter(storyId: string, chapterTitle: string): Promise<ChapterMetaData> {
-    return new Promise<ChapterMetaData>((resolve, reject) => {
-      this.getStory(storyId).then((story: StoryMetaData) => {
-
-        let chapterURI = StoryRepository.createGuid()
-
-        let chapterMetaData = <ChapterMetaData>{
-          URI: chapterURI, //We should not save the URI since it could change without us knowing
-          title: chapterTitle,
-        }
-
-        this.chapterMetaData[chapterURI] = chapterMetaData
-        this.chapterContents[chapterURI] = "";
-
-        story.chapters.push(chapterMetaData)
-        this.saveRepo()
-
-        resolve(chapterMetaData)
-      }).catch(e => reject(e))
-    })
-  }
-
-  updateStoryChapter(uri: string, chapter: StoryChapter): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      if (this.chapterMetaData[uri] != undefined) {
-        this.chapterMetaData[uri] = chapter.metaData
-        this.chapterContents[uri] = chapter.content
-        this.saveRepo()
-        resolve(true)
-      } else {
-        reject("Could not find story chapter")
-      }
-    })
-  }
-
   removeStory(storyId: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       let storyMD = this.storiesMD[storyId]
@@ -134,6 +132,33 @@ export class StoryRepository {
 
       this.saveRepo();
       resolve(true)
+    })
+  }
+
+  private updateStory(story: StoryMetaData): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      if (!story) {
+        return reject(reject("Invalid story"))
+      }
+      this.storiesMD[story.storyId] = story
+      this.saveRepo();
+      resolve(true)
+    })
+  }
+
+  getStory(storyId: string): Promise<StoryMetaData> {
+    return new Promise<StoryMetaData>((resolve, reject) => {
+      let storyMD = this.storiesMD[storyId]
+      if (storyMD != undefined) {
+        // Append chapter meta data
+        storyMD.chapters.forEach(chapter => {
+          storyMD.chapters[chapter.URI] = this.chapterMetaData[chapter.URI]
+        })
+        resolve(storyMD);
+      }
+      else {
+        reject("getStory - Could not find story")
+      }
     })
   }
 
@@ -159,22 +184,6 @@ export class StoryRepository {
 
     return new Promise<StoryMetaData[]>((resolve, reject) => {
       resolve(metaData)
-    })
-  }
-
-  getStory(storyId: string): Promise<StoryMetaData> {
-    return new Promise<StoryMetaData>((resolve, reject) => {
-      let storyMD = this.storiesMD[storyId]
-      if (storyMD != undefined) {
-        // Append chapter meta data
-        storyMD.chapters.forEach(chapter => {
-          storyMD.chapters[chapter.URI] = this.chapterMetaData[chapter.URI]
-        })
-        resolve(storyMD);
-      }
-      else {
-        reject("getStory - Could not find story")
-      }
     })
   }
 

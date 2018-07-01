@@ -34,6 +34,7 @@ export class StoryNavMenuComponent implements OnInit {
 
   ngOnInit() {
     this.storyEditor.getStory().subscribe((story) => {
+      this.titleElements = []
       if (story) {
         this.story = story
         this.story.chapters.forEach((chapter: ChapterMetaData) => {

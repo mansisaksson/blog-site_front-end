@@ -35,7 +35,7 @@ export class StoryViewerComponent implements OnInit {
       this.story = story
       this.storyService.setCurrentlyViewedStory(story)
       let chapterURIs = story.chapters.map(a => a.URI);
-      this.storyService.getStoryChapters(chapterURIs).then((chapters: StoryChapter[]) => {
+      this.storyService.getChapters(chapterURIs).then((chapters: StoryChapter[]) => {
         let storyHTML = ""
         let cfg = {};
         chapters.forEach((chapter: StoryChapter) => {

@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
 export class AddChapterComponent {
 
   constructor(
-    private router: Router,
     private storyEditorService: StoryEditorService,
     private uiService: UIService,
     private authenticationService: AuthenticationService,
@@ -25,12 +24,12 @@ export class AddChapterComponent {
       let form: DynamicForm = new DynamicForm("Create Chapter", "Create!")
       form.addTextInput("Chapter Title", "chapter_title", "Chapter 1")
       this.uiService.promptForm('', form).then((values: FormValues) => {
-        //this.router.navigate(['story-editor/'+story.storyId])
-
+        this.storyEditorService.addChapter(values["chapter_title"]).then(() => {
+          this.alertService.success("Chapter added!")
+          //this.router.navigate(['story-editor/'+story.storyId])
+        }).catch(e => this.alertService.error(e))
       }).catch(e => this.alertService.error(e))
-    }).catch(e => {
-      this.alertService.error(e)
-    })
+    }).catch(e => this.alertService.error(e))
   }
 
 }

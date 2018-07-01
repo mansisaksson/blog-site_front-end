@@ -71,7 +71,7 @@ export class StoryEditorService {
 					metaData: this.chapterMetaData,
 					content: JSON.stringify(this.editor.getContents())
 				}
-				this.storyService.updateStoryChapter(newChapter).then(() => {
+				this.storyService.updateChapter(newChapter).then(() => {
 					resolve()
 				}).catch(e => {
 					reject(e)
@@ -101,6 +101,20 @@ export class StoryEditorService {
 					reject()
 				}
 			}).catch(e => console.log(e))
+		})
+	}
+
+	public addChapter(title: string): Promise<StoryMetaData> {
+		return new Promise<StoryMetaData>((resolve, reject) => {
+			let story = this.currentStory.getValue()
+			if (story) {
+				this.storyService.createChapter(story.storyId, title).then((updatedStory: StoryMetaData) => {
+					this.currentStory.next(updatedStory)
+					resolve(updatedStory)
+				}).catch(e => reject(e))
+			} else {
+				reject("No valid story being editor")
+			}
 		})
 	}
 }
