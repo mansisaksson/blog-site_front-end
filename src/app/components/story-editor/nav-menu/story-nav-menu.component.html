@@ -1,15 +1,15 @@
 <div>
-  <h1>{{story.title}}</h1>
+  <h1 [style.color]="'white'">{{story.title}}</h1>
 </div>
 
 <div *ngFor="let element of titleElements">
-<p  
+<p 
 [style.padding.px]="0"
 [style.margin.px]="0"
 [style.font-size.px]="navTitles[element.tagName.toLowerCase()].fontSize" 
 [style.marginLeft.px]="navTitles[element.tagName.toLowerCase()].padding" 
 [style.color]="'white'" 
-[innerHtml]="element.innerHTML"
+[innerHtml]="'<'+element.tagName+'>'+element.content+'</'+element.tagName+'>'"
 >
 </p>
 </div>

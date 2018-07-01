@@ -12,7 +12,6 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
   private storyId: string
   private story: StoryMetaData
   private chapter: ChapterMetaData
-  private currentURI: string = ""
 
   constructor(
     private storyService: StoryService,
@@ -34,11 +33,10 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
       this.storyEditorService.createEditor(this.storyId,
         '#quillEditor',
         '#quill-toolbar',
-        '#scrolling-container').then((story) => {
+        '#scrolling-container').then((story: StoryMetaData) => {
           this.story = story
           if (story) {
-            this.currentURI = story.storyURIs[0]
-            this.storyEditorService.editChapter(this.currentURI).then((chapterMetaData: ChapterMetaData) => {
+            this.storyEditorService.editChapter(this.story.chapters[0].URI).then((chapterMetaData: ChapterMetaData) => {
               this.chapter = chapterMetaData
             })
           }

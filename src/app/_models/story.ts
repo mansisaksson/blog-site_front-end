@@ -18,5 +18,5 @@ export interface StoryMetaData {
     submittedAt: number
     lastUpdated: number
     revision: number
-    storyURIs: string[]
+    chapters: ChapterMetaData[]
 }

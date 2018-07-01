@@ -86,10 +86,10 @@ export class StoryEditorService {
 		return this.currentStory.asObservable()
 	}
 
-	public editChapter(storyURI: string): Promise<ChapterMetaData> {
+	public editChapter(chapterURI: string): Promise<ChapterMetaData> {
 		this.chapterMetaData = undefined // Clear current chapter
 		return new Promise<ChapterMetaData>((resolve, reject) => {
-			this.storyService.getStoryChapter(storyURI).then((chapter) => {
+			this.storyService.getStoryChapter(chapterURI).then((chapter) => {
 				if (this.editor) {
 					this.chapterMetaData = chapter.metaData
 					try {

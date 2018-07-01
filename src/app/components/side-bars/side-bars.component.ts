@@ -12,24 +12,23 @@ import {
 
 import { Router, ActivatedRouteSnapshot, Event, NavigationEnd } from '@angular/router'
 import { ISubscription } from 'rxjs/Subscription'
-import { unescapeIdentifier } from '@angular/compiler';
 
 @Component({
   template: `
   <div class="card" style="padding: 10px; margin-top: 10px">
-    <ng-container #sidebarContainer></ng-container>
+    <ng-container #sidebarContainer ></ng-container>
   </div>`
 })
 export class SideBarComponent {
   @ViewChild("sidebarContainer", { read: ViewContainerRef })
-  container: ViewContainerRef;
+  container: ViewContainerRef
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {
   }
 
   public addComponent(component: Type<Component>): ComponentRef<Component> {
-    let factory: ComponentFactory<Component> = this.componentFactoryResolver.resolveComponentFactory(component);
-    return this.container.createComponent(factory);
+    let factory: ComponentFactory<Component> = this.componentFactoryResolver.resolveComponentFactory(component)
+    return this.container.createComponent(factory)
   }
 }
 
@@ -41,8 +40,8 @@ export class SideBarsComponent implements OnInit, OnDestroy {
   @ViewChild("sidebarTarget", { read: ViewContainerRef })
   sidebarTarget: ViewContainerRef;
 
-  sidebarComponents: ComponentRef<SideBarComponent>[] = new Array<ComponentRef<SideBarComponent>>();
-  routerEventSubscription: ISubscription;
+  sidebarComponents: ComponentRef<SideBarComponent>[] = new Array<ComponentRef<SideBarComponent>>()
+  routerEventSubscription: ISubscription
 
   constructor(private router: Router,
     private componentFactoryResolver: ComponentFactoryResolver) {
@@ -51,13 +50,13 @@ export class SideBarsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.routerEventSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
-        this.updateSidebarContent(this.router.routerState.snapshot.root);
+        this.updateSidebarContent(this.router.routerState.snapshot.root)
       }
     })
   }
 
   ngOnDestroy(): void {
-    this.routerEventSubscription.unsubscribe();
+    this.routerEventSubscription.unsubscribe()
   }
 
   private updateSidebarContent(snapshot: ActivatedRouteSnapshot): void {
@@ -68,7 +67,7 @@ export class SideBarsComponent implements OnInit, OnDestroy {
       for (let sidebar of sidebars) {
         let factory: ComponentFactory<SideBarComponent> = this.componentFactoryResolver.resolveComponentFactory(SideBarComponent)
         let componentRef: ComponentRef<SideBarComponent> = this.sidebarTarget.createComponent(factory)
-        this.sidebarComponents.push(componentRef);
+        this.sidebarComponents.push(componentRef)
 
         if (sidebar instanceof Array) {
           for (let sidebarComponent of sidebar) {
@@ -81,16 +80,16 @@ export class SideBarsComponent implements OnInit, OnDestroy {
     }
 
     for (let childSnapshot of snapshot.children) {
-      this.updateSidebarContent(childSnapshot);
+      this.updateSidebarContent(childSnapshot)
     }
   }
 
   private clearSidebar() {
     for (let sidebarComponent of this.sidebarComponents) {
-      sidebarComponent.destroy();
+      sidebarComponent.destroy()
     }
-    this.sidebarTarget.clear();
-    this.sidebarComponents = [];
+    this.sidebarTarget.clear()
+    this.sidebarComponents = []
   }
 
 }

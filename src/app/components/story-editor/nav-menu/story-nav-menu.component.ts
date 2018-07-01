@@ -1,11 +1,16 @@
 import { Component, OnInit, } from '@angular/core';
 import { StoryEditorComponent } from './../story-editor.component'
 import { StoryEditorService } from './../../../_services'
-import { StoryChapter, StoryMetaData } from '../../../_models';
+import { StoryChapter, StoryMetaData, ChapterMetaData } from '../../../_models';
 
 interface NavTitle {
   fontSize: number,
   padding: number
+}
+
+class DrawableElem {
+  public tagName: string
+  public content: string
 }
 
 @Component({
@@ -21,24 +26,25 @@ export class StoryNavMenuComponent implements OnInit {
   }
 
   private story: StoryMetaData = <StoryMetaData>{ title: "..." }
-  private storyChapters: { [key: string]: StoryChapter } = {}
-  private titleElements: Element[] = []
+  private titleElements: DrawableElem[] = []
 
   constructor(private storyEditor: StoryEditorService) {
 
   }
 
   ngOnInit() {
-    // this.storyEditor.getStory().subscribe((story) => {
-    //   if (story) {
-    //     this.story = story
-    //     story.storyURIs.forEach((uri) => {
-    //       this.storyEditor.getStoryChapter(uri).subscribe((chapter) => {
-    //         this.parseChapter(chapter)
-    //       })
-    //     })
-    //   }
-    // })
+    this.storyEditor.getStory().subscribe((story) => {
+      if (story) {
+        this.story = story
+        this.story.chapters.forEach((chapter: ChapterMetaData) => {
+          let elem = <DrawableElem> {
+            tagName: 'h2',
+            content: chapter.title
+          }
+          this.titleElements.push(elem)
+        })
+      }
+    })
   }
 
   parseChapter(chapter: StoryChapter) {

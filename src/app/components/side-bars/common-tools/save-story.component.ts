@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   selector: 'app-common-tools',
   template: `
   <div *ngIf="enabled">
-    <button (click)="saveStory()" class="btn btn-primary">Save All</button>
+    <button (click)="saveStory()" class="btn btn-primary">Save Chapter</button>
   </div>`
 })
 export class SaveStoryComponent implements OnInit {

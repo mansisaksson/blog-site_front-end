@@ -4,23 +4,11 @@ import { StoryChapter, StoryMetaData, ChapterMetaData } from '../../_models/inde
 export class StoryRepository {
 
   private storiesMD: { [key: string]: StoryMetaData } = {}
-  private storyChapters: { [key: string]: StoryChapter } = {}
+  private chapterMetaData: { [key: string]: ChapterMetaData } = {}
+  private chapterContents: { [key: string]: string } = {}
 
   constructor() {
     this.loadRepo()
-
-    // let metaDataArray = <any>storyMD
-    // metaDataArray.forEach((element) => {
-    //   let storyMetaData: StoryMetaData = element;
-    //   storyMetaData.authorId = (Math.floor(Math.random() * 1000) + 500).toString()
-    //   this.storiesMD.set(storyMetaData.storyId, storyMetaData)
-
-    //   let story = <StoryChapter>{
-    //     title: storyMetaData.title,
-    //     content: "Temp Content"
-    //   }
-    //   this.stories.set(storyMetaData.storyId, story)
-    // })
   }
 
   static createGuid(): string {
@@ -34,7 +22,8 @@ export class StoryRepository {
 
   saveRepo() {
     localStorage.setItem('stories_md', JSON.stringify(this.storiesMD))
-    localStorage.setItem('story_chapters', JSON.stringify(this.storyChapters))
+    localStorage.setItem('story_chapters', JSON.stringify(this.chapterContents))
+    localStorage.setItem('chapter_md', JSON.stringify(this.chapterMetaData))
   }
 
   loadRepo() {
@@ -44,18 +33,25 @@ export class StoryRepository {
     }
     let storyChapters = JSON.parse(localStorage.getItem('story_chapters'))
     if (storyChapters) {
-      this.storyChapters = storyChapters;
+      this.chapterContents = storyChapters;
+    }
+    let chapterMD = JSON.parse(localStorage.getItem('chapter_md'))
+    if (chapterMD) {
+      this.chapterMetaData = chapterMD;
     }
   }
 
-  getStoryChapters(docURIs: string[]): Promise<StoryChapter[]> {
+  getStoryChapters(chapterURIs: string[]): Promise<StoryChapter[]> {
     return new Promise<StoryChapter[]>((resolve, reject) => {
       let result: StoryChapter[] = []
-      docURIs.forEach(docURI => {
-        let foundStoryDoc = this.storyChapters[docURI]
-        if (foundStoryDoc != undefined) {
-          //foundStoryDoc["URI"] = docURI; // update the URI in case it has changed
-          result.push(<StoryChapter>foundStoryDoc)
+      chapterURIs.forEach(uri => {
+        let foundChapter = this.chapterContents[uri]
+        if (foundChapter != undefined) {
+          let chapter = <StoryChapter>{
+            metaData: this.chapterMetaData[uri],
+            content: foundChapter
+          }
+          result.push(chapter)
         }
       })
 
@@ -66,19 +62,6 @@ export class StoryRepository {
   createStory(title: string, authorId: string, chapter1Title: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
       let storyId = StoryRepository.createGuid()
-      let storyDocURI = StoryRepository.createGuid()
-
-      let chapterMetaData = <ChapterMetaData>{
-        URI: storyDocURI, //We should not save the URI since it could change without us knowing
-        title: chapter1Title,
-      }
-
-      let newStory = <StoryChapter>{
-        metaData: chapterMetaData,
-        content: ""
-      }
-
-      this.storyChapters[storyDocURI] = newStory;
 
       let newStoryMetaData = <StoryMetaData>{
         storyId: storyId,
@@ -90,24 +73,48 @@ export class StoryRepository {
         submittedAt: Date.now(),
         lastUpdated: Date.now(),
         revision: 0,
-        storyURIs: [storyDocURI]
+        chapters: []
       }
 
       this.storiesMD[storyId] = newStoryMetaData
 
-      this.saveRepo()
-      resolve(newStoryMetaData)
+      this.createChapter(storyId, chapter1Title).then(() => {
+        resolve(newStoryMetaData)
+      }).catch(e => reject(e))
+    })
+  }
+
+  createChapter(storyId: string, chapterTitle: string): Promise<ChapterMetaData> {
+    return new Promise<ChapterMetaData>((resolve, reject) => {
+      this.getStory(storyId).then((story: StoryMetaData) => {
+
+        let chapterURI = StoryRepository.createGuid()
+
+        let chapterMetaData = <ChapterMetaData>{
+          URI: chapterURI, //We should not save the URI since it could change without us knowing
+          title: chapterTitle,
+        }
+
+        this.chapterMetaData[chapterURI] = chapterMetaData
+        this.chapterContents[chapterURI] = "";
+
+        story.chapters.push(chapterMetaData)
+        this.saveRepo()
+
+        resolve(chapterMetaData)
+      }).catch(e => reject(e))
     })
   }
 
   updateStoryChapter(uri: string, chapter: StoryChapter): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      if (this.storyChapters[uri]) {
-        this.storyChapters[uri] = chapter
+      if (this.chapterMetaData[uri] != undefined) {
+        this.chapterMetaData[uri] = chapter.metaData
+        this.chapterContents[uri] = chapter.content
         this.saveRepo()
         resolve(true)
       } else {
-        reject()
+        reject("Could not find story chapter")
       }
     })
   }
@@ -119,8 +126,9 @@ export class StoryRepository {
         return reject(reject("Could not remove - Could not find story"))
       }
 
-      storyMD.storyURIs.forEach(uri => {
-        delete this.storyChapters[storyId]
+      storyMD.chapters.forEach(chapter => {
+        delete this.chapterMetaData[chapter.URI]
+        delete this.chapterContents[chapter.URI]
       });
       delete this.storiesMD[storyId]
 
@@ -142,6 +150,13 @@ export class StoryRepository {
       metaData = metaData.filter(obj => obj.title.indexOf(searchQuery) >= 0)
     }
 
+    metaData.forEach(storyMD => {
+      // Append chapter meta data
+      storyMD.chapters.forEach(chapter => {
+        storyMD.chapters[chapter.URI] = this.chapterMetaData[chapter.URI]
+      })
+    })
+
     return new Promise<StoryMetaData[]>((resolve, reject) => {
       resolve(metaData)
     })
@@ -151,6 +166,10 @@ export class StoryRepository {
     return new Promise<StoryMetaData>((resolve, reject) => {
       let storyMD = this.storiesMD[storyId]
       if (storyMD != undefined) {
+        // Append chapter meta data
+        storyMD.chapters.forEach(chapter => {
+          storyMD.chapters[chapter.URI] = this.chapterMetaData[chapter.URI]
+        })
         resolve(storyMD);
       }
       else {
