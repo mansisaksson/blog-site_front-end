@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
-import { StoryEditorService, StoryService } from '../../_services'
+import { StoryEditorService, StoryService, AlertService } from '../../_services'
 import { StoryChapter, StoryMetaData, ChapterMetaData } from '../../_models'
 
 @Component({
@@ -14,6 +14,7 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
   private chapter: ChapterMetaData
 
   constructor(
+    private alertService: AlertService,
     private storyEditorService: StoryEditorService,
     private activatedRoute: ActivatedRoute) {
     
@@ -45,7 +46,7 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
               }
             })
           } else {
-            
+            this.alertService.error("This story has no chapters!")
           }
         })
     })
@@ -56,7 +57,14 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   onTitleChanged(newTitle: string) {
-    console.log(newTitle)
+    this.storyEditorService.renameStory(newTitle).then(() => {
+      this.alertService.success("Story Renamed!")
+    }).catch(e => this.alertService.error(e))
   }
 
+  onChapterTitleChanged(newTitle: string) {
+    this.storyEditorService.renameChapter(newTitle).then(() => {
+      this.alertService.success("Chapter Renamed!")
+    }).catch(e => this.alertService.error(e))
+  }
 }

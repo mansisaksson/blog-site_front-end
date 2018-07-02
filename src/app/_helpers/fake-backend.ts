@@ -171,9 +171,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
 			// delete chapter
 			else if (request.url.endsWith('/api/stories/chapters') && request.method === 'DELETE') {
-				let storyId = request.params.get("storyId")
 				let uri = request.params.get("uri")
-				this.storyRepo.removeChapter(storyId, uri).then((newStory: StoryMetaData) => {
+				this.storyRepo.removeChapter(uri).then((newStory: StoryMetaData) => {
 					observer.next(new HttpResponse({ status: 200, body: newStory }))
 				}, (error) => {
 					observer.error(error);
@@ -193,13 +192,28 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				})
 			}
 
-			// upate chapter
-			else if (request.url.endsWith('/api/stories/chapters') && request.method === 'PUT') {
+			// upate chapter content
+			else if (request.url.endsWith('/api/stories/chapters/content') && request.method === 'PUT') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
 					let uri = request.params.get("uri")
-					this.storyRepo.updateChapter(uri, <StoryChapter>request.body).then((success) => {
+					this.storyRepo.updateChapterContent(uri, request.body).then((success) => {
 						observer.next(new HttpResponse({ status: 200 }));
+					}, (error) => {
+						observer.error(error)
+					})
+				} else {
+					observer.error('Unauthorised');
+				}
+			}
+
+			// upate chapter meta data
+			else if (request.url.endsWith('/api/stories/chapters/metaData') && request.method === 'PUT') {
+				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+					let uri = request.params.get("uri")
+					this.storyRepo.updateChapterMetaData(uri, <ChapterMetaData>request.body).then((metaData: StoryMetaData) => {
+						observer.next(new HttpResponse({ status: 200, body: metaData }));
 					}, (error) => {
 						observer.error(error)
 					})

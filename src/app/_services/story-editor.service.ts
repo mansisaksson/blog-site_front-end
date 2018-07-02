@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StoryService } from './story.service'
 
-import { StoryChapter, StoryMetaData, ChapterMetaData } from '../_models/index';
+import { StoryMetaData, ChapterMetaData } from '../_models/index';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 // for some reason the @types/quill are broken, have to use this instead
@@ -25,7 +25,7 @@ Quill.register(Font, true)
 @Injectable()
 export class StoryEditorService {
 	private currentStory: BehaviorSubject<StoryMetaData> = new BehaviorSubject<StoryMetaData>(undefined);
-	private chapterMetaData: BehaviorSubject<ChapterMetaData> = new BehaviorSubject<ChapterMetaData>(undefined)
+	private currentChapter: BehaviorSubject<ChapterMetaData> = new BehaviorSubject<ChapterMetaData>(undefined)
 	private editor: Quill
 
 	constructor(private storyService: StoryService) {
@@ -37,7 +37,7 @@ export class StoryEditorService {
 	}
 
 	public getCurrentChapter(): Observable<ChapterMetaData> {
-		return this.chapterMetaData.asObservable()
+		return this.currentChapter.asObservable()
 	}
 
 	public createEditor(
@@ -47,6 +47,9 @@ export class StoryEditorService {
 		scrollingContainer: string
 	): Promise<StoryMetaData> {
 		return new Promise((resolve, reject) => {
+			this.currentStory.next(undefined)
+			this.currentChapter.next(undefined)
+
 			this.storyService.getStory(storyId).then((story) => {
 				this.storyService.setCurrentlyViewedStory(story)
 
@@ -70,31 +73,30 @@ export class StoryEditorService {
 	public destroyEditor() {
 		delete this.editor
 		this.currentStory.next(undefined)
-		this.chapterMetaData.next(undefined)
+		this.currentChapter.next(undefined)
 	}
 
 	public editChapter(chapterURI: string): Observable<ChapterMetaData> {
-		this.chapterMetaData.next(undefined) // Clear current chapter
-		this.storyService.getStoryChapter(chapterURI).then((chapter) => {
-			if (this.editor) {
-				this.chapterMetaData.next(chapter.metaData)
+		if (this.editor) {
+			this.currentChapter.next(undefined) // Clear current chapter
+			this.editor.setText("...") // Clear the editor
+
+			this.storyService.getStoryChapter(chapterURI).then((chapter) => {
+				this.currentChapter.next(chapter.metaData)
 				try {
 					this.editor.setContents(JSON.parse(chapter.content))
 				} catch (error) { this.editor.setContents() }
-			}
-		}).catch(e => console.log(e))
-		
-		return this.chapterMetaData.asObservable()
+			}).catch(e => console.log(e))
+		}
+		return this.currentChapter.asObservable()
 	}
 
 	public saveCurrentChapter(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			if (this.editor && this.chapterMetaData.getValue()) {
-				let newChapter = <StoryChapter>{
-					metaData: this.chapterMetaData.getValue(),
-					content: JSON.stringify(this.editor.getContents())
-				}
-				this.storyService.updateChapter(newChapter).then(() => {
+			let metaData = this.currentChapter.getValue()
+			if (this.editor && metaData) {
+				let content = JSON.stringify(this.editor.getContents())
+				this.storyService.updateChapterContent(metaData.URI, content).then(() => {
 					resolve()
 				}).catch(e => {
 					reject(e)
@@ -124,10 +126,9 @@ export class StoryEditorService {
 
 	public deleteCurrentChapter(): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
-			let story = this.currentStory.getValue()
-			let chaper = this.chapterMetaData.getValue()
-			if (story && chaper) {
-				this.storyService.deleteChapter(story.storyId, chaper.URI).then((updatedStory: StoryMetaData) => {
+			let chapter = this.currentChapter.getValue()
+			if (this.editor && chapter) {
+				this.storyService.deleteChapter(chapter.URI).then((updatedStory: StoryMetaData) => {
 					this.currentStory.next(updatedStory)
 
 					if (updatedStory.chapters.length > 0) {
@@ -136,7 +137,7 @@ export class StoryEditorService {
 							resolve(updatedStory)
 						}, e => reject(e))
 					} else {
-						this.chapterMetaData.next(undefined)
+						this.currentChapter.next(undefined)
 					}
 				}).catch(e => reject(e))
 			} else {
@@ -144,10 +145,20 @@ export class StoryEditorService {
 			}
 		})
 	}
-	
+
 	public renameChapter(newName: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
-			// TODO
+			let metaData = this.currentChapter.getValue()
+			if (this.editor && metaData) {
+				metaData.title = newName
+				this.storyService.updateChapterMetaData(metaData.URI, metaData).then((story) => {
+					this.currentChapter.next(metaData)
+					this.currentStory.next(story)
+					resolve(story)
+				}).catch(e => reject(e))
+			} else {
+				reject("No valid chapter is being edited")
+			}
 		})
 	}
 

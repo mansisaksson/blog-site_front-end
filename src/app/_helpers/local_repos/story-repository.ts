@@ -6,6 +6,7 @@ export class StoryRepository {
   private storiesMD: { [key: string]: StoryMetaData } = {}
   private chapterMetaData: { [key: string]: ChapterMetaData } = {}
   private chapterContents: { [key: string]: string } = {}
+  private chapterOwner: { [key: string]: string } = {}
 
   constructor() {
     this.loadRepo()
@@ -24,6 +25,7 @@ export class StoryRepository {
     localStorage.setItem('stories_md', JSON.stringify(this.storiesMD))
     localStorage.setItem('story_chapters', JSON.stringify(this.chapterContents))
     localStorage.setItem('chapter_md', JSON.stringify(this.chapterMetaData))
+    localStorage.setItem('chapter_owner', JSON.stringify(this.chapterOwner))
   }
 
   loadRepo() {
@@ -39,6 +41,10 @@ export class StoryRepository {
     if (chapterMD) {
       this.chapterMetaData = chapterMD;
     }
+    let chapterOwners = JSON.parse(localStorage.getItem('chapter_owner'))
+    if (chapterOwners) {
+      this.chapterOwner = chapterOwners;
+    }
   }
 
   createChapter(storyId: string, chapterTitle: string): Promise<StoryMetaData> {
@@ -51,7 +57,8 @@ export class StoryRepository {
         }
 
         this.chapterMetaData[chapterURI] = chapterMetaData
-        this.chapterContents[chapterURI] = "";
+        this.chapterContents[chapterURI] = ""
+        this.chapterOwner[chapterURI] = storyId
 
         story.chapters.push(chapterMetaData)
         this.updateStory(story).then(() => {
@@ -61,8 +68,9 @@ export class StoryRepository {
     })
   }
 
-  removeChapter(storyId: string, uri: string): Promise<StoryMetaData> {
+  removeChapter(uri: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
+      let storyId = this.chapterOwner[uri]
       this.getStory(storyId).then((story: StoryMetaData) => {
         if (!this.chapterMetaData[uri]) {
           return reject(reject("Could not remove - Could not find chapter"))
@@ -70,6 +78,7 @@ export class StoryRepository {
 
         delete this.chapterMetaData[uri]
         delete this.chapterContents[uri]
+        delete this.chapterOwner[uri]
 
         story.chapters = story.chapters.filter(value => { return value.URI != uri })
         this.updateStory(story).then(() => {
@@ -79,11 +88,29 @@ export class StoryRepository {
     })
   }
 
-  updateChapter(uri: string, chapter: StoryChapter): Promise<boolean> {
+  updateChapterMetaData(uri: string, metaData: ChapterMetaData): Promise<StoryMetaData> {
+    return new Promise<StoryMetaData>((resolve, reject) => {
+      let storyId = this.chapterOwner[uri]
+      this.getStory(storyId).then((story: StoryMetaData) => {
+        if (!this.chapterMetaData[uri]) {
+          return reject(reject("Could not remove - Could not find chapter"))
+        }
+
+        metaData.URI = uri
+        this.chapterMetaData[uri] = metaData
+        let chapterIndex = story.chapters.findIndex((value) => { return value.URI == uri })
+        story.chapters[chapterIndex] = metaData
+        this.updateStory(story).then(() => {
+          resolve(story)
+        }).catch(e => reject(e))
+      }).catch(e => reject(e))
+    })
+  }
+
+  updateChapterContent(uri: string, content: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       if (this.chapterMetaData[uri] != undefined) {
-        this.chapterMetaData[uri] = chapter.metaData
-        this.chapterContents[uri] = chapter.content
+        this.chapterContents[uri] = content
         this.saveRepo()
         resolve(true)
       } else {
@@ -145,6 +172,7 @@ export class StoryRepository {
       storyMD.chapters.forEach(chapter => {
         delete this.chapterMetaData[chapter.URI]
         delete this.chapterContents[chapter.URI]
+        delete this.chapterOwner[chapter.URI]
       });
       delete this.storiesMD[storyId]
 

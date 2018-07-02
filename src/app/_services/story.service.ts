@@ -101,10 +101,9 @@ export class StoryService {
 		})
 	}
 
-	deleteChapter(storyId: string, chapterURI: string): Promise<StoryMetaData> {
+	deleteChapter(chapterURI: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let params = {
-				storyId: storyId,
 				uri: chapterURI,
 			}
 			this.http.delete('/api/stories/chapters', { params: params }).subscribe((data) => {
@@ -128,12 +127,12 @@ export class StoryService {
 		})
 	}
 
-	updateChapter(storyChapter: StoryChapter): Promise<boolean> {
+	updateChapterContent(uri, chapterCntent: string): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
 			let params = {
-				uri: storyChapter.metaData.URI
+				uri: uri
 			}
-			this.http.put('/api/stories/chapters', storyChapter, { params: params }).subscribe((data) => {
+			this.http.put('/api/stories/chapters/content', chapterCntent, { params: params }).subscribe((data) => {
 				resolve(<boolean>data)
 			}, (error) => {
 				reject(error)
@@ -141,5 +140,16 @@ export class StoryService {
 		})
 	}
 
-
+	updateChapterMetaData(uri: string, newMetaData: ChapterMetaData): Promise<StoryMetaData> {
+		return new Promise<StoryMetaData>((resolve, reject) => {
+			let params = {
+				uri: uri
+			}
+			this.http.put('/api/stories/chapters/metaData', newMetaData, { params: params }).subscribe((data) => {
+				resolve(<StoryMetaData>data)
+			}, (error) => {
+				reject(error)
+			})
+		})
+	}
 }
