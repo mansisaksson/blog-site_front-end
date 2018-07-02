@@ -184,11 +184,25 @@ export class StoryRepository {
   private updateStory(story: StoryMetaData): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       if (!story) {
-        return reject(reject("Invalid story"))
+        return reject("Invalid story")
       }
       this.storiesMD[story.storyId] = story
       this.saveRepo();
       resolve(true)
+    })
+  }
+
+  updateStoryTitle(storyId: string, newTitle: string): Promise<StoryMetaData> {
+    return new Promise<StoryMetaData>((resolve, reject) => {
+      let storyMD: StoryMetaData = this.storiesMD[storyId]
+      if (storyMD) {
+        storyMD.title = newTitle
+        this.updateStory(storyMD).then(success => {
+          resolve(storyMD)
+        }).catch(e => reject(e))
+      } else {
+        reject("updateStoryTitle - Invalid story")
+      }
     })
   }
 

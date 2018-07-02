@@ -164,7 +164,15 @@ export class StoryEditorService {
 
 	public renameStory(newName: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
-			// TODO
+			let story = this.currentStory.getValue()
+			if (this.editor && story) {
+				this.storyService.updateStoryName(story.storyId, newName).then((story) => {
+					this.currentStory.next(story)
+					resolve(story)
+				}).catch(e => reject(e))
+			} else {
+				reject("No valid story is being edited")
+			}
 		})
 	}
 }

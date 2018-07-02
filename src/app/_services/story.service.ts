@@ -86,6 +86,19 @@ export class StoryService {
 		})
 	}
 
+	updateStoryName(stortId: string, newTitle: string): Promise<StoryMetaData> {
+		return new Promise<StoryMetaData>((resolve, reject) => {
+			let params = {
+				storyId: stortId
+			}
+			this.http.put('/api/stories/title', newTitle, { params: params }).subscribe((data) => {
+				resolve(<StoryMetaData>data)
+			}, (error) => {
+				reject(error)
+			})
+		})
+	}
+
 	// *** Chapters
 	createChapter(storyId: string, chapterTitle: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
