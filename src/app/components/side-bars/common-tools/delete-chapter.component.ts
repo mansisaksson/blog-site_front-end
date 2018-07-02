@@ -24,7 +24,7 @@ export class DeleteChapterComponent {
 
       this.uiService.promptForm('', form).then((entries: FormValues) => {
         if (entries["delete"] === "DELETE") {
-          this.storyEditorService.deleteChapter().then(() => {
+          this.storyEditorService.deleteCurrentChapter().then(() => {
             this.alertService.success("Chapter Deleted!")
           }).catch(e => this.alertService.error(e))
         } else {

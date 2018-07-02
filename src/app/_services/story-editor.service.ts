@@ -73,7 +73,21 @@ export class StoryEditorService {
 		this.chapterMetaData.next(undefined)
 	}
 
-	public saveChapter(): Promise<any> {
+	public editChapter(chapterURI: string): Observable<ChapterMetaData> {
+		this.chapterMetaData.next(undefined) // Clear current chapter
+		this.storyService.getStoryChapter(chapterURI).then((chapter) => {
+			if (this.editor) {
+				this.chapterMetaData.next(chapter.metaData)
+				try {
+					this.editor.setContents(JSON.parse(chapter.content))
+				} catch (error) { this.editor.setContents() }
+			}
+		}).catch(e => console.log(e))
+		
+		return this.chapterMetaData.asObservable()
+	}
+
+	public saveCurrentChapter(): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (this.editor && this.chapterMetaData.getValue()) {
 				let newChapter = <StoryChapter>{
@@ -91,21 +105,7 @@ export class StoryEditorService {
 		})
 	}
 
-	public editChapter(chapterURI: string): Observable<ChapterMetaData> {
-		this.chapterMetaData.next(undefined) // Clear current chapter
-		this.storyService.getStoryChapter(chapterURI).then((chapter) => {
-			if (this.editor) {
-				this.chapterMetaData.next(chapter.metaData)
-				try {
-					this.editor.setContents(JSON.parse(chapter.content))
-				} catch (error) { this.editor.setContents() }
-			}
-		}).catch(e => console.log(e))
-		
-		return this.chapterMetaData.asObservable()
-	}
-
-	public addChapter(title: string): Promise<StoryMetaData> {
+	public createNewChapter(title: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let story = this.currentStory.getValue()
 			if (story) {
@@ -122,7 +122,7 @@ export class StoryEditorService {
 		})
 	}
 
-	public deleteChapter(): Promise<StoryMetaData> {
+	public deleteCurrentChapter(): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let story = this.currentStory.getValue()
 			let chaper = this.chapterMetaData.getValue()
@@ -142,6 +142,18 @@ export class StoryEditorService {
 			} else {
 				reject("No valid story being editor")
 			}
+		})
+	}
+	
+	public renameChapter(newName: string): Promise<StoryMetaData> {
+		return new Promise<StoryMetaData>((resolve, reject) => {
+			// TODO
+		})
+	}
+
+	public renameStory(newName: string): Promise<StoryMetaData> {
+		return new Promise<StoryMetaData>((resolve, reject) => {
+			// TODO
 		})
 	}
 }

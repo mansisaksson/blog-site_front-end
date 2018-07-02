@@ -24,7 +24,7 @@ export class AddChapterComponent {
       let form: DynamicForm = new DynamicForm("Create Chapter", "Create!")
       form.addTextInput("Chapter Title", "chapter_title", "Chapter 1")
       this.uiService.promptForm('', form).then((values: FormValues) => {
-        this.storyEditorService.addChapter(values["chapter_title"]).then(() => {
+        this.storyEditorService.createNewChapter(values["chapter_title"]).then(() => {
           this.alertService.success("Chapter added!")
           //this.router.navigate(['story-editor/'+story.storyId])
         }).catch(e => this.alertService.error(e))

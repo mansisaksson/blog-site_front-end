@@ -40,7 +40,7 @@ export class SaveStoryComponent implements OnInit {
     if (this.enabled) {
       this.authenticationService.withLoggedInUser().then((user: User) => {
         if (this.story != undefined) {
-          this.storyEditorService.saveChapter().then(() => {
+          this.storyEditorService.saveCurrentChapter().then(() => {
             this.alertService.success("Chapter saved!")
           }).catch(e => this.alertService.error(e))
         } else {
