@@ -2,7 +2,7 @@
 	[ ] Migrate to MongoDB
 
 [ ] Edit story/chapter meta data
-	[ ] Edit title
+	[x] Edit title
 
 [ ] Centered images are not saved
 
