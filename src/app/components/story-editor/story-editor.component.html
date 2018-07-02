@@ -1,6 +1,6 @@
 <div id="scrolling-container">
 <div id="quill-container">
-<h2>{{story.title}}</h2>
+<app-inline-editable (onEdit)="onTitleChanged($event)"><h2>{{story.title}}</h2></app-inline-editable>
 <h3>{{chapter.title}}</h3>
 <div class="quill-editor" id ="quillEditor"></div>
 </div>

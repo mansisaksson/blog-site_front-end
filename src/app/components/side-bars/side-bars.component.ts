@@ -34,7 +34,10 @@ export class SideBarComponent {
 
 @Component({
   selector: 'app-side-bars',
-  templateUrl: './side-bars.component.html'
+  template: `
+  <div class="container-fluid">
+    <ng-container #sidebarTarget></ng-container>
+  </div>`
 })
 export class SideBarsComponent implements OnInit, OnDestroy {
   @ViewChild("sidebarTarget", { read: ViewContainerRef })

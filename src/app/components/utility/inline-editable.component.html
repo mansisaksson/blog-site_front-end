@@ -1,0 +1,20 @@
+<style>
+.inlineEditor {
+  overflow:hidden;
+}
+.inlineEditor-content {
+  float: left;
+}
+.editButton {
+  font-size: 14px;
+  padding: 3px;
+}
+</style>
+<div class="inlineEditor">
+  <div class="inlineEditor-content" #content>
+    <ng-content></ng-content>
+  </div>
+  <div class="inlineEditor-content">
+    <button class="btn editButton btn-primary" (click)="toggleEdit()">{{btnText}}</button>
+  </div>
+</div>

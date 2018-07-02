@@ -55,4 +55,8 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
     this.storyEditorService.destroyEditor()
   }
 
+  onTitleChanged(newTitle: string) {
+    console.log(newTitle)
+  }
+
 }
