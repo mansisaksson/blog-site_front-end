@@ -28,11 +28,12 @@
     "quill-image-resize-module": "^3.0.0",
     "quill-mention": "^0.2.7",
     "rxjs": "^5.5.6",
+    "tsc": "^1.20150623.0",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
     "@angular-devkit/core": "0.3.2",
-    "@angular/cli": "~1.7.4",
+    "@angular/cli": "^1.7.4",
     "@angular/compiler-cli": "^5.2.0",
     "@angular/language-service": "^5.2.0",
     "@ngtools/webpack": "1.10.2",
@@ -53,7 +54,7 @@
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.10",
     "postcss-url": "^7.1.2",
-    "protractor": "~5.1.2",
+    "protractor": "^5.3.2",
     "raw-loader": "^0.5.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",

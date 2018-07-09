@@ -7,6 +7,8 @@ import { StoryChapter, StoryMetaData, ChapterMetaData } from '../_models/story'
 import { UserRepository } from './local_repos/user-repository'
 import { StoryRepository } from './local_repos/story-repository'
 
+import { environment } from './../../environments/environment';
+
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/delay';
@@ -25,15 +27,19 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 	}
 
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+		if (!environment.useFakeBackend) {
+			// pass through any requests not handled above
+			return next.handle(request)
+		}
 
 		return new Observable<HttpEvent<any>>((observer) => {
-			//console.log(request)
-
 			/* ***** Begin User ***** */
 			// authenticate
-			if (request.url.endsWith('/api/authenticate') && request.method === 'POST') {
-				this.userRepo.findUserByName(request.body.username).then((user: User) => {
-					if (user.password === request.body.password) {
+			if (request.url.endsWith('/api/authenticate') && request.method === 'GET') {
+				let userName = request.params['user_name']
+				let userPassword = request.params['user_password']
+				this.userRepo.findUserByName(userName).then((user: User) => {
+					if (user.password === userPassword) {
 						let body = {
 							id: user.id,
 							username: user.username,
@@ -238,8 +244,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			}
 			/* ***** End Chapters ***** */
 
-			// pass through any requests not handled above
-			//return next.handle(request);
+
 		})
 			// call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
 			.materialize()

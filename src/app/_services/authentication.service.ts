@@ -1,9 +1,8 @@
 ﻿import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { User } from '../_models/index'
-import 'rxjs/add/operator/map'
 import { UIService } from './ui.service';
+import { UserService } from './user.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -11,7 +10,7 @@ export class AuthenticationService {
 	private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
 
 	constructor(
-		private http: HttpClient,
+		private userService: UserService,
 		private uiService: UIService) {
 		this.refreshLoginState()
 	}
@@ -34,13 +33,13 @@ export class AuthenticationService {
 
 	login(username: string, password: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
-			this.http.post<any>('/api/authenticate', { username: username, password: password }).subscribe(user => {
-				if (user && user.token) {
+			this.userService.authenticate(username, password).then((user: User) => {
+				if (user) {
 					localStorage.setItem('currentUser', JSON.stringify(user))
 				}
 				this.refreshLoginState()
 				resolve(user)
-			}, (e) => {
+			}).catch(e => {
 				this.refreshLoginState()
 				reject(e)
 			})

@@ -1,7 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { User } from '../_models/index';
+import { environment } from './../../environments/environment'
 
 @Injectable()
 export class UserService {
@@ -12,7 +12,7 @@ export class UserService {
 			let params = {
 				// TODO: add search functionality
 			}
-			this.http.get<User[]>('/api/users/query', { params: params }).subscribe((data) => {
+			this.http.get<User[]>(environment.backendAddr+'/api/users/query', { params: params }).subscribe((data) => {
 				resolve(data)
 			}, (error) => {
 				reject(error)
@@ -25,7 +25,7 @@ export class UserService {
 			let params = {
 				userId: id
 			}
-			this.http.get('/api/users', { params: params }).subscribe((data) => {
+			this.http.get(environment.backendAddr+'/api/users', { params: params }).subscribe((data) => {
 				resolve(<User>data)
 			}, (error) => {
 				reject(error)
@@ -33,9 +33,25 @@ export class UserService {
 		})
 	}
 
-	create(user: User): Promise<User> {
+	authenticate(userName: string, password: string): Promise<any> {
+		return new Promise<any>((resolve, reject) => {
+			let params = {
+				user_name: userName,
+				user_password: password
+			}
+			this.http.get<any>(environment.backendAddr+'/api/authenticate', { params: params }).subscribe(user => {
+				resolve(user)
+			}, (e) => { reject(e) })
+		})
+	}
+
+	create(userName: string, password: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
-			this.http.post('/api/users', user).subscribe((data) => {
+			let params = {
+				user_name: userName,
+				user_password: password
+			}
+			this.http.post(environment.backendAddr+'/api/users', {}, { params: params }).subscribe((data) => {
 				resolve(<User>data)
 			}, (error) => {
 				reject(error)
@@ -60,7 +76,7 @@ export class UserService {
 			let params = {
 				userId: id
 			}
-			this.http.delete('/api/users', { params: params }).subscribe((data) => {
+			this.http.delete(environment.backendAddr+'/api/users', { params: params }).subscribe((data) => {
 				resolve(<boolean>data)
 			}, (error) => {
 				reject(error)

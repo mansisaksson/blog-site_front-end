@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
-};
+  production: true,
+  useFakeBackend: false,
+  backendAddr: 'http://mansisaksson.com:3000'
+}
