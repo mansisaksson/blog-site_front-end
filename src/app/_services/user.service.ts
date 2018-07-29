@@ -1,7 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { User } from '../_models/index';
+import { environment } from './../../environments/environment'
 
 @Injectable()
 export class UserService {
@@ -12,7 +12,7 @@ export class UserService {
 			let params = {
 				// TODO: add search functionality
 			}
-			this.http.get<User[]>('/api/users/query', { params: params }).subscribe((data) => {
+			this.http.get<User[]>(environment.backendAddr+'/api/users/query', { params: params }).subscribe((data) => {
 				resolve(data)
 			}, (error) => {
 				reject(error)
@@ -25,11 +25,23 @@ export class UserService {
 			let params = {
 				user_id: id
 			}
-			this.http.get('/api/users', { params: params }).subscribe((data) => {
+			this.http.get(environment.backendAddr+'/api/users', { params: params }).subscribe((data) => {
 				resolve(<User>data)
 			}, (error) => {
 				reject(error)
 			})
+		})
+	}
+
+	authenticate(userName: string, password: string): Promise<any> {
+		return new Promise<any>((resolve, reject) => {
+			let params = {
+				user_name: userName,
+				user_password: password
+			}
+			this.http.get<any>(environment.backendAddr+'/api/authenticate', { params: params }).subscribe(user => {
+				resolve(user)
+			}, (e) => { reject(e) })
 		})
 	}
 
@@ -39,7 +51,7 @@ export class UserService {
 				user_name: userName,
 				user_password: password
 			}
-			this.http.post('/api/users', {}, { params: params }).subscribe((data) => {
+			this.http.post(environment.backendAddr+'/api/users', {}, { params: params }).subscribe((data) => {
 				resolve(<User>data)
 			}, (error) => {
 				reject(error)
@@ -64,7 +76,7 @@ export class UserService {
 			let params = {
 				userId: id
 			}
-			this.http.delete('/api/users', { params: params }).subscribe((data) => {
+			this.http.delete(environment.backendAddr+'/api/users', { params: params }).subscribe((data) => {
 				resolve(<boolean>data)
 			}, (error) => {
 				reject(error)

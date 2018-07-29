@@ -42,7 +42,7 @@ export class RegisterComponent implements OnDestroy {
 		this.loading = true;
 		this.userService.create(this.model.username, this.model.password).then(user => {
 			this.alertService.success('Registration successful', true)
-			this.authenticationService.login(this.model.username, this.model.username).then(() => {
+			this.authenticationService.login(this.model.username, this.model.password).then(() => {
 				this.router.navigate([this.message.url])
 				this.closeModal()
 			})
