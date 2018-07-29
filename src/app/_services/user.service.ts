@@ -23,7 +23,7 @@ export class UserService {
 	getById(id: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
 			let params = {
-				userId: id
+				user_id: id
 			}
 			this.http.get('/api/users', { params: params }).subscribe((data) => {
 				resolve(<User>data)
@@ -33,9 +33,13 @@ export class UserService {
 		})
 	}
 
-	create(user: User): Promise<User> {
+	create(userName: string, password: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
-			this.http.post('/api/users', user).subscribe((data) => {
+			let params = {
+				user_name: userName,
+				user_password: password
+			}
+			this.http.post('/api/users', {}, { params: params }).subscribe((data) => {
 				resolve(<User>data)
 			}, (error) => {
 				reject(error)
