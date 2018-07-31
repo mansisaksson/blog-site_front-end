@@ -75,10 +75,10 @@ export class StoryService {
 		})
 	}
 
-	getStoryChapter(chapterURI: string): Promise<StoryChapter> {
+	getStoryChapter(chapterId: string): Promise<StoryChapter> {
 		return new Promise<StoryChapter>((resolve, reject) => {
-			let uriArray = [chapterURI]
-			this.getChapters(uriArray).then((data) => {
+			let idArray = [chapterId]
+			this.getChapters(idArray).then((data) => {
 				resolve(data[0])
 			}).catch((e) => {
 				reject(e)
@@ -114,10 +114,10 @@ export class StoryService {
 		})
 	}
 
-	deleteChapter(chapterURI: string): Promise<StoryMetaData> {
+	deleteChapter(chapterId: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let params = {
-				uri: chapterURI,
+				chapterId: chapterId,
 			}
 			this.http.delete('/api/stories/chapters', { params: params }).subscribe((data) => {
 				resolve(<StoryMetaData>data)
@@ -127,10 +127,10 @@ export class StoryService {
 		})
 	}
 
-	getChapters(chaptersURIs: string[]): Promise<StoryChapter[]> {
+	getChapters(chaptersIds: string[]): Promise<StoryChapter[]> {
 		return new Promise<StoryChapter[]>((resolve, reject) => {
 			let params = {
-				URIs: JSON.stringify(chaptersURIs)
+				chapterIds: JSON.stringify(chaptersIds)
 			}
 			this.http.get('/api/stories/chapters', { params: params }).subscribe((data) => {
 				resolve(<StoryChapter[]>data)
@@ -140,10 +140,10 @@ export class StoryService {
 		})
 	}
 
-	updateChapterContent(uri, chapterCntent: string): Promise<boolean> {
+	updateChapterContent(chapterId, chapterCntent: string): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
 			let params = {
-				uri: uri
+				chapterId: chapterId
 			}
 			this.http.put('/api/stories/chapters/content', chapterCntent, { params: params }).subscribe((data) => {
 				resolve(<boolean>data)
@@ -153,10 +153,10 @@ export class StoryService {
 		})
 	}
 
-	updateChapterMetaData(uri: string, newMetaData: ChapterMetaData): Promise<StoryMetaData> {
+	updateChapterMetaData(chapterId: string, newMetaData: ChapterMetaData): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let params = {
-				uri: uri
+				chapterId: chapterId
 			}
 			this.http.put('/api/stories/chapters/metaData', newMetaData, { params: params }).subscribe((data) => {
 				resolve(<StoryMetaData>data)

@@ -34,10 +34,10 @@ export class StoryViewerComponent implements OnInit {
     this.storyService.getStory(this.storyId).then((story) => {
       this.story = story
       this.storyService.setCurrentlyViewedStory(story)
-      let chapterURIs = story.chapters.map(a => a.URI);
-      this.storyService.getChapters(chapterURIs).then((chapters: StoryChapter[]) => {
+      let chapterIds = story.chapters.map(a => a.chapterId)
+      this.storyService.getChapters(chapterIds).then((chapters: StoryChapter[]) => {
         let storyHTML = ""
-        let cfg = {};
+        let cfg = {}
         chapters.forEach((chapter: StoryChapter) => {
           storyHTML += '<div class="storyChapter">'
           storyHTML += '<h2>' + chapter.metaData.title + '</h2>'
@@ -47,8 +47,8 @@ export class StoryViewerComponent implements OnInit {
             storyHTML += converter.convert()
           } catch {}
           storyHTML += '</div>'
-        });
-        document.getElementById('documentContainer').innerHTML = storyHTML;
+        })
+        document.getElementById('documentContainer').innerHTML = storyHTML
       }).catch((e) => console.log(e))
     }).catch((e) => console.log(e))
   }

@@ -76,12 +76,12 @@ export class StoryEditorService {
 		this.currentChapter.next(undefined)
 	}
 
-	public editChapter(chapterURI: string): Observable<ChapterMetaData> {
+	public editChapter(chapterId: string): Observable<ChapterMetaData> {
 		if (this.editor) {
 			this.currentChapter.next(undefined) // Clear current chapter
 			this.editor.setText("...") // Clear the editor
 
-			this.storyService.getStoryChapter(chapterURI).then((chapter) => {
+			this.storyService.getStoryChapter(chapterId).then((chapter) => {
 				this.currentChapter.next(chapter.metaData)
 				try {
 					this.editor.setContents(JSON.parse(chapter.content))
@@ -96,7 +96,7 @@ export class StoryEditorService {
 			let metaData = this.currentChapter.getValue()
 			if (this.editor && metaData) {
 				let content = JSON.stringify(this.editor.getContents())
-				this.storyService.updateChapterContent(metaData.URI, content).then(() => {
+				this.storyService.updateChapterContent(metaData.chapterId, content).then(() => {
 					resolve()
 				}).catch(e => {
 					reject(e)
@@ -114,7 +114,7 @@ export class StoryEditorService {
 				this.storyService.createChapter(story.storyId, title).then((updatedStory: StoryMetaData) => {
 					this.currentStory.next(updatedStory)
 					let chapter = updatedStory.chapters[updatedStory.chapters.length - 1]
-					this.editChapter(chapter.URI).subscribe(() => {
+					this.editChapter(chapter.chapterId).subscribe(() => {
 						resolve(updatedStory)
 					}, e => reject(e))
 				}).catch(e => reject(e))
@@ -128,12 +128,12 @@ export class StoryEditorService {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let chapter = this.currentChapter.getValue()
 			if (this.editor && chapter) {
-				this.storyService.deleteChapter(chapter.URI).then((updatedStory: StoryMetaData) => {
+				this.storyService.deleteChapter(chapter.chapterId).then((updatedStory: StoryMetaData) => {
 					this.currentStory.next(updatedStory)
 
 					if (updatedStory.chapters.length > 0) {
 						let chapter = updatedStory.chapters[updatedStory.chapters.length - 1]
-						this.editChapter(chapter.URI).subscribe(() => {
+						this.editChapter(chapter.chapterId).subscribe(() => {
 							resolve(updatedStory)
 						}, e => reject(e))
 					} else {
@@ -151,7 +151,7 @@ export class StoryEditorService {
 			let metaData = this.currentChapter.getValue()
 			if (this.editor && metaData) {
 				metaData.title = newName
-				this.storyService.updateChapterMetaData(metaData.URI, metaData).then((story) => {
+				this.storyService.updateChapterMetaData(metaData.chapterId, metaData).then((story) => {
 					this.currentChapter.next(metaData)
 					this.currentStory.next(story)
 					resolve(story)

@@ -1,12 +1,10 @@
 import { StoryChapter, StoryMetaData, ChapterMetaData } from '../../_models/index'
 
-// We do not save the URI to disc since it could potentially change
 export class StoryRepository {
 
   private storiesMD: { [key: string]: StoryMetaData } = {}
   private chapterMetaData: { [key: string]: ChapterMetaData } = {}
   private chapterContents: { [key: string]: string } = {}
-  private chapterOwner: { [key: string]: string } = {}
 
   constructor() {
     this.loadRepo()
@@ -25,7 +23,6 @@ export class StoryRepository {
     localStorage.setItem('stories_md', JSON.stringify(this.storiesMD))
     localStorage.setItem('story_chapters', JSON.stringify(this.chapterContents))
     localStorage.setItem('chapter_md', JSON.stringify(this.chapterMetaData))
-    localStorage.setItem('chapter_owner', JSON.stringify(this.chapterOwner))
   }
 
   loadRepo() {
@@ -41,24 +38,22 @@ export class StoryRepository {
     if (chapterMD) {
       this.chapterMetaData = chapterMD;
     }
-    let chapterOwners = JSON.parse(localStorage.getItem('chapter_owner'))
-    if (chapterOwners) {
-      this.chapterOwner = chapterOwners;
-    }
   }
 
   createChapter(storyId: string, chapterTitle: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
       this.getStory(storyId).then((story: StoryMetaData) => {
+        let chapterId = StoryRepository.createGuid()
         let chapterURI = StoryRepository.createGuid()
         let chapterMetaData = <ChapterMetaData>{
+          chapterId: chapterId,
+          storyId: story.storyId,
           URI: chapterURI, //We should not save the URI since it could change without us knowing
           title: chapterTitle,
         }
 
-        this.chapterMetaData[chapterURI] = chapterMetaData
+        this.chapterMetaData[chapterId] = chapterMetaData
         this.chapterContents[chapterURI] = ""
-        this.chapterOwner[chapterURI] = storyId
 
         story.chapters.push(chapterMetaData)
         this.updateStory(story).then(() => {
@@ -68,19 +63,19 @@ export class StoryRepository {
     })
   }
 
-  removeChapter(uri: string): Promise<StoryMetaData> {
+  removeChapter(chapterId: string): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
-      let storyId = this.chapterOwner[uri]
+      let storyId = this.chapterMetaData[chapterId].storyId
       this.getStory(storyId).then((story: StoryMetaData) => {
-        if (!this.chapterMetaData[uri]) {
+        if (!this.chapterMetaData[chapterId]) {
           return reject(reject("Could not remove - Could not find chapter"))
         }
 
-        delete this.chapterMetaData[uri]
+        let uri = this.chapterMetaData[chapterId].URI
         delete this.chapterContents[uri]
-        delete this.chapterOwner[uri]
+        delete this.chapterMetaData[chapterId]
 
-        story.chapters = story.chapters.filter(value => { return value.URI != uri })
+        story.chapters = story.chapters.filter(value => { return value.chapterId != chapterId })
         this.updateStory(story).then(() => {
           resolve(story)
         }).catch(e => reject(e))
@@ -88,17 +83,17 @@ export class StoryRepository {
     })
   }
 
-  updateChapterMetaData(uri: string, metaData: ChapterMetaData): Promise<StoryMetaData> {
+  updateChapterMetaData(chapterId: string, metaData: ChapterMetaData): Promise<StoryMetaData> {
     return new Promise<StoryMetaData>((resolve, reject) => {
-      let storyId = this.chapterOwner[uri]
+      let storyId = this.chapterMetaData[chapterId].storyId
       this.getStory(storyId).then((story: StoryMetaData) => {
-        if (!this.chapterMetaData[uri]) {
+        if (!this.chapterMetaData[chapterId]) {
           return reject(reject("Could not remove - Could not find chapter"))
         }
 
-        metaData.URI = uri
-        this.chapterMetaData[uri] = metaData
-        let chapterIndex = story.chapters.findIndex((value) => { return value.URI == uri })
+        metaData.chapterId = chapterId
+        this.chapterMetaData[chapterId] = metaData
+        let chapterIndex = story.chapters.findIndex((value) => { return value.chapterId == chapterId })
         story.chapters[chapterIndex] = metaData
         this.updateStory(story).then(() => {
           resolve(story)
@@ -107,9 +102,10 @@ export class StoryRepository {
     })
   }
 
-  updateChapterContent(uri: string, content: string): Promise<boolean> {
+  updateChapterContent(storyId: string, content: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      if (this.chapterMetaData[uri] != undefined) {
+      if (this.chapterMetaData[storyId] != undefined) {
+        let uri = this.chapterMetaData[storyId].URI
         this.chapterContents[uri] = content
         this.saveRepo()
         resolve(true)
@@ -119,15 +115,15 @@ export class StoryRepository {
     })
   }
 
-  getChapters(chapterURIs: string[]): Promise<StoryChapter[]> {
+  getChapters(chapterIds: string[]): Promise<StoryChapter[]> {
     return new Promise<StoryChapter[]>((resolve, reject) => {
       let result: StoryChapter[] = []
-      chapterURIs.forEach(uri => {
-        let foundChapter = this.chapterContents[uri]
+      chapterIds.forEach(chapterId => {
+        let foundChapter = this.chapterMetaData[chapterId]
         if (foundChapter != undefined) {
           let chapter = <StoryChapter>{
-            metaData: this.chapterMetaData[uri],
-            content: foundChapter
+            metaData: foundChapter,
+            content: this.chapterContents[foundChapter.URI]
           }
           result.push(chapter)
         }
@@ -170,9 +166,8 @@ export class StoryRepository {
       }
 
       storyMD.chapters.forEach(chapter => {
-        delete this.chapterMetaData[chapter.URI]
         delete this.chapterContents[chapter.URI]
-        delete this.chapterOwner[chapter.URI]
+        delete this.chapterMetaData[chapter.chapterId]
       });
       delete this.storiesMD[storyId]
 
@@ -212,7 +207,7 @@ export class StoryRepository {
       if (storyMD != undefined) {
         // Append chapter meta data
         storyMD.chapters.forEach(chapter => {
-          storyMD.chapters[chapter.URI] = this.chapterMetaData[chapter.URI]
+          storyMD.chapters[chapter.chapterId] = this.chapterMetaData[chapter.chapterId]
         })
         resolve(storyMD);
       }
@@ -238,7 +233,7 @@ export class StoryRepository {
     metaData.forEach(storyMD => {
       // Append chapter meta data
       storyMD.chapters.forEach(chapter => {
-        storyMD.chapters[chapter.URI] = this.chapterMetaData[chapter.URI]
+        storyMD.chapters[chapter.chapterId] = this.chapterMetaData[chapter.chapterId]
       })
     })
 

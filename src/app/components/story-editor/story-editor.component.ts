@@ -36,7 +36,7 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
         '#scrolling-container').then((story: StoryMetaData) => {
           this.story = story
           if (story && this.story.chapters.length > 0) {
-            this.storyEditorService.editChapter(this.story.chapters[0].URI).subscribe((chapterMetaData: ChapterMetaData) => {
+            this.storyEditorService.editChapter(this.story.chapters[0].chapterId).subscribe((chapterMetaData: ChapterMetaData) => {
               if (chapterMetaData) {
                 this.chapter = chapterMetaData  
               } else {

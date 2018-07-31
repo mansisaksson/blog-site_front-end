@@ -42,7 +42,7 @@ export class StoryNavMenuComponent implements OnInit {
           let elem = <DrawableElem> {
             tagName: 'h2',
             content: chapter.title,
-            payload: chapter.URI
+            payload: chapter.chapterId
           }
           this.titleElements.push(elem)
         })
@@ -50,8 +50,8 @@ export class StoryNavMenuComponent implements OnInit {
     })
   }
 
-  editChapter(chapterURI: string) {
-    this.storyEditor.editChapter(chapterURI)
+  editChapter(chapterId: string) {
+    this.storyEditor.editChapter(chapterId)
   }
 
   parseChapter(chapter: StoryChapter) {
