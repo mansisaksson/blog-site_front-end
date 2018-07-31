@@ -42,17 +42,24 @@ export class UserRepository {
     })
   }
 
-  addUser(user: User): Promise<User> {
+  addUser(username: string, password: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      let newUser = user;
       // validation
-      let duplicateUser = this.users.filter(user => { return user.username === newUser.username; }).length;
-      if (duplicateUser) {
-        return reject('Username "' + newUser.username + '" is already taken');
+      if (!username || !password) {
+        return reject('Invalid username or password');
       }
 
+      let duplicateUser = this.users.filter(user => { return user.username === username; }).length;
+      if (duplicateUser) {
+        return reject('Username "' + username + '" is already taken');
+      }
+
+      let newUser = {
+        id: (this.users.length + 1).toString(),
+        username: username,
+        password: password
+      }
       // save new user
-      newUser.id = (this.users.length + 1).toString();
       this.users.push(newUser);
       localStorage.setItem('users', JSON.stringify(this.users));
 

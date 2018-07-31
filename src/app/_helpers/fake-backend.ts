@@ -36,8 +36,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			/* ***** Begin User ***** */
 			// authenticate
 			if (request.url.endsWith('/api/authenticate') && request.method === 'GET') {
-				let userName = request.params['user_name']
-				let userPassword = request.params['user_password']
+				let userName = request.params.get('user_name')
+				let userPassword = request.params.get('user_password')
 				this.userRepo.findUserByName(userName).then((user: User) => {
 					if (user.password === userPassword) {
 						let body = {
@@ -86,8 +86,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
 			// create user
 			else if (request.url.endsWith('/api/users') && request.method === 'POST') {
-				let newUser = request.body;
-				this.userRepo.addUser(newUser).then((user: User) => {
+				let userName = request.params.get('user_name')
+				let userPassword = request.params.get('user_password')
+				console.log(userName)
+				this.userRepo.addUser(userName, userPassword).then((user: User) => {
 					observer.next(new HttpResponse({ status: 200, body: user }));
 				}, error => {
 					observer.error(error);
