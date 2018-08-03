@@ -24,11 +24,13 @@ export class AlertService {
 	}
 
 	success(message: string, keepAfterNavigationChange = false) {
+		console.log(message)
 		this.keepAfterNavigationChange = keepAfterNavigationChange;
 		this.subject.next({ type: 'success', text: message });
 	}
 
 	error(message: string, keepAfterNavigationChange = false) {
+		console.error(message)
 		this.keepAfterNavigationChange = keepAfterNavigationChange;
 		this.subject.next({ type: 'error', text: message });
 	}

@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  useFakeBackend: true,
+  useFakeBackend: false,
   backendAddr: this.useFakeBackend ? '' : 'http://localhost:3000'
 }

@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../_models/index';
+import { User, BackendResponse } from '../_models/index';
 import { environment } from './../../environments/environment'
 
 @Injectable()
@@ -12,11 +12,14 @@ export class UserService {
 			let params = {
 				// TODO: add search functionality
 			}
-			this.http.get<User[]>(environment.backendAddr+'/api/users/query', { params: params }).subscribe((data) => {
-				resolve(data)
-			}, (error) => {
-				reject(error)
-			})
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/users/query', { params: params }).subscribe((data) => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (error) => reject(error))
 		})
 	}
 
@@ -25,23 +28,31 @@ export class UserService {
 			let params = {
 				user_id: id
 			}
-			this.http.get(environment.backendAddr+'/api/users', { params: params }).subscribe((data) => {
-				resolve(<User>data)
-			}, (error) => {
-				reject(error)
-			})
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/users', { params: params }).subscribe((data) => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(<User>response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (error) => reject(error))
 		})
 	}
 
-	authenticate(userName: string, password: string): Promise<any> {
-		return new Promise<any>((resolve, reject) => {
+	authenticate(userName: string, password: string): Promise<User> {
+		return new Promise<User>((resolve, reject) => {
 			let params = {
 				user_name: userName,
 				user_password: password
 			}
-			this.http.get<any>(environment.backendAddr+'/api/authenticate', { params: params }).subscribe(user => {
-				resolve(user)
-			}, (e) => { reject(e) })
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/authenticate', { params: params }).subscribe(data => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(<User>response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (e) => reject(e))
 		})
 	}
 
@@ -51,11 +62,14 @@ export class UserService {
 				user_name: userName,
 				user_password: password
 			}
-			this.http.post(environment.backendAddr+'/api/users', {}, { params: params }).subscribe((data) => {
-				resolve(<User>data)
-			}, (error) => {
-				reject(error)
-			})
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/users', {}, { params: params }).subscribe((data) => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(<User>response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (error) => reject(error))
 		})
 	}
 
@@ -76,11 +90,14 @@ export class UserService {
 			let params = {
 				userId: id
 			}
-			this.http.delete(environment.backendAddr+'/api/users', { params: params }).subscribe((data) => {
-				resolve(<boolean>data)
-			}, (error) => {
-				reject(error)
-			})
+			this.http.delete<BackendResponse>(environment.backendAddr + '/api/users', { params: params }).subscribe((data) => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (error) => reject(error))
 		})
 	}
 }

@@ -54,10 +54,11 @@ export class UserRepository {
         return reject('Username "' + username + '" is already taken');
       }
 
-      let newUser = {
+      let newUser = <User>{
         id: (this.users.length + 1).toString(),
         username: username,
-        password: password
+        password: password,
+        createdAt: Date.now()
       }
       // save new user
       this.users.push(newUser);

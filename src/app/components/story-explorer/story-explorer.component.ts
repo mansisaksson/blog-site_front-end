@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router';
-import { StoryService, AuthenticationService } from '../../_services/index'
+import { StoryService, AuthenticationService, AlertService } from '../../_services/index'
 
 import { StoryChapter, StoryMetaData, User } from '../../_models/index';
 
@@ -16,6 +16,7 @@ export class StoryExplorerComponent implements OnInit {
 
   constructor(
     private storyService: StoryService,
+    private alertService: AlertService,
     private activatedRoute: ActivatedRoute,
     private authService: AuthenticationService) {
   }
@@ -39,7 +40,7 @@ export class StoryExplorerComponent implements OnInit {
     if (this.hasInit) {
       this.storyService.getStories(this.userId).then((data: StoryMetaData[]) => {
         this.storyMetaData = data;
-      })
+      }).catch(e => this.alertService.error(e))
     }
   }
 

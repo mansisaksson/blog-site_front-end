@@ -45,6 +45,9 @@ export class RegisterComponent implements OnDestroy {
 			this.authenticationService.login(this.model.username, this.model.password).then(() => {
 				this.router.navigate([this.message.url])
 				this.closeModal()
+			}).catch(error => {
+				this.alertService.error(error)
+				this.closeModal()
 			})
 		}).catch((error) => {
 			this.alertService.error(error)
