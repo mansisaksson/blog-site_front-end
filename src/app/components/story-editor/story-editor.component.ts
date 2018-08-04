@@ -17,8 +17,8 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
     private alertService: AlertService,
     private storyEditorService: StoryEditorService,
     private activatedRoute: ActivatedRoute) {
-    
-      // Default values to avout NULL reads
+
+    // Default values to avout NULL reads
     this.story = <StoryMetaData>{
       title: "..."
     }
@@ -38,7 +38,7 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
           if (story && this.story.chapters.length > 0) {
             this.storyEditorService.editChapter(this.story.chapters[0].chapterId).subscribe((chapterMetaData: ChapterMetaData) => {
               if (chapterMetaData) {
-                this.chapter = chapterMetaData  
+                this.chapter = chapterMetaData
               } else {
                 this.chapter = <ChapterMetaData>{
                   title: "..."

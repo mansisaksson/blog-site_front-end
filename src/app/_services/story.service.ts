@@ -207,7 +207,7 @@ export class StoryService {
 			let params = {
 				chapterId: chapterId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', newMetaData, { params: params }).subscribe((data) => {
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', JSON.stringify(newMetaData), { params: params }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(<StoryMetaData>response.body)
