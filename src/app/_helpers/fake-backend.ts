@@ -3,7 +3,7 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable } from 'rxjs/Observable';
 
 import { User } from '../_models/user'
-import { StoryChapter, StoryMetaData, ChapterMetaData } from '../_models/story'
+import { ChapterContent, StoryMetaData, ChapterMetaData } from '../_models/story'
 import { UserRepository } from './local_repos/user-repository'
 import { StoryRepository } from './local_repos/story-repository'
 
@@ -208,7 +208,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				if (!chapterIds) {
 					return observer.error("Invalid Story Ids")
 				}
-				this.storyRepo.getChapters(chapterIds).then((chapters: StoryChapter[]) => {
+				this.storyRepo.getChapters(chapterIds).then((chapters: ChapterContent[]) => {
 					observer.next(new HttpResponse({ status: 200, body: chapters }))
 				}, (error) => {
 					observer.error(error);
@@ -231,7 +231,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 			}
 
 			// upate chapter meta data
-			else if (request.url.endsWith('/api/stories/chapters/metaData') && request.method === 'PUT') {
+			else if (request.url.endsWith('/api/stories/chapters') && request.method === 'PUT') {
 				// check for fake auth token in header and return user if valid, this security is implemented server side in a real application
 				if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
 					let chapterId = request.params.get("chapterId")

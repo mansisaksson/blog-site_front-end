@@ -1,4 +1,4 @@
-import { StoryChapter, StoryMetaData, ChapterMetaData } from '../../_models/index'
+import { ChapterContent, StoryMetaData, ChapterMetaData } from '../../_models/index'
 
 export class StoryRepository {
 
@@ -115,21 +115,21 @@ export class StoryRepository {
     })
   }
 
-  getChapters(chapterIds: string[]): Promise<StoryChapter[]> {
-    return new Promise<StoryChapter[]>((resolve, reject) => {
-      let result: StoryChapter[] = []
-      chapterIds.forEach(chapterId => {
-        let foundChapter = this.chapterMetaData[chapterId]
-        if (foundChapter != undefined) {
-          let chapter = <StoryChapter>{
-            metaData: foundChapter,
-            content: this.chapterContents[foundChapter.URI]
-          }
-          result.push(chapter)
-        }
-      })
+  getChapters(chapterIds: string[]): Promise<ChapterContent[]> {
+    return new Promise<ChapterContent[]>((resolve, reject) => {
+      // let result: ChapterContent[] = []
+      // chapterIds.forEach(chapterId => {
+      //   let foundChapter = this.chapterMetaData[chapterId]
+      //   if (foundChapter != undefined) {
+      //     let chapter = <ChapterContent>{
+      //       metaData: foundChapter,
+      //       content: this.chapterContents[foundChapter.URI]
+      //     }
+      //     result.push(chapter)
+      //   }
+      // })
 
-      resolve(result)
+      // resolve(result)
     })
   }
 

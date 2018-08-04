@@ -1,5 +1,4 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { User } from '../../_models/index';
 import { UserService, AuthenticationService, AlertService } from '../../_services/index';
 
@@ -36,8 +35,8 @@ export class HomeComponent implements OnInit {
   }
 
   private loadAllUsers() {
-    this.userService.getAll().then(users => {
-      this.users = users
-    }).catch(e => this.alertService.error(e))
+    // this.userService.getAll().then(users => {
+    //   this.users = users
+    // }).catch(e => this.alertService.error(e))
   }
 }

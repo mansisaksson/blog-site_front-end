@@ -1,7 +1,6 @@
 import { Component, OnInit, } from '@angular/core';
-import { StoryEditorComponent } from './../story-editor.component'
 import { StoryEditorService } from './../../../_services'
-import { StoryChapter, StoryMetaData, ChapterMetaData } from '../../../_models';
+import { ChapterContent, StoryMetaData, ChapterMetaData } from '../../../_models';
 
 interface NavTitle {
   fontSize: number,
@@ -54,7 +53,7 @@ export class StoryNavMenuComponent implements OnInit {
     this.storyEditor.editChapter(chapterId)
   }
 
-  parseChapter(chapter: StoryChapter) {
+  parseChapter(chapter: ChapterContent) {
     // let parser = new DOMParser()
     // let htmlDoc = parser.parseFromString(chapter.content, "text/html")
     // let elements = htmlDoc.querySelectorAll('h1, h2, h3')

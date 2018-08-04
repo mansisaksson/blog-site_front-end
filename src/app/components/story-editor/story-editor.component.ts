@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
 import { StoryEditorService, StoryService, AlertService } from '../../_services'
-import { StoryChapter, StoryMetaData, ChapterMetaData } from '../../_models'
+import { StoryMetaData, ChapterMetaData } from '../../_models'
 
 @Component({
   selector: 'app-story-editor',

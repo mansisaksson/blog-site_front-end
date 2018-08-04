@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
-import { User, StoryChapter, StoryMetaData } from './../../../_models'
-import { StoryEditorService, StoryService, AuthenticationService, AlertService } from './../../../_services'
-import { Router } from '@angular/router';
+import { User, StoryMetaData } from './../../../_models'
+import { StoryEditorService, AuthenticationService, AlertService } from './../../../_services'
 
 @Component({
   selector: 'app-common-tools',

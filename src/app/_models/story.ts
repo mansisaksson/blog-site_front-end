@@ -5,8 +5,8 @@ export interface ChapterMetaData {
     title: string
 }
 
-export class StoryChapter {
-    metaData: ChapterMetaData
+export class ChapterContent {
+    URI: string
     content: string
 }
 

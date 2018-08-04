@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpParams } from '@angular/common/http'
 
-import { StoryChapter, StoryMetaData, ChapterMetaData, BackendResponse } from '../_models'
+import { ChapterContent, StoryMetaData, ChapterMetaData, BackendResponse } from '../_models'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { environment } from '../../environments/environment'
 
@@ -88,10 +88,17 @@ export class StoryService {
 		})
 	}
 
-	getStoryChapter(chapterId: string): Promise<StoryChapter> {
-		return new Promise<StoryChapter>((resolve, reject) => {
-			let idArray = [chapterId]
-			this.getChapters(idArray).then((data) => {
+	getStoryChapter(chapterId: string): Promise<ChapterMetaData> {
+		return new Promise<ChapterMetaData>((resolve, reject) => {
+			this.getChapters([chapterId]).then((data) => {
+				resolve(data[0])
+			}).catch((e) => reject(e))
+		})
+	}
+
+	getChapterContent(uri: string): Promise<ChapterContent> {
+		return new Promise<ChapterContent>((resolve, reject) => {
+			this.getChapterContents([uri]).then((data) => {
 				resolve(data[0])
 			}).catch((e) => reject(e))
 		})
@@ -147,15 +154,15 @@ export class StoryService {
 		})
 	}
 
-	getChapters(chaptersIds: string[]): Promise<StoryChapter[]> {
-		return new Promise<StoryChapter[]>((resolve, reject) => {
+	getChapters(chaptersIds: string[]): Promise<ChapterMetaData[]> {
+		return new Promise<ChapterMetaData[]>((resolve, reject) => {
 			let params = {
 				chapterIds: JSON.stringify(chaptersIds)
 			}
 			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { params: params }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
-					resolve(<StoryChapter[]>response.body)
+					resolve(<ChapterMetaData[]>response.body)
 				} else {
 					reject(response.error_code)
 				}
@@ -163,12 +170,28 @@ export class StoryService {
 		})
 	}
 
-	updateChapterContent(chapterId, chapterCntent: string): Promise<any> {
+	getChapterContents(contentURIs: string[]): Promise<ChapterContent[]> {
+		return new Promise<ChapterContent[]>((resolve, reject) => {
+			let params = {
+				contentURIs: JSON.stringify(contentURIs)
+			}
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', { params: params }).subscribe((data) => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(<ChapterContent[]>response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (error) => reject(error))
+		})
+	}
+
+	updateChapterContent(chapterId: string, content: string): Promise<any> {
 		return new Promise<any>((resolve, reject) => {
 			let params = {
 				chapterId: chapterId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', chapterCntent, { params: params }).subscribe((data) => {
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', content, { params: params }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(response.body)
@@ -184,7 +207,7 @@ export class StoryService {
 			let params = {
 				chapterId: chapterId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters/metaData', newMetaData, { params: params }).subscribe((data) => {
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', newMetaData, { params: params }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(<StoryMetaData>response.body)

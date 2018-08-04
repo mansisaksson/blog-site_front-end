@@ -81,12 +81,15 @@ export class StoryEditorService {
 			this.currentChapter.next(undefined) // Clear current chapter
 			this.editor.setText("...") // Clear the editor
 
-			this.storyService.getStoryChapter(chapterId).then((chapter) => {
-				this.currentChapter.next(chapter.metaData)
-				try {
-					this.editor.setContents(JSON.parse(chapter.content))
-				} catch (error) { this.editor.setContents() }
-			}).catch(e => console.log(e))
+			let chapter = this.currentStory.getValue().chapters.find(chapter => { return chapter.chapterId == chapterId })
+			if (chapter) {
+				this.currentChapter.next(chapter)
+				this.storyService.getChapterContent(chapter.URI).then(content => {
+					try {
+						this.editor.setContents(JSON.parse(content.content))
+					} catch (error) { this.editor.setContents() }
+				}).catch(e => console.log(e))
+			}
 		}
 		return this.currentChapter.asObservable()
 	}
