@@ -45,7 +45,7 @@ export class UserService {
 				user_name: userName,
 				user_password: password
 			}
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/authenticate', { params: params }).subscribe(data => {
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/authenticate', { params: params, withCredentials: true }).subscribe(data => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(<User>response.body)
@@ -90,7 +90,7 @@ export class UserService {
 			let params = {
 				userId: id
 			}
-			this.http.delete<BackendResponse>(environment.backendAddr + '/api/users', { params: params }).subscribe((data) => {
+			this.http.delete<BackendResponse>(environment.backendAddr + '/api/users', { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(response.body)

@@ -26,7 +26,7 @@ export class StoryService {
 				title: title,
 				chapter1Title: chapter1Title
 			}
-			this.http.post<BackendResponse>(environment.backendAddr + '/api/stories', {}, { params: params }).subscribe((data) => {
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/stories', {}, { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(<StoryMetaData>response.body)
@@ -42,7 +42,7 @@ export class StoryService {
 			let params = {
 				storyId: id
 			}
-			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories', { params: params }).subscribe((data) => {
+			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories', { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(response.body)
@@ -109,7 +109,7 @@ export class StoryService {
 			let params = {
 				storyId: stortId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/title', newTitle, { params: params }).subscribe((data) => {
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/title', newTitle, { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(<StoryMetaData>response.body)
@@ -127,7 +127,7 @@ export class StoryService {
 				storyId: storyId,
 				chapterTitle: chapterTitle,
 			}
-			this.http.post<BackendResponse>(environment.backendAddr + '/api/stories/chapters', {}, { params: params }).subscribe((data) => {
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/stories/chapters', {}, { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(<ChapterMetaData>response.body)
@@ -143,7 +143,7 @@ export class StoryService {
 			let params = {
 				chapterId: chapterId,
 			}
-			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { params: params }).subscribe((data) => {
+			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(<StoryMetaData>response.body)
@@ -191,7 +191,7 @@ export class StoryService {
 			let params = {
 				chapterId: chapterId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', content, { params: params }).subscribe((data) => {
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', content, { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(response.body)
@@ -207,7 +207,7 @@ export class StoryService {
 			let params = {
 				chapterId: chapterId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', JSON.stringify(newMetaData), { params: params }).subscribe((data) => {
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', JSON.stringify(newMetaData), { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(<ChapterMetaData>response.body)
