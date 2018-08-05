@@ -121,8 +121,8 @@ export class StoryService {
 	}
 
 	// *** Chapters
-	createChapter(storyId: string, chapterTitle: string): Promise<StoryMetaData> {
-		return new Promise<StoryMetaData>((resolve, reject) => {
+	createChapter(storyId: string, chapterTitle: string): Promise<ChapterMetaData> {
+		return new Promise<ChapterMetaData>((resolve, reject) => {
 			let params = {
 				storyId: storyId,
 				chapterTitle: chapterTitle,
@@ -130,7 +130,7 @@ export class StoryService {
 			this.http.post<BackendResponse>(environment.backendAddr + '/api/stories/chapters', {}, { params: params }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
-					resolve(<StoryMetaData>response.body)
+					resolve(<ChapterMetaData>response.body)
 				} else {
 					reject(response.error_code)
 				}
@@ -202,15 +202,15 @@ export class StoryService {
 		})
 	}
 
-	updateChapterMetaData(chapterId: string, newMetaData: ChapterMetaData): Promise<StoryMetaData> {
-		return new Promise<StoryMetaData>((resolve, reject) => {
+	updateChapterMetaData(chapterId: string, newMetaData: ChapterMetaData): Promise<ChapterMetaData> {
+		return new Promise<ChapterMetaData>((resolve, reject) => {
 			let params = {
 				chapterId: chapterId
 			}
 			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', JSON.stringify(newMetaData), { params: params }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
-					resolve(<StoryMetaData>response.body)
+					resolve(<ChapterMetaData>response.body)
 				} else {
 					reject(response.error_code)
 				}

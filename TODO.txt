@@ -1,7 +1,5 @@
 [ ] User management
 
-[ ] Create new chapter is broken
-
 [ ] Edit story/chapter meta data
 	[x] Edit title
 
@@ -10,6 +8,8 @@
 [ ] Editor sidebar navigator
 	[x] Display chapters
 	[ ] Display document preview
+
+[x] Create new chapter is broken
 
 [x] Implement server backend
 	[x] Migrate to MongoDB
