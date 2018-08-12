@@ -4,14 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // used to create fake backend
-import { fakeBackendProvider } from './_helpers/index';
+import { fakeBackendProvider, DuplicateRequestProvider } from './_helpers/index';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
 import { AlertComponent, LoginComponent, RegisterComponent, FormComponent } from './_directives/index';
 import { AuthGuard } from './_guards/index';
-import { JwtInterceptor } from './_helpers/index';
 import { AlertService, AuthenticationService, UserService, StoryService, StoryEditorService, UIService, StoryCacheService } from './_services/index';
 import { HomeComponent } from './components/home/index';
 
@@ -72,13 +71,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     UserService,
     StoryService,
     StoryCacheService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: JwtInterceptor,
-      multi: true
-    },
-
-    // provider used to create fake backend
+    DuplicateRequestProvider,
     fakeBackendProvider
   ],
   bootstrap: [

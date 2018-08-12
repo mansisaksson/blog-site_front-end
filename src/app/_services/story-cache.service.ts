@@ -17,7 +17,7 @@ export class StoryCacheService {
 	private queryCache: QueryCache[] = []
 	private cacheTimeStamp: { [key: string]: number } = {}
 
-	private TimeToInvalidate = 10
+	private TimeToInvalidate = 20
 
 	constructor() {
 		this.LoadStoryCache()

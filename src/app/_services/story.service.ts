@@ -16,7 +16,6 @@ interface QueryCache {
 @Injectable()
 export class StoryService {
 	private currentStory: BehaviorSubject<StoryMetaData> = new BehaviorSubject<StoryMetaData>(undefined)
-	private pendingRequests: { [url: string]: { [params: string]: Subject<any> } } = {}
 
 	constructor(private http: HttpClient, private cacheService: StoryCacheService) {
 	}
@@ -27,41 +26,6 @@ export class StoryService {
 
 	getCurrentlyViewedStory(): Observable<StoryMetaData> {
 		return this.currentStory.asObservable()
-	}
-
-	private getPendingRequest(url: string, params: any): Subject<any> {
-		let requests = this.pendingRequests[url]
-		if (requests != undefined) {
-			let stringParams = JSON.stringify(params)
-			let request = requests[stringParams]
-			if (request != undefined) {
-				console.log("Stopped Duplicate Request: " + url + " - " + stringParams)
-				return request
-			}
-		}
-		return undefined
-	}
-
-	private createPendingRequest(url: string, params: any) {
-		console.log("Create request: " + url + " - " + JSON.stringify(params))
-		let existinRequest = this.getPendingRequest(url, params)
-		if (existinRequest != undefined) {
-			throw "Overwriting existing request: " + url
-		}
-
-		let newSubject = new Subject()
-		let stringParams = JSON.stringify(params)
-		this.pendingRequests[url] = {}
-		this.pendingRequests[url][stringParams] = newSubject
-
-		return newSubject
-	}
-
-	private resolveRequest(url: string, params: any) {
-		if (this.pendingRequests[url] != undefined) {
-			console.log("Delete request: " + url + " - " + JSON.stringify(params))
-			delete this.pendingRequests[url][JSON.stringify(params)]
-		}
 	}
 
 	createStory(userId: string, title: string, chapter1Title: string): Promise<StoryMetaData> {
@@ -117,15 +81,7 @@ export class StoryService {
 				searchQuery: searchQuery
 			}
 
-			let request = this.getPendingRequest('/api/stories/query', params)
-			if (request == undefined) {
-				request =	this.createPendingRequest('/api/stories/query', params)
-				this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/query', { params: params }).subscribe((data) => {
-					request.next(data)
-					this.resolveRequest('/api/stories/query', params)
-				})
-			}
-			request.subscribe((data) => {
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/query', { params: params }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					let stories: StoryMetaData[] = <StoryMetaData[]>response.body
