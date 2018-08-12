@@ -4,3 +4,4 @@ export * from './user.service';
 export * from './story.service';
 export * from './story-editor.service'
 export * from './ui.service'
+export * from './story-cache.service'
