@@ -1,15 +1,29 @@
+[ ] User Cache
+	[ ] Cache current user
+	[ ] Time-out when session ends
+	[ ] Re-validate session periodically
+
 [ ] Fix fake backend
 
 [ ] User management
-
-[ ] Edit story/chapter meta data
-	[x] Edit title
+	[ ] Edit User Name
+	[ ] Delete User
 
 [ ] Centered images are not saved
 
 [ ] Editor sidebar navigator
 	[x] Display chapters
 	[ ] Display document preview
+
+[x] Cache Stories
+	[x] Cache Story Meta data
+	[x] Cache Chapter
+	[x] Cache Content
+	[x] Cache Search Queries
+	[x] Cache Time-out
+
+[x] Edit story/chapter meta data
+	[x] Edit title
 
 [x] Create new chapter is broken
 

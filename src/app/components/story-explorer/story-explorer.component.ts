@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core'
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router'
 import { StoryService, AuthenticationService, AlertService } from '../../_services/index'
-
-import { StoryMetaData, User } from '../../_models/index';
+import { StoryMetaData, User } from '../../_models/index'
 
 @Component({
   selector: 'app-story-explorer',
@@ -10,9 +9,9 @@ import { StoryMetaData, User } from '../../_models/index';
   styleUrls: ['./story-explorer.component.css']
 })
 export class StoryExplorerComponent implements OnInit {
-  storyMetaData: StoryMetaData[];
-  userId: string;
-  currentUser: User;
+  storyMetaData: StoryMetaData[]
+  userId: string
+  currentUser: User
 
   constructor(
     private storyService: StoryService,
@@ -21,7 +20,7 @@ export class StoryExplorerComponent implements OnInit {
     private authService: AuthenticationService) {
   }
 
-  hasInit = false;
+  hasInit = false
   ngOnInit() {
     this.authService.getCurrentUser().subscribe(next => {
       this.currentUser = next
@@ -39,36 +38,36 @@ export class StoryExplorerComponent implements OnInit {
   refreshStoryList() {
     if (this.hasInit) {
       this.storyService.getStories(this.userId).then((data: StoryMetaData[]) => {
-        this.storyMetaData = data;
+        this.storyMetaData = data
       }).catch(e => this.alertService.error(e))
     }
   }
 
   // unix time is measured in seconds (not milliseconds)
   timeSince(date: number) {
-    let seconds = Math.floor(Date.now() / 1000 - date);
-    let interval = Math.floor(seconds / 31536000);
+    let seconds = Math.floor(Date.now() / 1000 - date)
+    let interval = Math.floor(seconds / 31536000)
 
     if (interval > 1) {
-      return interval + " years";
+      return interval + " years"
     }
-    interval = Math.floor(seconds / 2592000);
+    interval = Math.floor(seconds / 2592000)
     if (interval > 1) {
-      return interval + " months";
+      return interval + " months"
     }
-    interval = Math.floor(seconds / 86400);
+    interval = Math.floor(seconds / 86400)
     if (interval > 1) {
-      return interval + " days";
+      return interval + " days"
     }
-    interval = Math.floor(seconds / 3600);
+    interval = Math.floor(seconds / 3600)
     if (interval > 1) {
-      return interval + " hours";
+      return interval + " hours"
     }
-    interval = Math.floor(seconds / 60);
+    interval = Math.floor(seconds / 60)
     if (interval > 1) {
-      return interval + " minutes";
+      return interval + " minutes"
     }
-    return Math.floor(seconds) + " seconds";
+    return Math.floor(seconds) + " seconds"
   }
 
 }
