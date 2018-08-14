@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
-// used to create fake backend
-import { fakeBackendProvider, DuplicateRequestProvider } from './_helpers/index';
+import { DuplicateRequestProvider } from './_helpers/index';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
@@ -71,8 +70,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     UserService,
     StoryService,
     StoryCacheService,
-    DuplicateRequestProvider,
-    fakeBackendProvider
+    DuplicateRequestProvider
   ],
   bootstrap: [
     AppComponent

@@ -2,16 +2,9 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 
 import { ChapterContent, StoryMetaData, ChapterMetaData, BackendResponse } from '../_models'
-import { BehaviorSubject, Observable, Subject } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { environment } from '../../environments/environment'
 import { StoryCacheService } from './story-cache.service';
-
-interface QueryCache {
-	userId: string,
-	queryString: string,
-	resultIds: string[],
-	cacheId: string
-}
 
 @Injectable()
 export class StoryService {

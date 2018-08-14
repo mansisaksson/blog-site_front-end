@@ -1,14 +1,7 @@
-[ ] Don't send duplicate requests 
-	-	If we've already sent a request for something then we should not send another one before we've received a response
-	[x] Create anti-duplicate system
-	[ ] Implement on all requests
-
 [ ] User Cache
 	[ ] Cache current user
 	[ ] Time-out when session ends
 	[ ] Re-validate session periodically
-
-[ ] Fix fake backend
 
 [ ] User management
 	[ ] Edit User Name
@@ -19,6 +12,18 @@
 [ ] Editor sidebar navigator
 	[x] Display chapters
 	[ ] Display document preview
+
+[ ] Layout/Navigation Re-work
+	[ ] User Settings Page
+	[ ] Hide Left sidebar when not used
+	[ ] Improve the story viewer (looks like shit)
+
+[x] Fix fake backend or remove if no longer desired
+
+[x] Don't send duplicate requests 
+	-	If we've already sent a request for something then we should not send another one before we've received a response
+	[x] Create anti-duplicate system
+	[x] Implement on all requests
 
 [x] Cache Stories
 	[x] Cache Story Meta data

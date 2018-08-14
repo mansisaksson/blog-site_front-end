@@ -1,0 +1,3 @@
+[ ] "subreddits" for stories
+
+[ ] User custumizable home-page where you can sort stories/showcase certain stories/chapters
