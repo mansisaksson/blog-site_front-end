@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div>
-    <button (click)="addChapter()" class="btn btn-primary">Create New Chapter</button>
+  <div style="padding-top: 5px;">
+    <button (click)="addChapter()" class="btn btn-primary" style="width: 100%">Create New Chapter</button>
   </div>`
 })
 export class AddChapterComponent {

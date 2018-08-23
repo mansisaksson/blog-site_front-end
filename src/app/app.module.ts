@@ -12,6 +12,7 @@ import { AlertComponent, LoginComponent, RegisterComponent, FormComponent } from
 import { AuthGuard } from './_guards/index';
 import { AlertService, AuthenticationService, UserService, StoryService, StoryEditorService, UIService, StoryCacheService } from './_services/index';
 import { HomeComponent } from './components/home/index';
+import { EditUserComponent } from './components/edit-user/edit-user.component'
 
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
 import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
@@ -39,6 +40,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     RegisterComponent,
     HomeComponent,
     FormComponent,
+    EditUserComponent,
     
     StoryExplorerComponent,
     StoryViewerComponent,

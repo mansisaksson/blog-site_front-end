@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div>
-    <button (click)="createStory()" class="btn btn-primary">Create New Story</button>
+  <div style="padding-top: 5px;">
+    <button (click)="createStory()" class="btn btn-primary" style="width: 100%">Create New Story</button>
   </div>`
 })
 export class CreateStoryComponent {

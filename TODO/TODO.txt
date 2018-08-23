@@ -14,9 +14,10 @@
 	[ ] Display document preview
 
 [ ] Layout/Navigation Re-work
-	[ ] User Settings Page
+	[x] User Settings Page
 	[ ] Hide Left sidebar when not used
 	[ ] Improve the story viewer (looks like shit)
+	[ ] Search functionality for the story explorer
 
 [x] Fix fake backend or remove if no longer desired
 

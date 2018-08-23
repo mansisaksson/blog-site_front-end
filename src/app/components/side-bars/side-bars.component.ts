@@ -15,7 +15,7 @@ import { ISubscription } from 'rxjs/Subscription'
 
 @Component({
   template: `
-  <div class="card" style="padding: 10px; margin-top: 10px">
+  <div class="card" style="padding: 10px; padding-top: 5px; margin-top: 10px;">
     <ng-container #sidebarContainer ></ng-container>
   </div>`
 })

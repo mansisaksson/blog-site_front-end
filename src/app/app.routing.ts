@@ -5,6 +5,7 @@ import { AuthGuard } from './_guards/index';
 
 import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
 import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component'
 import { StoryEditorComponent, StoryEditorToolbarComponent, StoryNavMenuComponent } from './components/story-editor';
 import { CreateStoryComponent, DeleteStoryComponent, EditStoryComponent, SaveStoryComponent, AddChapterComponent, DeleteChapterComponent } from './components/side-bars/common-tools/';
 
@@ -41,6 +42,11 @@ const appRoutes: Routes = [
             toolbar: StoryEditorToolbarComponent,
             navMenu: StoryNavMenuComponent
         }
+    },
+    { 
+        path: 'edit-user',
+        component: EditUserComponent,
+        data: { sidebars: [ ]}
     },
 
     // otherwise redirect to home

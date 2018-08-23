@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div *ngIf="enabled">
-    <button (click)="editStory()" class="btn btn-primary">Edit Story</button>
+  <div *ngIf="enabled" style="padding-top: 5px;">
+    <button (click)="editStory()" class="btn btn-primary" style="width: 100%">Edit Story</button>
   </div>`
 })
 export class EditStoryComponent implements OnInit {

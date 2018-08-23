@@ -5,8 +5,8 @@ import { AuthenticationService, AlertService, UIService, DynamicForm, FormValues
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div>
-    <button (click)="deleteChapter()" class="btn btn-primary">Delete Chapter</button>
+  <div style="padding-top: 5px;">
+    <button (click)="deleteChapter()" class="btn btn-primary" style="width: 100%">Delete Chapter</button>
   </div>`
 })
 export class DeleteChapterComponent {

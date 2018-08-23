@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div *ngIf="enabled">
-    <button (click)="deleteStory()" class="btn btn-primary">Delete Story</button>
+  <div *ngIf="enabled" style="padding-top: 5px;">
+    <button (click)="deleteStory()" class="btn btn-primary" style="width: 100%">Delete Story</button>
   </div>`
 })
 export class DeleteStoryComponent implements OnInit {

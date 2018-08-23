@@ -5,8 +5,8 @@ import { StoryEditorService, AuthenticationService, AlertService } from './../..
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div *ngIf="enabled">
-    <button (click)="saveStory()" class="btn btn-primary">Save Chapter</button>
+  <div *ngIf="enabled" style="padding-top: 5px;">
+    <button (click)="saveStory()" class="btn btn-primary" style="width: 100%">Save Chapter</button>
   </div>`
 })
 export class SaveStoryComponent implements OnInit {

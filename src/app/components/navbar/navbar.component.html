@@ -22,6 +22,7 @@
     <div *ngIf="isLoggedIn; then loggedInBlock else loggedOutBlock"></div>
     <!-- Sign Out -->
     <ng-template #loggedInBlock>
+      <a class="nav-link" routerLink="/edit-user">User Name</a>
       <a (click)="signOut()" class="btn btn-info my-2 my-sm-0">Sign Out</a>
     </ng-template>
 
