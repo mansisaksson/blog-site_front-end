@@ -43,9 +43,8 @@ export class StoryExplorerComponent implements OnInit {
     }
   }
 
-  // unix time is measured in seconds (not milliseconds)
   timeSince(date: number) {
-    let seconds = Math.floor(Date.now() / 1000 - date)
+    let seconds = Math.floor(Date.now() / 1000 - date / 1000)
     let interval = Math.floor(seconds / 31536000)
 
     if (interval > 1) {
