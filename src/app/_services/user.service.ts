@@ -56,13 +56,39 @@ export class UserService {
 		})
 	}
 
+	getSession(): Promise<User> {
+		return new Promise<User>((resolve, reject) => {
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/session', { withCredentials: true }).subscribe(data => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(<User>response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (e) => reject(e))
+		})
+	}
+
+	invalidateSession(): Promise<boolean> {
+		return new Promise<boolean>((resolve, reject) => {
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/session/invalidate', {}, { withCredentials: true }).subscribe(data => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(<boolean>response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (e) => reject(e))
+		})
+	}
+
 	create(userName: string, password: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
 			let params = {
 				user_name: userName,
 				user_password: password
 			}
-			this.http.post<BackendResponse>(environment.backendAddr + '/api/users', {}, { params: params }).subscribe((data) => {
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/users', {}, { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					resolve(<User>response.body)
@@ -77,11 +103,6 @@ export class UserService {
 		console.log("update user - NOT YET IMPLEMENTED")
 		return new Promise<boolean>((resolve, reject) => {
 			return reject("not yet implemented")
-			// this.http.put('/api/users', JSON.stringify(user)).subscribe((data) => {
-			// 	resolve(<boolean>data)
-			// }, (error) => {
-			// 	reject(error)
-			// })
 		})
 	}
 

@@ -3,16 +3,20 @@ import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { User } from '../_models/index'
 import { UIService } from './ui.service';
 import { UserService } from './user.service';
+import { AlertService } from './alert.service';
 
 @Injectable()
 export class AuthenticationService {
-	private isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-	private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
+	private isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
+	private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined)
+	private lastValidateTime: number = Date.now()
+	private revalidateTime: number = 20 * 1000
 
 	constructor(
 		private userService: UserService,
-		private uiService: UIService) {
-		this.refreshLoginState()
+		private uiService: UIService,
+		private alertService: AlertService) {
+		this.validateLoginState()
 	}
 
 	withLoggedInUser(): Promise<User> {
@@ -34,13 +38,10 @@ export class AuthenticationService {
 	login(username: string, password: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
 			this.userService.authenticate(username, password).then((user: User) => {
-				if (user) {
-					localStorage.setItem('currentUser', JSON.stringify(user))
-				}
-				this.refreshLoginState()
+				this.setUserSession(user)
 				resolve(user)
 			}).catch(e => {
-				this.refreshLoginState()
+				this.setUserSession(undefined)
 				reject(e)
 			})
 		})
@@ -48,20 +49,47 @@ export class AuthenticationService {
 
 	logout(): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
-			localStorage.removeItem('currentUser')
-			this.refreshLoginState()
-			resolve(true)
+			this.userService.invalidateSession().then(() => {
+				this.setUserSession(undefined)
+				resolve(true)
+			}).catch((e) => { 
+				this.setUserSession(undefined)
+				reject(e)
+			})
 		})
 	}
 
 	getIsLoggedIn(): Observable<boolean> {
-		this.refreshLoginState()
+		this.validateLoginState()
 		return this.isLoggedIn.asObservable()
 	}
 
 	getCurrentUser(): Observable<User> {
-		this.refreshLoginState()
+		this.validateLoginState()
 		return this.currentUser.asObservable()
+	}
+
+	private validateLoginState() {
+		let timeSinceUpdate = Date.now() - this.lastValidateTime
+		if (timeSinceUpdate > this.revalidateTime) {
+			this.userService.getSession().then((user) => {
+				this.setUserSession(user)
+				this.refreshLoginState()
+			})
+		}
+		else {
+			this.refreshLoginState()
+		}
+	}
+
+	private setUserSession(user: User) {
+		if (!user) {
+			localStorage.removeItem('currentUser')
+		} else {
+			localStorage.setItem('currentUser', JSON.stringify(user))
+		}
+		this.lastValidateTime = Date.now()
+		this.refreshLoginState()
 	}
 
 	private refreshLoginState() {

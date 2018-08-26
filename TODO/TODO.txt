@@ -1,8 +1,3 @@
-[ ] User Cache
-	[ ] Cache current user
-	[ ] Time-out when session ends
-	[ ] Re-validate session periodically
-
 [ ] User management
 	[ ] Edit User Name
 	[ ] Delete User
@@ -18,6 +13,11 @@
 	[ ] Hide Left sidebar when not used
 	[ ] Improve the story viewer (looks like shit)
 	[ ] Search functionality for the story explorer
+
+[x] User Cache
+	[x] Cache current user
+	[x] Time-out when session ends
+	[x] Re-validate session periodically
 
 [x] Fix fake backend or remove if no longer desired
 
