@@ -10,7 +10,7 @@ import { User } from '../../_models';
 })
 export class NavbarComponent implements OnInit {
   isLoggedIn: boolean;
-  currentUser: User;
+  currentUser: User = new User()
 
   constructor(
     private authService: AuthenticationService,
