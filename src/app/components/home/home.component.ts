@@ -13,8 +13,6 @@ export class HomeComponent implements OnInit {
   isLoggedIn: boolean
 
   constructor(
-    private userService: UserService,
-    private alertService: AlertService,
     private authService: AuthenticationService) {
   }
 
@@ -22,21 +20,7 @@ export class HomeComponent implements OnInit {
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user
       this.isLoggedIn = user ? true : false
-
-      if (this.isLoggedIn)
-        this.loadAllUsers()
     })
   }
 
-  deleteUser(id: string) {
-    this.userService.delete(id).then(() => {
-      this.loadAllUsers()
-    }).catch(e => this.alertService.error(e))
-  }
-
-  private loadAllUsers() {
-    // this.userService.getAll().then(users => {
-    //   this.users = users
-    // }).catch(e => this.alertService.error(e))
-  }
 }
