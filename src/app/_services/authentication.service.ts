@@ -75,6 +75,8 @@ export class AuthenticationService {
 			this.userService.getSession().then((user) => {
 				this.setUserSession(user)
 				this.refreshLoginState()
+			}).catch(error => {
+				console.log(error)
 			})
 		}
 		else {
