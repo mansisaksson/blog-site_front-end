@@ -9,7 +9,7 @@ import { AlertService } from './alert.service';
 export class AuthenticationService {
 	private isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 	private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined)
-	private lastValidateTime: number = Date.now()
+	private lastValidateTime: number = 0
 	private revalidateTime: number = 20 * 1000
 
 	constructor(
