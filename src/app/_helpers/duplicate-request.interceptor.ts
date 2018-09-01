@@ -40,7 +40,7 @@ export class DuplicateRequestInterceptor implements HttpInterceptor {
         next.handle(request).subscribe((data) => {
           pendingRequest.next(data)
         }, (error) => { 
-          pendingRequest.thrownError(error) 
+          pendingRequest.error(error)
         }, () => { 
           this.resolveRequest(request.urlWithParams) 
         })
