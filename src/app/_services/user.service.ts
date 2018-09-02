@@ -114,10 +114,11 @@ export class UserService {
 		})
 	}
 
-	delete(id: string): Promise<any> {
+	delete(id: string, password: string): Promise<any> {
 		return new Promise<any>((resolve, reject) => {
 			let params = {
-				userId: id
+				userId: id,
+				userPassword: password
 			}
 			this.http.delete<BackendResponse>(environment.backendAddr + '/api/users', { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data

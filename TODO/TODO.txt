@@ -1,22 +1,24 @@
 [ ] We get hundreds of duplicate requests for "localhost:3000/api/stories/query?userId=undefined&searchQuery=undefined"
 when opening the story viewer
 
-[ ] User management
-	[x] Edit User Name
-	[x] Edit password
-	[ ] Delete User
-
-[ ] Centered images are not saved
-
-[ ] Editor sidebar navigator
-	[x] Display chapters
-	[ ] Display document preview
+[ ] Require password on story delete
 
 [ ] Layout/Navigation Re-work
 	[x] User Settings Page
 	[x] Improve the story viewer (looks like shit)
 	[ ] Hide Left sidebar when not used
 	[ ] Search functionality for the story explorer
+
+[ ] Editor sidebar navigator
+	[x] Display chapters
+	[ ] Display document preview
+
+[ ] Centered images are not saved
+
+[x] User management
+	[x] Edit User Name
+	[x] Edit password
+	[x] Delete User
 
 [x] User Cache
 	[x] Cache current user

@@ -3,6 +3,7 @@ import { User } from '../../_models'
 import { AuthenticationService, UserService, AlertService, DynamicForm, UIService, FormValues } from '../../_services'
 import { FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms'
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'edit-user',
@@ -19,7 +20,8 @@ export class EditUserComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private alertService: AlertService,
-    private uiService: UIService) {
+    private uiService: UIService,
+    private router: Router) {
 
   }
 
@@ -97,9 +99,12 @@ export class EditUserComponent implements OnInit {
     form.addPasswordInput('Please enter your password', "user_password")
 
     let onSubmit = (FormValues: FormValues, closeForm, showFormError) => {
-      this.userService.delete(this.user.id).then(() => {
+      let password = FormValues['user_password']
+      this.userService.delete(this.user.id, password).then(() => {
         closeForm()
         this.alertService.success('User Removed!')
+        this.authService.setUserSession(undefined)
+        this.router.navigate([''])
       }).catch(e => {
         showFormError(e)
       })
