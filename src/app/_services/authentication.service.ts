@@ -69,6 +69,16 @@ export class AuthenticationService {
 		return this.currentUser.asObservable()
 	}
 
+	setUserSession(user: User) {
+		if (!user) {
+			localStorage.removeItem('currentUser')
+		} else {
+			localStorage.setItem('currentUser', JSON.stringify(user))
+		}
+		this.lastValidateTime = Date.now()
+		this.refreshLoginState()
+	}
+
 	private validateLoginState() {
 		let timeSinceUpdate = Date.now() - this.lastValidateTime
 		if (timeSinceUpdate > this.revalidateTime) {
@@ -82,16 +92,6 @@ export class AuthenticationService {
 		else {
 			this.refreshLoginState()
 		}
-	}
-
-	private setUserSession(user: User) {
-		if (!user) {
-			localStorage.removeItem('currentUser')
-		} else {
-			localStorage.setItem('currentUser', JSON.stringify(user))
-		}
-		this.lastValidateTime = Date.now()
-		this.refreshLoginState()
 	}
 
 	private refreshLoginState() {

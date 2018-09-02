@@ -99,10 +99,18 @@ export class UserService {
 		})
 	}
 
-	update(user: User): Promise<boolean> {
-		console.log("update user - NOT YET IMPLEMENTED")
-		return new Promise<boolean>((resolve, reject) => {
-			return reject("not yet implemented")
+	update(user: any): Promise<User> {
+		return new Promise<User>((resolve, reject) => {
+			let params = {
+			}
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/users', JSON.stringify(user), { params: params, withCredentials: true }).subscribe((data) => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(<User>response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (error) => reject(error))
 		})
 	}
 

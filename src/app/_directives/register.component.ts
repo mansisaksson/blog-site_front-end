@@ -1,7 +1,9 @@
-﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
+﻿import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { AlertService, UserService, AuthenticationService, UIService } from '../_services/index';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { environment } from '../../environments/environment';
 declare let $: any;
 
 @Component({
@@ -9,10 +11,12 @@ declare let $: any;
 	templateUrl: 'register.component.html'
 })
 
-export class RegisterComponent implements OnDestroy {
+export class RegisterComponent implements OnDestroy, OnInit {
+	private registerForm: FormGroup
+	private submitted = false
+	private loading = false
+
 	private subscription: Subscription;
-	private model: any = {};
-	private loading = false;
 	private message: any;
 
 	@ViewChild('registerModal') registerModal;
@@ -21,6 +25,7 @@ export class RegisterComponent implements OnDestroy {
 		private router: Router,
 		private userService: UserService,
 		private alertService: AlertService,
+		private formBuilder: FormBuilder,
 		private authenticationService: AuthenticationService,
 		private uiService: UIService
 	) {
@@ -34,15 +39,44 @@ export class RegisterComponent implements OnDestroy {
 		})
 	}
 
+	ngOnInit() {
+		this.registerForm = this.formBuilder.group({
+      userName: ['', [Validators.required, Validators.pattern(environment.userNameRegex)]],
+      password: ['', [Validators.pattern(environment.userPasswordRegex)]],
+      confirmPassword: ['']
+    }, {
+      validator: RegisterComponent.MatchPassword
+    })
+	}
+
 	ngOnDestroy(): void {
 		this.subscription.unsubscribe();
 	}
 
+	static MatchPassword(AC: AbstractControl) {
+    let password = AC.get('password').value
+    let confirmPassword = AC.get('confirmPassword').value
+    if (password != confirmPassword) {
+      AC.get('confirmPassword').setErrors({ MatchPassword: true })
+    } else {
+      AC.get('confirmPassword').setErrors(undefined)
+      return null
+    }
+  }
+
 	register() {
-		this.loading = true;
-		this.userService.create(this.model.username, this.model.password).then(user => {
+		this.submitted = true
+
+    if (this.registerForm.invalid) {
+      return
+    }
+
+    let userName = this.registerForm.get('userName').value
+    let password = this.registerForm.get('password').value
+    
+		this.userService.create(userName, password).then(user => {
 			this.alertService.success('Registration successful', true)
-			this.authenticationService.login(this.model.username, this.model.password).then(() => {
+			this.authenticationService.login(userName, password).then(() => {
 				this.router.navigate([this.message.url])
 				this.closeModal()
 			}).catch(error => {
@@ -55,13 +89,18 @@ export class RegisterComponent implements OnDestroy {
 		});
 	}
 
+	// convenience getter for easy access to form fields
+	get f() { return this.registerForm.controls }
+
 	openModal() {
-		this.loading = false;
+		this.submitted = false
+		this.loading = false
 		$(this.registerModal.nativeElement).modal('show')
 	}
 
 	closeModal() {
-		this.loading = false;
+		this.submitted = false
+		this.loading = false
 		$(this.registerModal.nativeElement).modal('hide')
 	}
 }

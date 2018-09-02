@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { User } from '../../_models'
-import { AuthenticationService } from '../../_services'
+import { AuthenticationService, UserService, AlertService } from '../../_services'
 import { FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms'
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'edit-user',
@@ -13,15 +14,19 @@ export class EditUserComponent implements OnInit {
   private submitted = false
   private user: User = new User()
 
-  constructor(private authService: AuthenticationService, private formBuilder: FormBuilder) {
+  constructor(
+    private authService: AuthenticationService, 
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    private alertService: AlertService) {
 
   }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      userName: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
+      userName: ['', [Validators.required, Validators.pattern(environment.userNameRegex)]],
+      password: ['', [Validators.pattern(environment.userPasswordRegex)]],
+      confirmPassword: ['']
     }, {
       validator: EditUserComponent.MatchPassword
     })
@@ -31,6 +36,8 @@ export class EditUserComponent implements OnInit {
       if (!this.user) {
         this.user = new User()
       }
+
+      this.registerForm.get('userName').setValue(this.user.username)
     })
   }
 
@@ -40,6 +47,7 @@ export class EditUserComponent implements OnInit {
     if (password != confirmPassword) {
       AC.get('confirmPassword').setErrors({ MatchPassword: true })
     } else {
+      AC.get('confirmPassword').setErrors(undefined)
       return null
     }
   }
@@ -50,12 +58,35 @@ export class EditUserComponent implements OnInit {
   onSubmit() {
     this.submitted = true
 
-    // stop here if form is invalid
     if (this.registerForm.invalid) {
       return
     }
+    
+    let update: boolean = false
+    let userName = this.registerForm.get('userName').value != this.user.username ? this.registerForm.get('userName').value : undefined
+    let password = this.registerForm.get('password').value != '' ? this.registerForm.get('password').value : undefined
+    
+    let newUserProperties = {}
+    newUserProperties['id'] = this.user.id
+    if (userName) {
+      update = true
+      newUserProperties['username'] = userName
+    }
+    if (password) {
+      update = true
+      newUserProperties['password'] = password
+    }
 
-    alert('SUCCESS!! :-)')
+    if (update) {
+      this.userService.update(newUserProperties).then((user: User) => {
+        this.authService.setUserSession(user)
+        this.alertService.success("User updated!")
+      }).catch(e => {
+        this.alertService.error(e)
+      })
+    } else {
+      this.submitted = false
+    }
   }
 
 }

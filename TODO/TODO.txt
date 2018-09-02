@@ -1,6 +1,6 @@
 [ ] User management
-	[ ] Edit User Name
-	[ ] Edit password
+	[x] Edit User Name
+	[x] Edit password
 	[ ] Delete User
 
 [ ] Centered images are not saved
@@ -11,8 +11,8 @@
 
 [ ] Layout/Navigation Re-work
 	[x] User Settings Page
+	[x] Improve the story viewer (looks like shit)
 	[ ] Hide Left sidebar when not used
-	[ ] Improve the story viewer (looks like shit)
 	[ ] Search functionality for the story explorer
 
 [x] User Cache
