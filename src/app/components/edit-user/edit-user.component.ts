@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { User } from '../../_models'
-import { AuthenticationService, UserService, AlertService } from '../../_services'
+import { AuthenticationService, UserService, AlertService, DynamicForm, UIService, FormValues } from '../../_services'
 import { FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms'
 import { environment } from '../../../environments/environment';
 
@@ -15,10 +15,11 @@ export class EditUserComponent implements OnInit {
   private user: User = new User()
 
   constructor(
-    private authService: AuthenticationService, 
+    private authService: AuthenticationService,
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private alertService: AlertService) {
+    private alertService: AlertService,
+    private uiService: UIService) {
 
   }
 
@@ -28,8 +29,8 @@ export class EditUserComponent implements OnInit {
       password: ['', [Validators.pattern(environment.userPasswordRegex)]],
       confirmPassword: ['']
     }, {
-      validator: EditUserComponent.MatchPassword
-    })
+        validator: EditUserComponent.MatchPassword
+      })
 
     this.authService.getCurrentUser().subscribe(user => {
       this.user = user;
@@ -61,11 +62,11 @@ export class EditUserComponent implements OnInit {
     if (this.registerForm.invalid) {
       return
     }
-    
+
     let update: boolean = false
     let userName = this.registerForm.get('userName').value != this.user.username ? this.registerForm.get('userName').value : undefined
     let password = this.registerForm.get('password').value != '' ? this.registerForm.get('password').value : undefined
-    
+
     let newUserProperties = {}
     newUserProperties['id'] = this.user.id
     if (userName) {
@@ -79,6 +80,7 @@ export class EditUserComponent implements OnInit {
 
     if (update) {
       this.userService.update(newUserProperties).then((user: User) => {
+        this.submitted = false
         this.authService.setUserSession(user)
         this.alertService.success("User updated!")
       }).catch(e => {
@@ -89,4 +91,19 @@ export class EditUserComponent implements OnInit {
     }
   }
 
+  onDeleteUser() {
+    let form: DynamicForm = new DynamicForm("Delete User", "Delete")
+    form.addLabel('warning_text', "Warning!, this cannot be undone!", 'red')
+    form.addPasswordInput('Please enter your password', "user_password")
+
+    let onSubmit = (FormValues: FormValues, closeForm, showFormError) => {
+      this.userService.delete(this.user.id).then(() => {
+        closeForm()
+        this.alertService.success('User Removed!')
+      }).catch(e => {
+        showFormError(e)
+      })
+    }
+    this.uiService.promptForm(form, false, onSubmit)
+  }
 }

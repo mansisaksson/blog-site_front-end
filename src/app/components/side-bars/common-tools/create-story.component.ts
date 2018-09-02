@@ -26,13 +26,14 @@ export class CreateStoryComponent {
       form.addTextInput("Story Title", "title", "Title Here")
       form.addTextInput("Chapter 1 Title", "chapter_title", "Chapter 1")
 
-      this.uiService.promptForm('', form).then((values: FormValues) => {
+      let onFormSubmit = (values: FormValues) => {
         this.storyService.createStory(user.id, values["title"], values["chapter_title"]).then((story: StoryMetaData) => {
           this.router.navigate(['story-editor/'+story.storyId])
         }).catch((error) => {
           this.alertService.error(error)
         })
-      }).catch(e => this.alertService.error(e))
+      }
+      this.uiService.promptForm(form, true, onFormSubmit)
     }).catch(e => {
       this.alertService.error(e)
     })

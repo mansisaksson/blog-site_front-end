@@ -21,17 +21,17 @@ export class DeleteChapterComponent {
     this.authenticationService.withLoggedInUser().then((user: User) => {
       let form: DynamicForm = new DynamicForm("Delete Chapter", "Delete")
       form.addTextInput("Type DELETE", "delete", "")
-
-      this.uiService.promptForm('', form).then((entries: FormValues) => {
-        if (entries["delete"] === "DELETE") {
+      
+      let onFormSubmit = (values: FormValues) => {
+        if (values["delete"] === "DELETE") {
           this.storyEditorService.deleteCurrentChapter().then(() => {
             this.alertService.success("Chapter Deleted!")
           }).catch(e => this.alertService.error(e))
         } else {
           this.alertService.error("Invalid verification string")
         }
-      })
-
+      }
+      this.uiService.promptForm(form, true, onFormSubmit)
     }).catch(e => {
       this.alertService.error(e)
     })

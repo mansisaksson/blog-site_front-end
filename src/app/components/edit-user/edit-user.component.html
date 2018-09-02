@@ -2,7 +2,7 @@
 	<div style="max-width: 600px; margin: auto;">
 
 		<h1>Edit {{user.username}}</h1>
-		<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+		<form [formGroup]="registerForm">
 			
 			<div class="form-group">
 				<label>User Name</label>
@@ -32,11 +32,11 @@
 			</div>
 
 			<div class="form-group">
-				<button [disabled]="loading" class="btn btn-primary">Update User</button>
+				<button [disabled]="loading" class="btn btn-primary" (click)="onSubmit()">Update User</button>
 			</div>
 
 			<div class="form-group">
-				<button [disabled]="loading" class="btn">Delete User</button>
+				<button [disabled]="loading" class="btn" (click)="onDeleteUser()">Delete User</button>
 			</div>
 
 		</form>

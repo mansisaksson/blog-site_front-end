@@ -23,12 +23,12 @@ export class AddChapterComponent {
     this.authenticationService.withLoggedInUser().then((user: User) => {
       let form: DynamicForm = new DynamicForm("Create Chapter", "Create!")
       form.addTextInput("Chapter Title", "chapter_title", "Chapter 1")
-      this.uiService.promptForm('', form).then((values: FormValues) => {
+      let onFormSubmit = (values: FormValues) => {
         this.storyEditorService.createNewChapter(values["chapter_title"]).then(() => {
           this.alertService.success("Chapter added!")
-          //this.router.navigate(['story-editor/'+story.storyId])
         }).catch(e => this.alertService.error(e))
-      }).catch(e => this.alertService.error(e))
+      }
+      this.uiService.promptForm(form, true, onFormSubmit)
     }).catch(e => this.alertService.error(e))
   }
 

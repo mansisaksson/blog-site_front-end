@@ -1,13 +1,24 @@
-﻿<!-- Text Input -->
-<ng-template #textInput let-label="label" let-key="key" let-value="value">
-    <label>{{label}}</label>
+﻿<!-- Label -->
+<ng-template #labelInput let-label="label" let-key="key" let-value="value" let-color="color">
+    <label [style.color]="color" id="{{generateKeyId(key)}}">{{label}}</label>
+</ng-template>
+
+<!-- Text Input -->
+<ng-template #textInput let-label="label" let-key="key" let-value="value" let-color="color">
+    <label [style.color]="color">{{label}}</label>
     <input type="text" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" required />
 </ng-template>
 
 <!-- Boolean Input -->
-<ng-template #boolInput let-label="label" let-key="key" let-value="value">
-    <label>{{label}}</label>
+<ng-template #boolInput let-label="label" let-key="key" let-value="value" let-color="color">
+    <label [style.color]="color">{{label}}</label>
     <input type="checkbox" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" />
+</ng-template>
+
+<!-- Password Input -->
+<ng-template #passwordInput let-label="label" let-key="key" let-value="value" let-color="color">
+    <label [style.color]="color">{{label}}</label>
+    <input type="password" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" />
 </ng-template>
 
 <ng-template #modalContent>
@@ -17,7 +28,13 @@
             <div [ngSwitch]="entry.type">
                 <div *ngSwitchCase="'text'"><ng-container *ngTemplateOutlet="textInput; context: entry"></ng-container></div>
                 <div *ngSwitchCase="'bool'"><ng-container *ngTemplateOutlet="boolInput; context: entry"></ng-container></div>
+                <div *ngSwitchCase="'label'"><ng-container *ngTemplateOutlet="labelInput; context: entry"></ng-container></div>
+                <div *ngSwitchCase="'password'"><ng-container *ngTemplateOutlet="passwordInput; context: entry"></ng-container></div>
             </div>
+        </div>
+
+        <div class="form-group" *ngIf="error != ''">
+            <label [style.color]="'red'">{{error}}</label>
         </div>
     </div>
 

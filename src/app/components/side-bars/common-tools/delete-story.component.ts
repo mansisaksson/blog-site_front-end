@@ -45,8 +45,8 @@ export class DeleteStoryComponent implements OnInit {
         let form: DynamicForm = new DynamicForm("Delete Story", "Delete")
         form.addTextInput("Type DELETE", "delete", "")
 
-        this.uiService.promptForm('', form).then((entries: FormValues) => {
-          if (entries["delete"] === "DELETE") {
+        let onSubmit = (values: FormValues) => {
+          if (values["delete"] === "DELETE") {
             this.storyService.deleteStory(this.storyId).then(() => {
               this.router.navigate([''])
             }).catch(e => {
@@ -55,8 +55,8 @@ export class DeleteStoryComponent implements OnInit {
           } else {
             this.alertService.error("Invalid verification string")
           }
-        })
-        
+        }
+        this.uiService.promptForm(form, true, onSubmit)
       }).catch(e => {
         this.alertService.error(e)
       })

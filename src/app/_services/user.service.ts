@@ -114,8 +114,8 @@ export class UserService {
 		})
 	}
 
-	delete(id: string): Promise<boolean> {
-		return new Promise<boolean>((resolve, reject) => {
+	delete(id: string): Promise<any> {
+		return new Promise<any>((resolve, reject) => {
 			let params = {
 				userId: id
 			}

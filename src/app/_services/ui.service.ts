@@ -6,7 +6,8 @@ export interface DynamicFormElement {
 	type: string
 	label: string
 	key: string
-	value: any
+	value: any,
+	color: string
 }
 
 export interface FormValues {
@@ -37,22 +38,46 @@ export class DynamicForm {
 		return this._entries
 	}
 
-	addTextInput(label: string, key: string, defaultValue?: string) {
+	addLabel(key: string, value: string, color?: string) {
 		let textElem = <DynamicFormElement>{
-			type: "text",
-			label: label,
+			type: "label",
+			label: value,
 			key: key,
-			value: DynamicForm.getTextValue(defaultValue)
+			value: value,
+			color: color ? color : ''
 		}
 		this._entries[key] = textElem;
 	}
 
-	addBoolInput(label: string, key: string, defaultValue?: boolean) {
+	addPasswordInput(label: string, key: string, color?: string) {
+		let textElem = <DynamicFormElement>{
+			type: "password",
+			label: label,
+			key: key,
+			value: '',
+			color: color ? color : ''
+		}
+		this._entries[key] = textElem;
+	}
+
+	addTextInput(label: string, key: string, defaultValue?: string, color?: string) {
+		let textElem = <DynamicFormElement>{
+			type: "text",
+			label: label,
+			key: key,
+			value: DynamicForm.getTextValue(defaultValue),
+			color: color ? color : ''
+		}
+		this._entries[key] = textElem;
+	}
+
+	addBoolInput(label: string, key: string, defaultValue?: boolean, color?: string) {
 		let textElem = <DynamicFormElement>{
 			type: "bool",
 			label: label,
 			key: key,
-			value: defaultValue ? defaultValue : false
+			value: defaultValue ? defaultValue : false,
+			color: color ? color : ''
 		}
 		this._entries[key] = textElem;
 	}
@@ -68,6 +93,14 @@ export class DynamicForm {
 					this._entries[key].value = DynamicForm.getBoolValue(value)
 					break;
 				}
+				case "label": {
+					this._entries[key].value = value
+					break;
+				}
+				case "password": {
+					this._entries[key].value = DynamicForm.getPasswordValue(value)
+					break;
+				}
 			}
 		}
 
@@ -75,6 +108,10 @@ export class DynamicForm {
 	}
 
 	private static getTextValue(value: string): string {
+		return value ? value : ""
+	}
+
+	private static getPasswordValue(value: string): string {
 		return value ? value : ""
 	}
 
@@ -95,11 +132,10 @@ export class UIService {
 			if (event instanceof NavigationStart) {
 				this.loginMessageSubject.next({ event: 'close', url: '/' });
 				this.registerMessageSubject.next({ event: 'close', url: '/' });
-				this.formMessageSubject.next({ event: 'close', url: '/' });
+				this.formMessageSubject.next({ event: 'close' });
 			}
 		})
 	}
-
 
 	promptUserLogin(successRoute: string, onCanceled?: Function) {
 		this.loginMessageSubject.next({ event: 'open', url: successRoute, onCanceled: onCanceled })
@@ -109,18 +145,16 @@ export class UIService {
 		this.registerMessageSubject.next({ event: 'open', url: successRoute })
 	}
 
-	promptForm(successRoute: string, formContent: DynamicForm): Promise<FormValues> {
-		return new Promise<FormValues>((resolve, reject) => {
-			let onSubmitted = (values: FormValues) => { resolve(values) }
-			let onCanceled = (error) => { reject(error) }
+	promptForm(formContent: DynamicForm, autoClose: boolean, onSubmitted: (values: FormValues, closeForm: () => any, showError: (error: string) => any) => any, onCanceled?: (reason: any) => any) {
+			//let onSubmitted = (values: FormValues) => { resolve(values) }
+			//let onCanceled = (error) => { reject(error) }
 			this.formMessageSubject.next({
 				event: 'open',
-				url: successRoute,
 				form: formContent,
 				onSubmitted: onSubmitted,
-				onCanceled: onCanceled
+				onCanceled: onCanceled,
+				autoClose: autoClose
 			})
-		})
 	}
 
 	getShowLoginPrompt(): Observable<any> {
