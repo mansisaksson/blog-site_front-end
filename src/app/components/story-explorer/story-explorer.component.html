@@ -1,6 +1,6 @@
 <table style="width:100%">
   <tr *ngFor="let metaData of storyMetaData">
-    <div class="story-link">
+    <div class="story-link" [style.background-color]="getAccessibilityColor(metaData.accessibility)">
       <th class="thumbnail">
         <a [routerLink]="['/story-viewer', metaData.storyId]"><img src="{{metaData.thumbnail}}" width="112" height="66" ></a>
       </th>

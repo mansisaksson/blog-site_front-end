@@ -14,6 +14,7 @@ export interface StoryMetaData {
     storyId: string
     authorId: string
     title: string
+    accessibility: string
     upvotes: number
     downvotes: number
     thumbnailURI: string

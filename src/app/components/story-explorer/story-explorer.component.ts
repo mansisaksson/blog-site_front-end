@@ -69,4 +69,13 @@ export class StoryExplorerComponent implements OnInit {
     return Math.floor(seconds) + " seconds"
   }
 
+  getAccessibilityColor(accessibility: string): string {
+    switch (accessibility) {
+      case 'public':
+        return 'white'
+
+      default: /*'private'*/
+        return '#cca310'
+    }
+  }
 }

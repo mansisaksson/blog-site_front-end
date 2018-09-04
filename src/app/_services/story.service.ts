@@ -74,7 +74,7 @@ export class StoryService {
 				searchQuery: searchQuery
 			}
 
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/query', { params: params }).subscribe((data) => {
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/query', { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					let stories: StoryMetaData[] = <StoryMetaData[]>response.body
@@ -99,7 +99,7 @@ export class StoryService {
 			let params = {
 				storyId: id
 			}
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories', { params: params }).subscribe((data) => {
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories', { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					let story = <StoryMetaData>response.body
@@ -195,7 +195,7 @@ export class StoryService {
 			let params = {
 				chapterIds: JSON.stringify(cache.notFound)
 			}
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { params: params }).subscribe((data) => {
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					let chapters = <ChapterMetaData[]>response.body
@@ -219,7 +219,7 @@ export class StoryService {
 			let params = {
 				contentURIs: JSON.stringify(contentURIs)
 			}
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', { params: params }).subscribe((data) => {
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					let contents = <ChapterContent[]>response.body
