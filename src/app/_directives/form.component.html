@@ -21,6 +21,20 @@
     <input type="password" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" />
 </ng-template>
 
+<!-- Dropdown Input -->
+<ng-template #dropdownInput let-label="label" let-key="key" let-value="value" let-color="color" let-dropdownEntries="dropdownEntries">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="{{generateKeyId(key)}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{label}}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="generateKeyId(key)">
+            <a class="dropdown-item" *ngFor="let key of getDropdownKeys(dropdownEntries)">
+                {{getDropdownValue(dropdownEntries, key)}}
+            </a>
+        </div>
+    </div>
+</ng-template>
+
 <ng-template #modalContent>
 <form name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
     <div class="modal-body">
@@ -30,6 +44,7 @@
                 <div *ngSwitchCase="'bool'"><ng-container *ngTemplateOutlet="boolInput; context: entry"></ng-container></div>
                 <div *ngSwitchCase="'label'"><ng-container *ngTemplateOutlet="labelInput; context: entry"></ng-container></div>
                 <div *ngSwitchCase="'password'"><ng-container *ngTemplateOutlet="passwordInput; context: entry"></ng-container></div>
+                <div *ngSwitchCase="'dropdown'"><ng-container *ngTemplateOutlet="dropdownInput; context: entry"></ng-container></div>
             </div>
         </div>
 

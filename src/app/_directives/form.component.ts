@@ -97,4 +97,12 @@ export class FormComponent implements OnDestroy, OnInit {
 	generateKeyId(key: string) {
 		return "generatedFormElement-" + key
 	}
+
+	getDropdownKeys(dropdownEntries: any) {
+		return Object.keys(dropdownEntries)
+	}
+
+	getDropdownValue(dropdownEntries: any, key: string) {
+		return dropdownEntries[key]
+	}
 }

@@ -10,6 +10,11 @@ export interface DynamicFormElement {
 	color: string
 }
 
+export interface DropdownFormElement extends DynamicFormElement {
+	dropdownEntries: { [key: string]: string }
+	addDropdownEntry: (key: string, label: string) => DropdownFormElement
+}
+
 export interface FormValues {
 	[key: string]: any
 }
@@ -39,36 +44,54 @@ export class DynamicForm {
 	}
 
 	addLabel(key: string, value: string, color?: string) {
-		let textElem = <DynamicFormElement>{
+		let elem = <DynamicFormElement>{
 			type: "label",
 			label: value,
 			key: key,
 			value: value,
 			color: color ? color : ''
 		}
-		this._entries[key] = textElem;
+		this._entries[key] = elem;
 	}
 
 	addPasswordInput(label: string, key: string, color?: string) {
-		let textElem = <DynamicFormElement>{
+		let elem = <DynamicFormElement>{
 			type: "password",
 			label: label,
 			key: key,
 			value: '',
 			color: color ? color : ''
 		}
-		this._entries[key] = textElem;
+		this._entries[key] = elem;
 	}
 
 	addTextInput(label: string, key: string, defaultValue?: string, color?: string) {
-		let textElem = <DynamicFormElement>{
+		let elem = <DynamicFormElement>{
 			type: "text",
 			label: label,
 			key: key,
 			value: DynamicForm.getTextValue(defaultValue),
 			color: color ? color : ''
 		}
-		this._entries[key] = textElem;
+		this._entries[key] = elem;
+	}
+
+	addDropdown(label: string, key: string, defaultValue?: string, color?: string): DropdownFormElement {
+		let elem = <DropdownFormElement>{
+			type: "dropdown",
+			label: label,
+			key: key,
+			value: DynamicForm.getTextValue(defaultValue),
+			color: color ? color : '',
+			dropdownEntries: {},
+			addDropdownEntry: function(key: string, label: string) {
+				this.dropdownEntries[key] = label
+				return this
+			}
+		}
+		this._entries[key] = elem;
+
+		return elem
 	}
 
 	addBoolInput(label: string, key: string, defaultValue?: boolean, color?: string) {
@@ -118,21 +141,22 @@ export class DynamicForm {
 	private static getBoolValue(value: string): boolean {
 		return value != undefined ? (value == "true" ? true : false) : false
 	}
+
 }
 
 @Injectable()
 export class UIService {
-	private loginMessageSubject = new Subject<any>();
-	private registerMessageSubject = new Subject<any>();
-	private formMessageSubject = new Subject<any>();
+	private loginMessageSubject = new Subject<any>()
+	private registerMessageSubject = new Subject<any>()
+	private formMessageSubject = new Subject<any>()
 
 	constructor(
 		private router: Router) {
 		router.events.subscribe(event => {
 			if (event instanceof NavigationStart) {
-				this.loginMessageSubject.next({ event: 'close', url: '/' });
-				this.registerMessageSubject.next({ event: 'close', url: '/' });
-				this.formMessageSubject.next({ event: 'close' });
+				this.loginMessageSubject.next({ event: 'close', url: '/' })
+				this.registerMessageSubject.next({ event: 'close', url: '/' })
+				this.formMessageSubject.next({ event: 'close' })
 			}
 		})
 	}
