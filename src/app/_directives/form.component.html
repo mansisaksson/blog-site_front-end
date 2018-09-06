@@ -17,19 +17,21 @@
 
 <!-- Password Input -->
 <ng-template #passwordInput let-label="label" let-key="key" let-value="value" let-color="color">
-    <label [style.color]="color">{{label}}</label>
+        <label [style.color]="color">{{label}}</label>
     <input type="password" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" />
 </ng-template>
 
 <!-- Dropdown Input -->
 <ng-template #dropdownInput let-label="label" let-key="key" let-value="value" let-color="color" let-dropdownEntries="dropdownEntries">
     <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="{{generateKeyId(key)}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{label}}
+        <label [style.color]="color">{{label}}</label><br>
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="{{generateKeyId(key) + '_button'}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{getDropdownValue(dropdownEntries, value)}}
         </button>
-        <div class="dropdown-menu" aria-labelledby="generateKeyId(key)">
-            <a class="dropdown-item" *ngFor="let key of getDropdownKeys(dropdownEntries)">
-                {{getDropdownValue(dropdownEntries, key)}}
+        <input type="hidden" id="{{generateKeyId(key)}}" value="{{value}}"/>
+        <div class="dropdown-menu" aria-labelledby="generateKeyId(key) + '_button'">
+            <a class="dropdown-item" *ngFor="let dropDownKey of getDropdownKeys(dropdownEntries)" (click)="selectDropdownValue(key, dropDownKey)">
+                {{getDropdownValue(dropdownEntries, dropDownKey)}}
             </a>
         </div>
     </div>

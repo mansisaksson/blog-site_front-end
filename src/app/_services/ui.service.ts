@@ -110,19 +110,23 @@ export class DynamicForm {
 			switch (this._entries[key].type) {
 				case "text": {
 					this._entries[key].value = DynamicForm.getTextValue(value)
-					break;
+					break
 				}
 				case "bool": {
 					this._entries[key].value = DynamicForm.getBoolValue(value)
-					break;
+					break
 				}
 				case "label": {
 					this._entries[key].value = value
-					break;
+					break
 				}
 				case "password": {
 					this._entries[key].value = DynamicForm.getPasswordValue(value)
-					break;
+					break
+				}
+				case "dropdown": {
+					this._entries[key].value = value
+					break
 				}
 			}
 		}

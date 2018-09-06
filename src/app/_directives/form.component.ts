@@ -59,7 +59,7 @@ export class FormComponent implements OnDestroy, OnInit {
 			this.form.keys().forEach(key => {
 				let element = <HTMLInputElement>document.getElementById(this.generateKeyId(key))
 				formValues[key] = this.form.updateElementValue(key, element.value)
-			});
+			})
 			let closeForm = () => {
 				this.closeModal()
 			}
@@ -104,5 +104,9 @@ export class FormComponent implements OnDestroy, OnInit {
 
 	getDropdownValue(dropdownEntries: any, key: string) {
 		return dropdownEntries[key]
+	}
+
+	selectDropdownValue(dropdownKey: string, valueKey: string) {
+		this.form.updateElementValue(dropdownKey, valueKey)
 	}
 }

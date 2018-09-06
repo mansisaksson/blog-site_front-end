@@ -41,12 +41,12 @@ export class StorySettingsComponent implements OnInit {
 
   publishStory() {
     let form: DynamicForm = new DynamicForm("Story Settings", "Apply")
-    form.addDropdown('Accessibility', 'accessibility_dropdown', 'public')
+    form.addDropdown('Accessibility', 'accessibility', 'public')
     .addDropdownEntry('public', 'Public')
     .addDropdownEntry('private', 'Private')
 
     let onSubmit = (values: FormValues) => {
-      
+      console.log(values['accessibility'])
     }
     this.uiService.promptForm(form, true, onSubmit)
   }
