@@ -11,7 +11,7 @@ import { Router } from '@angular/router'
   </div>`
 })
 export class StorySettingsComponent implements OnInit {
-  private storyId: string
+  private story: StoryMetaData = <StoryMetaData>{ storyId: "", accessibility: 'private' }
   private enabled: boolean
 
   constructor(
@@ -29,24 +29,25 @@ export class StorySettingsComponent implements OnInit {
         this.authenticationService.getCurrentUser().subscribe((user: User) => {
           if (user != undefined) {
             this.enabled = (user.id == story.authorId) ? true : false
-            this.storyId = story.storyId
+            this.story = story
           }
         })
       } else {
         this.enabled = false
-        this.storyId = ""
+        this.story = <StoryMetaData>{ storyId: "", accessibility: 'private' }
       }
     })
   }
 
   publishStory() {
     let form: DynamicForm = new DynamicForm("Story Settings", "Apply")
-    form.addDropdown('Accessibility', 'accessibility', 'public')
+    form.addDropdown('Accessibility', 'accessibility', this.story.accessibility)
     .addDropdownEntry('public', 'Public')
     .addDropdownEntry('private', 'Private')
 
     let onSubmit = (values: FormValues) => {
       console.log(values['accessibility'])
+      alert("TODO")
     }
     this.uiService.promptForm(form, true, onSubmit)
   }
