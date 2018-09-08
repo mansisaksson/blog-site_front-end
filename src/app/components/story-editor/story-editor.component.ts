@@ -57,13 +57,13 @@ export class StoryEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   onTitleChanged(newTitle: string) {
-    this.storyEditorService.renameStory(newTitle).then(() => {
+    this.storyEditorService.updateStory({ title: newTitle }).then(() => {
       this.alertService.success("Story Renamed!")
     }).catch(e => this.alertService.error(e))
   }
 
   onChapterTitleChanged(newTitle: string) {
-    this.storyEditorService.renameChapter(newTitle).then(() => {
+    this.storyEditorService.updateChapterMetaData({ title: newTitle }).then(() => {
       this.alertService.success("Chapter Renamed!")
     }).catch(e => this.alertService.error(e))
   }

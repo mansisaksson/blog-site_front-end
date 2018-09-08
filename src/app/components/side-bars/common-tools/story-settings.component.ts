@@ -15,7 +15,7 @@ export class StorySettingsComponent implements OnInit {
   private enabled: boolean
 
   constructor(
-    private storyService: StoryService,
+    private storyEditor: StoryEditorService,
     private authenticationService: AuthenticationService,
     private alertService: AlertService,
     private router: Router,
@@ -24,7 +24,7 @@ export class StorySettingsComponent implements OnInit {
 
   ngOnInit() {
     this.enabled = false
-    this.storyService.getCurrentlyViewedStory().subscribe((story: StoryMetaData) => {
+    this.storyEditor.getCurrentStory().subscribe((story: StoryMetaData) => {
       if (story != undefined) {
         this.authenticationService.getCurrentUser().subscribe((user: User) => {
           if (user != undefined) {
@@ -45,11 +45,14 @@ export class StorySettingsComponent implements OnInit {
     .addDropdownEntry('public', 'Public')
     .addDropdownEntry('private', 'Private')
 
-    let onSubmit = (values: FormValues) => {
-      console.log(values['accessibility'])
-      alert("TODO")
+    let onSubmit = (values: FormValues, closeForm) => {
+      this.storyEditor.updateStory({ accessibility: values['accessibility'] }).then(() => {
+        this.alertService.success('Story Updated!')
+        closeForm()
+      }).catch(e => this.alertService.error(e))
     }
-    this.uiService.promptForm(form, true, onSubmit)
+    let on
+    this.uiService.promptForm(form, false, onSubmit)
   }
 
 }

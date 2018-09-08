@@ -52,6 +52,8 @@ export class StoryCacheService {
 		localStorage.setItem('story_chapter_content_cache', JSON.stringify(this.chapterContentCache))
 		localStorage.setItem('story_cache_timestamps', JSON.stringify(this.cacheTimeStamp))
 		localStorage.setItem('story_query_cache', JSON.stringify(this.queryCache))
+		
+		this.LoadStoryCache() // Makes sure that any object saved in the cache lists are destroyed
 	}
 
 	private ValidateCache() {
@@ -163,7 +165,7 @@ export class StoryCacheService {
 			this.TimeStampId(chapter.chapterId)
 			let story = this.storyCache[chapter.storyId]
 			if (story) {
-				let index = story.chapters.findIndex(c => { return c.chapterId == chapter.chapterId })
+				let index = story.chapters.findIndex(c => c.chapterId == chapter.chapterId)
 				if (index != -1) {
 					story.chapters[index] = chapter
 				} else {

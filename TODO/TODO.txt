@@ -2,7 +2,7 @@
 	[ ] Story public/private flag so it can be worked on before it gets published
 	[ ] Story search
 	[ ] Display author name on stories
-
+	[ ] Use quill editor to render quill content (render library did not work well)
 
 ---- TODO
 [ ] We get hundreds of duplicate requests for "localhost:3000/api/stories/query?userId=undefined&searchQuery=undefined"

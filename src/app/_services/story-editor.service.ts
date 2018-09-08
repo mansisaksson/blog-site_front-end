@@ -152,16 +152,14 @@ export class StoryEditorService {
 		})
 	}
 
-	public renameChapter(newName: string): Promise<StoryMetaData> {
+	public updateChapterMetaData(newChapterProperties: object): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let chapter = this.currentChapter.getValue()
 			if (this.editor && chapter) {
-				chapter.title = newName
-				this.storyService.updateChapterMetaData(chapter.chapterId, chapter).then(() => {
+				this.storyService.updateChapterMetaData(chapter.chapterId, newChapterProperties).then(() => {
 					let story = this.currentStory.getValue()
 					let index = story.chapters.findIndex(c => c.chapterId == chapter.chapterId)
 					story.chapters[index] = chapter
-
 					this.currentChapter.next(chapter)
 					this.currentStory.next(story)
 					resolve(story)
@@ -172,11 +170,11 @@ export class StoryEditorService {
 		})
 	}
 
-	public renameStory(newName: string): Promise<StoryMetaData> {
+	public updateStory(newStoryProperties: object): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let story = this.currentStory.getValue()
 			if (this.editor && story) {
-				this.storyService.updateStoryName(story.storyId, newName).then((story) => {
+				this.storyService.updateStory(story.storyId, newStoryProperties).then((story) => {
 					this.currentStory.next(story)
 					resolve(story)
 				}).catch(e => reject(e))

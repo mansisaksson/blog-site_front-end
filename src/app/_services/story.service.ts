@@ -128,12 +128,12 @@ export class StoryService {
 		})
 	}
 
-	updateStoryName(storyId: string, newTitle: string): Promise<StoryMetaData> {
+	updateStory(storyId: string, newStoryProperties: object): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let params = {
 				storyId: storyId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/title', newTitle, { params: params, withCredentials: true }).subscribe((data) => {
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories', JSON.stringify(newStoryProperties), { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					let story = <StoryMetaData>response.body
@@ -251,12 +251,12 @@ export class StoryService {
 		})
 	}
 
-	updateChapterMetaData(chapterId: string, newMetaData: ChapterMetaData): Promise<ChapterMetaData> {
+	updateChapterMetaData(chapterId: string, newChapterProperties: object): Promise<ChapterMetaData> {
 		return new Promise<ChapterMetaData>((resolve, reject) => {
 			let params = {
 				chapterId: chapterId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', JSON.stringify(newMetaData), { params: params, withCredentials: true }).subscribe((data) => {
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', JSON.stringify(newChapterProperties), { params: params, withCredentials: true }).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
 					let chapter = <ChapterMetaData>response.body
