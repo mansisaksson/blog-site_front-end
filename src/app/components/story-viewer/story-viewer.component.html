@@ -1,4 +1,11 @@
 <div class="centered-document">
-<h1>{{story.title}}</h1>
-<div id="documentContainer"></div>
+	<h1>{{story.title}}</h1>
+	<div id="documentContainer" *ngFor="let chapter of story.chapters">
+		<div class="chapter-title">
+			<div class="chapter-title-line"></div>
+			<h2 class="chapter-title-text">{{chapter.title}}</h2>
+			<div class="chapter-title-line"></div>
+		</div>
+		<div id="{{'quill_content_' + chapter.chapterId}}"></div>
+	</div>
 </div>

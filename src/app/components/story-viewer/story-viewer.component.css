@@ -1,0 +1,14 @@
+.chapter-title {
+	text-align: center;
+}
+
+.chapter-title-line {
+	display: inline-block;
+	background-color: black;
+	height: 2px;
+	width: 200px;
+}
+
+.chapter-title-text {
+	display: inline-block;
+}
