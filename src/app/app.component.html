@@ -2,10 +2,10 @@
 <app-register></app-register>
 <app-form></app-form>
 <app-navbar></app-navbar>
-<alert></alert>
+<app-alert></app-alert>
 
 <div class="row no-gutters body-container">
-    <div class="col-2 bg-dark">
+    <div class="col-2 bg-dark" [hidden]="!isNavMenuEnabled()">
         <app-nav-menu></app-nav-menu>
     </div>
 

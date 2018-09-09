@@ -19,12 +19,11 @@ import { unescapeIdentifier } from '@angular/compiler';
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.css']
 })
-export class ToolbarComponent  implements OnInit, OnDestroy {
+export class ToolbarComponent  implements OnInit {
   @ViewChild("toolbarTarget", { read: ViewContainerRef })
   toolbarTarget: ViewContainerRef
 
   toolbarComponent: ComponentRef<Component>
-  routerEventSubscription: ISubscription
 
   constructor(private router: Router,
     private componentFactoryResolver: ComponentFactoryResolver) {
@@ -32,15 +31,11 @@ export class ToolbarComponent  implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.routerEventSubscription = this.router.events.subscribe((event: Event) => {
-      if (event instanceof NavigationEnd) {
-        this.updateContent(this.router.routerState.snapshot.root)
-      }
+    this.router.events
+    .filter(e => e instanceof NavigationEnd)
+    .forEach(e => {
+      this.updateContent(this.router.routerState.snapshot.root)
     })
-  }
-
-  ngOnDestroy(): void {
-    this.routerEventSubscription.unsubscribe()
   }
 
   private updateContent(snapshot: ActivatedRouteSnapshot): void {

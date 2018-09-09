@@ -39,28 +39,23 @@ export class SideBarComponent {
     <ng-container #sidebarTarget></ng-container>
   </div>`
 })
-export class SideBarsComponent implements OnInit, OnDestroy {
+export class SideBarsComponent implements OnInit {
   @ViewChild("sidebarTarget", { read: ViewContainerRef })
   sidebarTarget: ViewContainerRef;
-
   sidebarComponents: ComponentRef<SideBarComponent>[] = new Array<ComponentRef<SideBarComponent>>()
-  routerEventSubscription: ISubscription
 
   constructor(private router: Router,
     private componentFactoryResolver: ComponentFactoryResolver) {
   }
 
   ngOnInit() {
-    this.routerEventSubscription = this.router.events.subscribe((event: Event) => {
-      if (event instanceof NavigationEnd) {
-        this.updateSidebarContent(this.router.routerState.snapshot.root)
-      }
+    this.router.events
+    .filter(e => e instanceof NavigationEnd)
+    .forEach(e => {
+      this.updateSidebarContent(this.router.routerState.snapshot.root)
     })
   }
 
-  ngOnDestroy(): void {
-    this.routerEventSubscription.unsubscribe()
-  }
 
   private updateSidebarContent(snapshot: ActivatedRouteSnapshot): void {
     this.clearSidebar();

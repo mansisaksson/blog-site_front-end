@@ -24,23 +24,17 @@ export class NavMenuComponent implements OnInit {
   navMenuTarget: ViewContainerRef
 
   navMenuComponent: ComponentRef<Component>
-  routerEventSubscription: ISubscription
 
   constructor(private router: Router,
     private componentFactoryResolver: ComponentFactoryResolver) { 
-
   }
 
   ngOnInit() {
-    this.routerEventSubscription = this.router.events.subscribe((event: Event) => {
-      if (event instanceof NavigationEnd) {
-        this.updateContent(this.router.routerState.snapshot.root)
-      }
+    this.router.events
+    .filter(e => e instanceof NavigationEnd)
+    .forEach(e => {
+      this.updateContent(this.router.routerState.snapshot.root)
     })
-  }
-
-  ngOnDestroy(): void {
-    this.routerEventSubscription.unsubscribe()
   }
 
   private updateContent(snapshot: ActivatedRouteSnapshot): void {
@@ -66,10 +60,6 @@ export class NavMenuComponent implements OnInit {
       this.navMenuTarget.clear()
     }
     this.navMenuComponent = undefined
-  }
-
-  isEnabled(): boolean {
-    return this.navMenuComponent ? true : false
   }
 
 }

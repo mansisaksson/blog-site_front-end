@@ -1,10 +1,15 @@
 ---- Minimum before publish
 	[x] Story public/private flag so it can be worked on before it gets published
 	[x] Use quill editor to render quill content (render library did not work well)
-	[ ] Story search
+	[ ] Story query
+		[ ] Sort by
+		[ ] Search by name
 	[ ] Display author name on stories
+	[ ] Thumbnails
 
 ---- TODO
+[ ] Design rework, look at http://www.aclockworkberry.com/ and other blogg sites
+
 [ ] Better Message service
 
 [ ] We get hundreds of duplicate requests for "localhost:3000/api/stories/query?userId=undefined&searchQuery=undefined"
@@ -18,9 +23,9 @@ when opening the story viewer
 	[ ] Hide Left sidebar when not used
 	[ ] Search functionality for the story explorer
 
-[ ] Editor sidebar navigator
+[x] Editor sidebar navigator
 	[x] Display chapters
-	[ ] Display document preview
+	[-] Display document preview
 
 [ ] Centered images are not saved
 
