@@ -4,8 +4,13 @@
 	padding: 5px;
 	margin: auto;
 	margin-top: 10px;
-	box-shadow: 0px 0px 5px #000;
 	max-width: 1200px;
 	min-height: 900px;
 	background-color: #ffffff;
+	
+	/* Border */
+	border-style: solid;
+	border-width: 1px;
+	border-color: #CCCCCC;
+	/*box-shadow: 0px 0px 5px #000;*/
 }

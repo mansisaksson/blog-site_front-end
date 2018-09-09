@@ -1,13 +1,16 @@
-<table style="width:100%">
+<table class="story-container">
   <tr *ngFor="let metaData of storyMetaData">
     <div class="story-link" [style.background-color]="getAccessibilityColor(metaData.accessibility)">
       <th class="thumbnail">
-        <a [routerLink]="['/story-viewer', metaData.storyId]"><img src="{{metaData.thumbnail}}" width="112" height="66" ></a>
+        <a [routerLink]="['/story-viewer', metaData.storyId]"><img src="{{metaData.thumbnail}}" width="256" height="151" ></a>
       </th>
-      <th>
+      <th style="padding-left: 10px;">
         <a [routerLink]="['/story-viewer', metaData.storyId]"><h4 style="font-size: 20px">{{metaData.title}}</h4></a>
         <p style="font-size: 14px">submitted {{timeSince(metaData.submittedAt)}} ago by {{metaData.authorName}}</p>
       </th>
+      <p style="font-size: 14px">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi congue vel nulla ac egestas. Aenean at purus vitae ex accumsan suscipit. Nullam consequat turpis in consequat imperdiet. Quisque nec posuere arcu. Mauris quam ex, pretium vitae luctus in, accumsan et lorem. Praesent condimentum, tellus fermentum semper pretium, metus augue feugiat sem, quis sodales orci lectus in orci. Morbi facilisis tortor non eros imperdiet, sit amet egestas enim eleifend.
+      </p>
     </div>
   </tr>
 </table>

@@ -4,10 +4,19 @@
 .story-link {
     padding: 5px;
     margin: 5px;
-    box-shadow: 0px 0px 5px #000;
     background-color: white;
+
+    border-style: solid;
+	border-width: 1px;
+    border-color: #CCCCCC;
+    /*box-shadow: 0px 0px 5px #000;*/
 }
 
 .thumbnail {
     vertical-align: middle;
+}
+
+.story-container {
+    width: 800px;
+    margin: auto;
 }

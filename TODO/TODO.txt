@@ -6,6 +6,7 @@
 		[ ] Search by name
 	[ ] Display author name on stories
 	[ ] Thumbnails
+	[ ] Story description
 
 ---- TODO
 [ ] Design rework, look at http://www.aclockworkberry.com/ and other blogg sites
