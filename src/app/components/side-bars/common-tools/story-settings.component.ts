@@ -41,12 +41,17 @@ export class StorySettingsComponent implements OnInit {
 
   publishStory() {
     let form: DynamicForm = new DynamicForm("Story Settings", "Apply")
+    form.addTextInput('Title', 'title', this.story.title)
     form.addDropdown('Accessibility', 'accessibility', this.story.accessibility)
     .addDropdownEntry('public', 'Public')
     .addDropdownEntry('private', 'Private')
 
     let onSubmit = (values: FormValues, closeForm) => {
-      this.storyEditor.updateStory({ accessibility: values['accessibility'] }).then(() => {
+      let newStoryProperties = { 
+        title: values['title'],
+        accessibility: values['accessibility'] 
+      }
+      this.storyEditor.updateStory(newStoryProperties).then(() => {
         this.alertService.success('Story Updated!')
         closeForm()
       }).catch(e => this.alertService.error(e))

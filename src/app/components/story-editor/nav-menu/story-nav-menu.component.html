@@ -3,6 +3,7 @@
   <h1 [style.color]="'white'">{{story.title}}</h1>
 </div>
 -->
+<h1>{{story.title}}</h1>
 <div *ngFor="let element of titleElements">
 <button class="btn btn-link"
 (click)="editChapter(element.payload)"

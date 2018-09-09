@@ -45,6 +45,8 @@ export class StoryNavMenuComponent implements OnInit {
           }
           this.titleElements.push(elem)
         })
+      } else {
+        story = <StoryMetaData>{ title: "..." }
       }
     })
   }

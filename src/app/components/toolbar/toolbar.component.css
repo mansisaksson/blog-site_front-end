@@ -1,6 +1,9 @@
 #toolbar-container {
-	height: 50px;
+	height: 52px;
 	background-color: white;
+}
+
+.toolbar-nav {
 	border-style: solid;
 	border-width: 1px;
 	border-color: #CCCCCC;
