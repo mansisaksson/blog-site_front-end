@@ -4,12 +4,12 @@
 </div>
 -->
 <div *ngFor="let element of titleElements">
-<button class="btn btn-primary textStyle"
+<button class="btn btn-link"
 (click)="editChapter(element.payload)"
 [style.padding.px]="0"
 [style.margin.px]="5"
-[style.marginLeft.px]="navTitles[element.tagName.toLowerCase()].padding" 
-[style.color]="'white'" 
+[style.marginLeft.px]="navTitles[element.tagName.toLowerCase()].padding"
+[style.color]="'black'"
 [innerHtml]="'<'+element.tagName+'>'+element.content+'</'+element.tagName+'>'"
 ></button>
 </div>

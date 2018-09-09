@@ -9,3 +9,10 @@
 	height: calc(100vh - 105px);
 	overflow-y: auto;
 }
+
+.nav-menu {
+	background-color: #ffffff;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #CCCCCC;
+}

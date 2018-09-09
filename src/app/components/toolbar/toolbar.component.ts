@@ -1,18 +1,14 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
   ViewContainerRef,
   ViewChild,
   ComponentRef,
   ComponentFactoryResolver,
-  ComponentFactory,
-  Type
+  ComponentFactory
 } from '@angular/core';
 
-import { Router, ActivatedRouteSnapshot, Event, NavigationEnd } from '@angular/router'
-import { ISubscription } from 'rxjs/Subscription'
-import { unescapeIdentifier } from '@angular/compiler';
+import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router'
 
 @Component({
   selector: 'app-toolbar',

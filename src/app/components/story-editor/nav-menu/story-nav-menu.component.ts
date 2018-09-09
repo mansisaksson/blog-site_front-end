@@ -20,9 +20,9 @@ class DrawableElem {
 })
 export class StoryNavMenuComponent implements OnInit {
   private navTitles: { [key: string]: NavTitle } = {
-    "h1": { fontSize: 12, padding: 5 },
-    "h2": { fontSize: 10, padding: 10 },
-    "h3": { fontSize: 8, padding: 15 },
+    "h1": { fontSize: 12, padding: 10 },
+    "h2": { fontSize: 10, padding: 15 },
+    "h3": { fontSize: 8, padding: 20 },
   }
 
   private story: StoryMetaData = <StoryMetaData>{ title: "..." }

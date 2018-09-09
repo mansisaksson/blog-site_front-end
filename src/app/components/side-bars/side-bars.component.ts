@@ -1,7 +1,6 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
   ViewContainerRef,
   ViewChild,
   ComponentRef,
@@ -11,7 +10,6 @@ import {
 } from '@angular/core';
 
 import { Router, ActivatedRouteSnapshot, Event, NavigationEnd } from '@angular/router'
-import { ISubscription } from 'rxjs/Subscription'
 
 @Component({
   template: `
