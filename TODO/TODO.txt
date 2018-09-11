@@ -9,6 +9,15 @@
 	[ ] Story description
 
 ---- TODO
+[ ] Use multipart or JSON for sending files?
+There are two main patterns for sending data between client and server, one if through Form Data,
+which is quite old, and the other is to format it using something like JSON and then parse it on the server.
+The problem with sending everything as JSON is that the size of serialized binary data is larger than if it were sent by
+multipart form data, as form data has a special property form handling file transfer and is therefor quite efficiant at doing so.
+
+The upside of using JSON is that I keep the code simple. Keeping all communication as JSON also gives a higher degree of flexibility
+if I were to switch transfer protocol, or were to allow communication from a non browser source. (eg. a game or a login server).
+
 [ ] Design rework, look at http://www.aclockworkberry.com/ and other blogg sites
 
 [ ] Better Message service
