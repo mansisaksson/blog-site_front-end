@@ -70,7 +70,6 @@ export class EditUserComponent implements OnInit {
     let password = this.registerForm.get('password').value != '' ? this.registerForm.get('password').value : undefined
 
     let newUserProperties = {}
-    newUserProperties['id'] = this.user.id
     if (userName) {
       update = true
       newUserProperties['username'] = userName
@@ -81,7 +80,7 @@ export class EditUserComponent implements OnInit {
     }
 
     if (update) {
-      this.userService.update(newUserProperties).then((user: User) => {
+      this.userService.updateUser(this.user.id, newUserProperties).then((user: User) => {
         this.submitted = false
         this.authService.setUserSession(user)
         this.alertService.success("User updated!")

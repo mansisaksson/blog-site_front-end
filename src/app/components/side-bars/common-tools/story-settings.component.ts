@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { User, StoryMetaData } from './../../../_models'
-import { StoryService, StoryEditorService, AuthenticationService, AlertService, DynamicForm, FormValues, UIService } from './../../../_services'
-import { Router } from '@angular/router'
+import { StoryEditorService, AuthenticationService, AlertService, DynamicForm, FormValues, UIService } from './../../../_services'
 
 @Component({
   selector: 'app-common-tools',
@@ -18,7 +17,6 @@ export class StorySettingsComponent implements OnInit {
     private storyEditor: StoryEditorService,
     private authenticationService: AuthenticationService,
     private alertService: AlertService,
-    private router: Router,
     private uiService: UIService
   ) { }
 
@@ -45,18 +43,44 @@ export class StorySettingsComponent implements OnInit {
     form.addDropdown('Accessibility', 'accessibility', this.story.accessibility)
     .addDropdownEntry('public', 'Public')
     .addDropdownEntry('private', 'Private')
+    form.addFileSelection('Thumbnail', 'thumbnail', { fileTypes: ['.png', '.jpg'], fileLimit: '1mb' })
 
-    let onSubmit = (values: FormValues, closeForm) => {
-      let newStoryProperties = { 
+    let onSubmit = (values: FormValues, closeForm, showError) => {
+      let newStoryProperties = {
         title: values['title'],
-        accessibility: values['accessibility'] 
+        accessibility: values['accessibility']
       }
-      this.storyEditor.updateStory(newStoryProperties).then(() => {
-        this.alertService.success('Story Updated!')
-        closeForm()
-      }).catch(e => this.alertService.error(e))
+
+      let updateStory = () => {
+        this.storyEditor.updateStory(newStoryProperties).then(() => {
+          this.alertService.success('Story Updated!')
+          closeForm()
+        }).catch(e => {
+          this.alertService.error(e)
+          closeForm()
+        })
+      }
+
+      // Set thumbnail property
+      let newThumbnail = <File>values['thumbnail']
+      if (newThumbnail) {
+        let fileSize = newThumbnail.size / 1024 / 1024 // in MB
+        if (fileSize <= 2) {
+          let fileReader = new FileReader()
+          fileReader.onload = (e) => {
+            let base64String = btoa(<string>fileReader.result)
+            newStoryProperties['thumbnail']  = base64String
+            updateStory()
+          }
+          fileReader.readAsBinaryString(newThumbnail)
+        } else {
+          showError('Thumbnail file size too big')
+          return
+        }
+      } else {
+        updateStory()
+      }
     }
-    let on
     this.uiService.promptForm(form, false, onSubmit)
   }
 

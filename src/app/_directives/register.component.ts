@@ -74,7 +74,7 @@ export class RegisterComponent implements OnDestroy, OnInit {
     let userName = this.registerForm.get('userName').value
     let password = this.registerForm.get('password').value
     
-		this.userService.create(userName, password).then(user => {
+		this.userService.createUser(userName, password).then(user => {
 			this.alertService.success('Registration successful', true)
 			this.authenticationService.login(userName, password).then(() => {
 				this.router.navigate([this.message.url])

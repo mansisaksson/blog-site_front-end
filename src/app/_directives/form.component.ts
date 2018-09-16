@@ -1,7 +1,6 @@
 ﻿import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { Subscription } from 'rxjs/Subscription'
-import { AlertService } from '../_services'
-import { UIService, DynamicFormElement, DynamicForm, FormValues } from '../_services/ui.service';
+import { UIService, DynamicForm, FormValues } from '../_services/ui.service';
 declare let $: any
 
 @Component({
@@ -20,8 +19,7 @@ export class FormComponent implements OnDestroy, OnInit {
 	@ViewChild('formModal') formModal
 
 	constructor(
-		private uiService: UIService,
-		private alertService: AlertService
+		private uiService: UIService
 	) {
 		this.uiService.getFormPrompt().subscribe(message => {
 			if (this.message) {
@@ -57,8 +55,7 @@ export class FormComponent implements OnDestroy, OnInit {
 		if (this.message && this.message.onSubmitted) {
 			let formValues: FormValues = {}
 			this.form.keys().forEach(key => {
-				let element = <HTMLInputElement>document.getElementById(this.generateKeyId(key))
-				formValues[key] = this.form.updateElementValue(key, element.value)
+				formValues[key] = this.form.updateElementValue(key)
 			})
 			let closeForm = () => {
 				this.closeModal()
@@ -106,7 +103,22 @@ export class FormComponent implements OnDestroy, OnInit {
 		return dropdownEntries[key]
 	}
 
+	getAcceptedFiles(files: string[]) {
+		let result = ''
+		files.forEach(s => {
+			result += s + ','
+		})
+		if (result.length > 0) {
+			result = result.slice(0, result.length - 1)
+		}
+		return result;
+	}
+
 	selectDropdownValue(dropdownKey: string, valueKey: string) {
-		this.form.updateElementValue(dropdownKey, valueKey)
+		let htmlElement = <HTMLInputElement>document.getElementById(dropdownKey)
+		if (htmlElement) {
+			htmlElement.value = valueKey
+			this.form.updateElementValue(dropdownKey)
+		}
 	}
 }

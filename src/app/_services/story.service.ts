@@ -24,12 +24,40 @@ export class StoryService {
 	createStory(userId: string, title: string, chapter1Title: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let params = {
-				userId: userId,
+				userId: userId
+			}
+			let body = {
 				title: title,
 				chapter1Title: chapter1Title
 			}
-			this.http.post<BackendResponse>(environment.backendAddr + '/api/stories', {}, { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/stories', JSON.stringify(body), { 
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
+				if (response.success) {
+					let story = <StoryMetaData>response.body
+					this.cacheService.UpdateStoryCache([story])
+					resolve(story)
+				} else {
+					reject(response.error_code)
+				}
+			}, (error) => reject(error))
+		})
+	}
+
+	updateStory(storyId: string, newStoryProperties: object): Promise<StoryMetaData> {
+		return new Promise<StoryMetaData>((resolve, reject) => {
+			let params = {
+				storyId: storyId
+			}
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories', JSON.stringify(newStoryProperties), { 
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let story = <StoryMetaData>response.body
 					this.cacheService.UpdateStoryCache([story])
@@ -46,8 +74,12 @@ export class StoryService {
 			let params = {
 				storyId: id
 			}
-			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories', { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
+			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories', { 
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					this.cacheService.InvalidateStoryCache([id])
 					resolve(response.body)
@@ -74,8 +106,12 @@ export class StoryService {
 				searchQuery: searchQuery
 			}
 
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/query', { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/query', { 
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let stories: StoryMetaData[] = <StoryMetaData[]>response.body
 					this.cacheService.UpdateStoryCache(stories)
@@ -99,8 +135,12 @@ export class StoryService {
 			let params = {
 				storyId: id
 			}
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories', { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories', { 
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let story = <StoryMetaData>response.body
 					this.cacheService.UpdateStoryCache([story])
@@ -128,17 +168,25 @@ export class StoryService {
 		})
 	}
 
-	updateStory(storyId: string, newStoryProperties: object): Promise<StoryMetaData> {
-		return new Promise<StoryMetaData>((resolve, reject) => {
+	// *** Chapters
+	createChapter(storyId: string, chapterTitle: string): Promise<ChapterMetaData> {
+		return new Promise<ChapterMetaData>((resolve, reject) => {
 			let params = {
 				storyId: storyId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories', JSON.stringify(newStoryProperties), { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
+			let body = {
+				title: chapterTitle
+			}
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/stories/chapters', JSON.stringify(body), { 
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let story = <StoryMetaData>response.body
-					this.cacheService.UpdateStoryCache([story])
-					resolve(story)
+					let chapter = <ChapterMetaData>response.body
+					this.cacheService.UpdateChapterCache([chapter])
+					resolve(chapter)
 				} else {
 					reject(response.error_code)
 				}
@@ -146,15 +194,17 @@ export class StoryService {
 		})
 	}
 
-	// *** Chapters
-	createChapter(storyId: string, chapterTitle: string): Promise<ChapterMetaData> {
+	updateChapter(chapterId: string, newChapterProperties: object): Promise<ChapterMetaData> {
 		return new Promise<ChapterMetaData>((resolve, reject) => {
 			let params = {
-				storyId: storyId,
-				chapterTitle: chapterTitle,
+				chapterId: chapterId
 			}
-			this.http.post<BackendResponse>(environment.backendAddr + '/api/stories/chapters', {}, { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', JSON.stringify(newChapterProperties), {
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let chapter = <ChapterMetaData>response.body
 					this.cacheService.UpdateChapterCache([chapter])
@@ -169,10 +219,14 @@ export class StoryService {
 	deleteChapter(chapterId: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let params = {
-				chapterId: chapterId,
+				chapterId: chapterId
 			}
-			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
+			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { 
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					this.cacheService.InvalidateChapterCache([chapterId])
 					let story = <StoryMetaData>response.body
@@ -195,13 +249,42 @@ export class StoryService {
 			let params = {
 				chapterIds: JSON.stringify(cache.notFound)
 			}
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { 
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response) => {
 				if (response.success) {
 					let chapters = <ChapterMetaData[]>response.body
 					this.cacheService.UpdateChapterCache(chapters)
 					chapters.concat(cache.foundChapters)
 					resolve(chapters)
+				} else {
+					reject(response.error_code)
+				}
+			}, (error) => reject(error))
+		})
+	}
+
+	updateChapterContent(chapterId: string, content: string): Promise<any> {
+		return new Promise<any>((resolve, reject) => {
+			let params = {
+				chapterId: chapterId
+			}
+			let body = {
+				content: content
+			}
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', JSON.stringify(body), {
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
+				if (response.success) {
+					let URI = response.body.URI
+					this.cacheService.UpdateChapterContentCache([{ URI: URI, content: content }])
+					resolve()
 				} else {
 					reject(response.error_code)
 				}
@@ -219,8 +302,12 @@ export class StoryService {
 			let params = {
 				contentURIs: JSON.stringify(contentURIs)
 			}
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', {
+				headers: { 'Content-Type': 'application/json' },
+				params: params,
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let contents = <ChapterContent[]>response.body
 					this.cacheService.UpdateChapterContentCache(contents)
@@ -233,39 +320,4 @@ export class StoryService {
 		})
 	}
 
-	updateChapterContent(chapterId: string, content: string): Promise<any> {
-		return new Promise<any>((resolve, reject) => {
-			let params = {
-				chapterId: chapterId
-			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', content, { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
-				if (response.success) {
-					let URI = response.body.URI
-					this.cacheService.UpdateChapterContentCache([{ URI: URI, content: content }])
-					resolve()
-				} else {
-					reject(response.error_code)
-				}
-			}, (error) => reject(error))
-		})
-	}
-
-	updateChapterMetaData(chapterId: string, newChapterProperties: object): Promise<ChapterMetaData> {
-		return new Promise<ChapterMetaData>((resolve, reject) => {
-			let params = {
-				chapterId: chapterId
-			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories/chapters', JSON.stringify(newChapterProperties), { params: params, withCredentials: true }).subscribe((data) => {
-				let response = <BackendResponse>data
-				if (response.success) {
-					let chapter = <ChapterMetaData>response.body
-					this.cacheService.UpdateChapterCache([chapter])
-					resolve(chapter)
-				} else {
-					reject(response.error_code)
-				}
-			}, (error) => reject(error))
-		})
-	}
 }

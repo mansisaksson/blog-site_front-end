@@ -37,6 +37,12 @@
     </div>
 </ng-template>
 
+<!-- File Input -->
+<ng-template #fileInput let-label="label" let-key="key" let-value="value" let-color="color" let-options="options">
+    <label [style.color]="color">{{label}}</label>
+    <input type="file" class="form-control-file" id="{{generateKeyId(key)}}" name="{{label}}" accept="{{getAcceptedFiles(options.fileTypes)}}" />
+</ng-template>
+
 <ng-template #modalContent>
 <form name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
     <div class="modal-body">
@@ -47,6 +53,7 @@
                 <div *ngSwitchCase="'label'"><ng-container *ngTemplateOutlet="labelInput; context: entry"></ng-container></div>
                 <div *ngSwitchCase="'password'"><ng-container *ngTemplateOutlet="passwordInput; context: entry"></ng-container></div>
                 <div *ngSwitchCase="'dropdown'"><ng-container *ngTemplateOutlet="dropdownInput; context: entry"></ng-container></div>
+                <div *ngSwitchCase="'file'"><ng-container *ngTemplateOutlet="fileInput; context: entry"></ng-container></div>
             </div>
         </div>
 

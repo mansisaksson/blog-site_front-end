@@ -156,7 +156,7 @@ export class StoryEditorService {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let chapter = this.currentChapter.getValue()
 			if (this.editor && chapter) {
-				this.storyService.updateChapterMetaData(chapter.chapterId, newChapterProperties).then(() => {
+				this.storyService.updateChapter(chapter.chapterId, newChapterProperties).then(() => {
 					let story = this.currentStory.getValue()
 					let index = story.chapters.findIndex(c => c.chapterId == chapter.chapterId)
 					story.chapters[index] = chapter

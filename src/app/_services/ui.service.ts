@@ -15,6 +15,10 @@ export interface DropdownFormElement extends DynamicFormElement {
 	addDropdownEntry: (key: string, label: string) => DropdownFormElement
 }
 
+export interface FileFormElement extends DynamicFormElement {
+	options: { fileTypes: string[], fileLimit: string }
+}
+
 export interface FormValues {
 	[key: string]: any
 }
@@ -84,7 +88,7 @@ export class DynamicForm {
 			value: DynamicForm.getTextValue(defaultValue),
 			color: color ? color : '',
 			dropdownEntries: {},
-			addDropdownEntry: function(key: string, label: string) {
+			addDropdownEntry: function (key: string, label: string) {
 				this.dropdownEntries[key] = label
 				return this
 			}
@@ -92,6 +96,27 @@ export class DynamicForm {
 		this._entries[key] = elem;
 
 		return elem
+	}
+
+	addFileSelection(
+		label: string,
+		key: string,
+		options: { fileTypes?: string[], fileLimit?: string },
+		color?: string
+	) {
+		let realOptions = {
+			fileTypes: options['fileTypes'] ? options['fileTypes'] : [],
+			fileLimit: options['fileLimit'] ? options['fileLimit'] : [],
+		}
+		let elem = <FileFormElement>{
+			type: "file",
+			label: label,
+			key: key,
+			options: realOptions,
+			value: '',
+			color: color ? color : ''
+		}
+		this._entries[key] = elem;
 	}
 
 	addBoolInput(label: string, key: string, defaultValue?: boolean, color?: string) {
@@ -105,28 +130,33 @@ export class DynamicForm {
 		this._entries[key] = textElem;
 	}
 
-	updateElementValue(key: string, value: string): any {
-		if (this._entries[key] != undefined && value != undefined) {
+	updateElementValue(key: string): any {
+		if (this._entries[key] != undefined) {
+			let htmlElement = <HTMLInputElement>document.getElementById("generatedFormElement-" + key)
+
 			switch (this._entries[key].type) {
 				case "text": {
-					this._entries[key].value = DynamicForm.getTextValue(value)
+					this._entries[key].value = DynamicForm.getTextValue(htmlElement.value)
 					break
 				}
 				case "bool": {
-					this._entries[key].value = DynamicForm.getBoolValue(value)
+					this._entries[key].value = DynamicForm.getBoolValue(htmlElement.value)
 					break
 				}
 				case "label": {
-					this._entries[key].value = value
+					this._entries[key].value = DynamicForm.getTextValue(htmlElement.value)
 					break
 				}
 				case "password": {
-					this._entries[key].value = DynamicForm.getPasswordValue(value)
+					this._entries[key].value = DynamicForm.getPasswordValue(htmlElement.value)
 					break
 				}
 				case "dropdown": {
-					this._entries[key].value = value
+					this._entries[key].value = DynamicForm.getTextValue(htmlElement.value)
 					break
+				}
+				case "file": {
+					this._entries[key].value = DynamicForm.getFileValue(htmlElement.files)
 				}
 			}
 		}
@@ -144,6 +174,10 @@ export class DynamicForm {
 
 	private static getBoolValue(value: string): boolean {
 		return value != undefined ? (value == "true" ? true : false) : false
+	}
+
+	private static getFileValue(files: FileList): File {
+		return files != undefined ? files[0] : undefined
 	}
 
 }
@@ -174,15 +208,15 @@ export class UIService {
 	}
 
 	promptForm(formContent: DynamicForm, autoClose: boolean, onSubmitted: (values: FormValues, closeForm: () => any, showError: (error: string) => any) => any, onCanceled?: (reason: any) => any) {
-			//let onSubmitted = (values: FormValues) => { resolve(values) }
-			//let onCanceled = (error) => { reject(error) }
-			this.formMessageSubject.next({
-				event: 'open',
-				form: formContent,
-				onSubmitted: onSubmitted,
-				onCanceled: onCanceled,
-				autoClose: autoClose
-			})
+		//let onSubmitted = (values: FormValues) => { resolve(values) }
+		//let onCanceled = (error) => { reject(error) }
+		this.formMessageSubject.next({
+			event: 'open',
+			form: formContent,
+			onSubmitted: onSubmitted,
+			onCanceled: onCanceled,
+			autoClose: autoClose
+		})
 	}
 
 	getShowLoginPrompt(): Observable<any> {
