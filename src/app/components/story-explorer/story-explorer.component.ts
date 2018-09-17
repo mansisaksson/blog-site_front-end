@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { StoryService, AuthenticationService, AlertService } from '../../_services/index'
 import { StoryMetaData, User } from '../../_models/index'
+import { environment } from '../../../environments/environment'
 
 @Component({
   selector: 'app-story-explorer',
@@ -77,5 +78,9 @@ export class StoryExplorerComponent implements OnInit {
       default: /*'private'*/
         return '#cca310'
     }
+  }
+
+  getThumbnailURL(thumbnailURI): string {
+    return environment.backendAddr + '/files/' + thumbnailURI
   }
 }

@@ -2,7 +2,7 @@
   <tr *ngFor="let metaData of storyMetaData">
     <div class="story-link" [style.background-color]="getAccessibilityColor(metaData.accessibility)">
       <th class="thumbnail">
-        <a [routerLink]="['/story-viewer', metaData.storyId]"><img src="{{metaData.thumbnail}}" width="256" height="151" ></a>
+        <a [routerLink]="['/story-viewer', metaData.storyId]"><img src="{{getThumbnailURL(metaData.thumbnailURI)}}" width="256" height="151" ></a>
       </th>
       <th style="padding-left: 10px;">
         <a [routerLink]="['/story-viewer', metaData.storyId]"><h1 style="font-size: 24px; color: black;">{{metaData.title}}</h1></a>
