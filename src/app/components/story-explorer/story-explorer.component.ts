@@ -81,6 +81,10 @@ export class StoryExplorerComponent implements OnInit {
   }
 
   getThumbnailURL(thumbnailURI): string {
-    return environment.backendAddr + '/files/' + thumbnailURI
+    if (thumbnailURI && thumbnailURI.length > 0) {
+      return environment.backendAddr + '/files/' + thumbnailURI
+    } else {
+      return "assets/default_thumbnail.png"
+    }
   }
 }
