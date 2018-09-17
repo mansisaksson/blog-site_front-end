@@ -43,7 +43,7 @@ export class StorySettingsComponent implements OnInit {
     form.addDropdown('Accessibility', 'accessibility', this.story.accessibility)
     .addDropdownEntry('public', 'Public')
     .addDropdownEntry('private', 'Private')
-    form.addFileSelection('Thumbnail', 'thumbnail', { fileTypes: ['.png', '.jpg'], fileLimit: '1mb' })
+    form.addFileSelection('Thumbnail', 'thumbnail', { fileTypes: ['.png'], fileLimit: '1mb' })
 
     let onSubmit = (values: FormValues, closeForm, showError) => {
       let newStoryProperties = {
