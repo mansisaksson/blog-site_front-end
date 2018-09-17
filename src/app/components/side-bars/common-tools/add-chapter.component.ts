@@ -22,7 +22,7 @@ export class AddChapterComponent {
   addChapter() {
     this.authenticationService.withLoggedInUser().then((user: User) => {
       let form: DynamicForm = new DynamicForm("Create Chapter", "Create!")
-      form.addTextInput("Chapter Title", "chapter_title", "Chapter 1")
+      form.addTextInput("Chapter Title", "chapter_title", { multiline: false }, "Chapter 1")
       let onFormSubmit = (values: FormValues) => {
         this.storyEditorService.createNewChapter(values["chapter_title"]).then(() => {
           this.alertService.success("Chapter added!")

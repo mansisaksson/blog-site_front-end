@@ -39,7 +39,8 @@ export class StorySettingsComponent implements OnInit {
 
   publishStory() {
     let form: DynamicForm = new DynamicForm("Story Settings", "Apply")
-    form.addTextInput('Title', 'title', this.story.title)
+    form.addTextInput('Title', 'title', { multiline: false }, this.story.title)
+    form.addTextInput('Description', 'description', { multiline: true, rows: 4, charLimit: 500 }, this.story.description)
     form.addDropdown('Accessibility', 'accessibility', this.story.accessibility)
     .addDropdownEntry('public', 'Public')
     .addDropdownEntry('private', 'Private')
@@ -48,6 +49,7 @@ export class StorySettingsComponent implements OnInit {
     let onSubmit = (values: FormValues, closeForm, showError) => {
       let newStoryProperties = {
         title: values['title'],
+        description: values['description'],
         accessibility: values['accessibility']
       }
 

@@ -4,9 +4,10 @@
 </ng-template>
 
 <!-- Text Input -->
-<ng-template #textInput let-label="label" let-key="key" let-value="value" let-color="color">
+<ng-template #textInput let-label="label" let-key="key" let-value="value" let-color="color" let-options="options">
     <label [style.color]="color">{{label}}</label>
-    <input type="text" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" required />
+    <input *ngIf="!options.multiline" type="text" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" required />
+    <textarea *ngIf="options.multiline" rows="{{options.rows}}" [attr.maxlength]="options.charLimit" class="form-control" id="{{generateKeyId(key)}}" name="{{label}}" value="{{value}}" required></textarea>
 </ng-template>
 
 <!-- Boolean Input -->

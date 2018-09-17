@@ -19,6 +19,10 @@ export interface FileFormElement extends DynamicFormElement {
 	options: { fileTypes: string[], fileLimit: string }
 }
 
+export interface TextFormElement extends DynamicFormElement {
+	options: { multiline: boolean, rows?: number, charLimit: number }
+}
+
 export interface FormValues {
 	[key: string]: any
 }
@@ -69,13 +73,19 @@ export class DynamicForm {
 		this._entries[key] = elem;
 	}
 
-	addTextInput(label: string, key: string, defaultValue?: string, color?: string) {
-		let elem = <DynamicFormElement>{
+	addTextInput(label: string, key: string, options: { multiline: boolean, rows?: number, charLimit?: number }, defaultValue?: string, color?: string) {
+		let realOptions = {
+			multiline: options.multiline,
+			rows: options.rows || 1,
+			charLimit: options.charLimit || 500,
+		}
+		let elem = <TextFormElement>{
 			type: "text",
 			label: label,
 			key: key,
 			value: DynamicForm.getTextValue(defaultValue),
-			color: color ? color : ''
+			color: color ? color : '',
+			options: realOptions
 		}
 		this._entries[key] = elem;
 	}

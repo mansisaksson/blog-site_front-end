@@ -2,7 +2,7 @@
 	[x] Story public/private flag so it can be worked on before it gets published
 	[x] Use quill editor to render quill content (render library did not work well)
 	[x] Thumbnails
-	[ ] Story description
+	[x] Story description
 	[ ] Story query
 		[ ] Sort by
 		[ ] Search by name

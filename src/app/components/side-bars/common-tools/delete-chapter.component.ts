@@ -20,7 +20,7 @@ export class DeleteChapterComponent {
   deleteChapter() {
     this.authenticationService.withLoggedInUser().then((user: User) => {
       let form: DynamicForm = new DynamicForm("Delete Chapter", "Delete")
-      form.addTextInput("Type DELETE", "delete", "")
+      form.addTextInput("Type DELETE", "delete", { multiline: false }, "")
       
       let onFormSubmit = (values: FormValues) => {
         if (values["delete"] === "DELETE") {

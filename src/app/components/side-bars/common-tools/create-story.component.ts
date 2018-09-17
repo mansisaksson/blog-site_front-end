@@ -23,8 +23,8 @@ export class CreateStoryComponent {
   createStory() {
     this.authenticationService.withLoggedInUser().then((user: User) => {
       let form: DynamicForm = new DynamicForm("Create Story", "Create!")
-      form.addTextInput("Story Title", "title", "Title Here")
-      form.addTextInput("Chapter 1 Title", "chapter_title", "Chapter 1")
+      form.addTextInput("Story Title", "title", { multiline: false }, "Title Here")
+      form.addTextInput("Chapter 1 Title", "chapter_title", { multiline: false }, "Chapter 1")
 
       let onFormSubmit = (values: FormValues) => {
         this.storyService.createStory(user.id, values["title"], values["chapter_title"]).then((story: StoryMetaData) => {
