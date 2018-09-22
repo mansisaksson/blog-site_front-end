@@ -44,7 +44,7 @@ multipart form data, as form data has a special property form handling file tran
 The upside of using JSON is that I keep the code simple. Keeping all communication as JSON also gives a higher degree of flexibility
 if I were to switch transfer protocol, or were to allow communication from a non browser source. (eg. a game or a login server).
 
-CONCLUSION: Using multipart form data for this project does not make any sens. Better to commit to JSON.
+CONCLUSION: Using multipart form data for this project does not make any sense. Better to commit to JSON.
 
 [x] User management
 	[x] Edit User Name
