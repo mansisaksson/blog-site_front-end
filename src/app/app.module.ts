@@ -45,6 +45,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     StoryExplorerComponent,
     StoryViewerComponent,
     StoryEditorComponent,
+
     StoryEditorToolbarComponent,
     StoryNavMenuComponent,
     NavbarComponent,
@@ -63,6 +64,12 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     SideBarComponent
   ],
   entryComponents: [
+    StoryEditorToolbarComponent,
+    StoryNavMenuComponent,
+    NavbarComponent,
+    ToolbarComponent,
+    InlineEditorComponent,
+    
     SideBarComponent,
     NavMenuComponent,
     CreateStoryComponent,
