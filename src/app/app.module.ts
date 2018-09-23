@@ -50,6 +50,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     NavbarComponent,
     ToolbarComponent,
     InlineEditorComponent,
+
     NavMenuComponent,
     CreateStoryComponent,
     DeleteStoryComponent,
@@ -62,6 +63,16 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     SideBarComponent
   ],
   entryComponents: [
+    SideBarComponent,
+    NavMenuComponent,
+    CreateStoryComponent,
+    DeleteStoryComponent,
+    DeleteChapterComponent,
+    EditStoryComponent,
+    SaveStoryComponent,
+    AddChapterComponent,
+    StorySettingsComponent,
+    SideBarsComponent,
     SideBarComponent
   ],
   providers: [
