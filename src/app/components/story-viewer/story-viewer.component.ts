@@ -15,9 +15,8 @@ export class StoryViewerComponent implements OnInit {
     title: "...",
     chapters: []
   }
-
+  public story: StoryMetaData = this.tempStory
   private storyId: string
-  private story: StoryMetaData = this.tempStory
 
   constructor(
     private storyService: StoryService,

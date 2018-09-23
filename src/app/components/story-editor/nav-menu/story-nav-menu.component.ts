@@ -25,8 +25,8 @@ export class StoryNavMenuComponent implements OnInit {
     "h3": { fontSize: 8, padding: 20 },
   }
 
-  private story: StoryMetaData = <StoryMetaData>{ title: "..." }
-  private titleElements: DrawableElem[] = []
+  public story: StoryMetaData = <StoryMetaData>{ title: "..." }
+  public titleElements: DrawableElem[] = []
 
   constructor(private storyEditor: StoryEditorService) {
 

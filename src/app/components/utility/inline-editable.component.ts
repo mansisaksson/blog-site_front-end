@@ -10,7 +10,7 @@ export class InlineEditorComponent {
 
   @Output() onEdit: EventEmitter<string> = new EventEmitter<string>()
   
-  private btnText = "Edit"
+  public btnText = "Edit"
   constructor() {
 
   }

@@ -9,9 +9,9 @@ import { StoryMetaData, ChapterMetaData } from '../../_models'
   styleUrls: ['./story-editor.component.css']
 })
 export class StoryEditorComponent implements AfterViewInit, OnDestroy {
+  public chapter: ChapterMetaData
   private storyId: string
   private story: StoryMetaData
-  private chapter: ChapterMetaData
 
   constructor(
     private alertService: AlertService,

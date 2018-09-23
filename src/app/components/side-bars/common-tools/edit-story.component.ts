@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
   </div>`
 })
 export class EditStoryComponent implements OnInit {
+  public enabled: boolean
   private storyId: string
-  private enabled: boolean
 
   constructor(
     private storyService: StoryService,

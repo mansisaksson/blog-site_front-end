@@ -10,8 +10,8 @@ import { StoryEditorService, AuthenticationService, AlertService } from './../..
   </div>`
 })
 export class SaveStoryComponent implements OnInit {
+  public enabled: boolean
   private story: StoryMetaData
-  private enabled: boolean
 
   constructor(
     private storyEditorService: StoryEditorService,

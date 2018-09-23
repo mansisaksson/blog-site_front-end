@@ -10,8 +10,8 @@ import { StoryEditorService, AuthenticationService, AlertService, DynamicForm, F
   </div>`
 })
 export class StorySettingsComponent implements OnInit {
+  public enabled: boolean
   private story: StoryMetaData = <StoryMetaData>{ storyId: "", accessibility: 'private' }
-  private enabled: boolean
 
   constructor(
     private storyEditor: StoryEditorService,

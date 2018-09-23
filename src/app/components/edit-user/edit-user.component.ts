@@ -11,9 +11,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./edit-user.component.css']
 })
 export class EditUserComponent implements OnInit {
-  private registerForm: FormGroup
-  private submitted = false
-  private user: User = new User()
+  public user: User = new User()
+  public registerForm: FormGroup
+  public submitted = false
+  public loading = false
 
   constructor(
     private authService: AuthenticationService,
@@ -80,8 +81,10 @@ export class EditUserComponent implements OnInit {
     }
 
     if (update) {
+      this.loading = true
       this.userService.updateUser(this.user.id, newUserProperties).then((user: User) => {
         this.submitted = false
+        this.loading = false
         this.authService.setUserSession(user)
         this.alertService.success("User updated!")
       }).catch(e => {

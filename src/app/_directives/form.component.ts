@@ -9,8 +9,8 @@ declare let $: any
 })
 
 export class FormComponent implements OnDestroy, OnInit {
+	public form: DynamicForm = new DynamicForm("Form")
 	private subscription: Subscription
-	private form: DynamicForm = new DynamicForm("Form")
 	private loading = false
 	private message: any
 	private autoClose: boolean = true
