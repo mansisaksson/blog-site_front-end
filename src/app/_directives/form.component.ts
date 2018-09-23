@@ -115,7 +115,8 @@ export class FormComponent implements OnDestroy, OnInit {
 	}
 
 	selectDropdownValue(dropdownKey: string, valueKey: string) {
-		let htmlElement = <HTMLInputElement>document.getElementById(dropdownKey)
+		let keyId = this.generateKeyId(dropdownKey)
+		let htmlElement = <HTMLInputElement>document.getElementById(keyId)
 		if (htmlElement) {
 			htmlElement.value = valueKey
 			this.form.updateElementValue(dropdownKey)
