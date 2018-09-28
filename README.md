@@ -1,4 +1,4 @@
-# Front End
+# story-site
 
 This is the frontend for a personal website which was created with the goal of learning more about web development.
 
