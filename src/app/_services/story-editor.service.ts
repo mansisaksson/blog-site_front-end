@@ -16,6 +16,43 @@ import * as Delta from 'quill-delta'
 import ImageResize from 'quill-image-resize-module'
 Quill.register('modules/imageResize', ImageResize)
 
+/*
+	Hack to solve a bug in Quill where image formats are not whitelisted properly.
+	For more info, read: https://github.com/kensnyder/quill-image-resize-module/issues/10
+*/
+var ImageFormat = Quill.import('formats/image');
+const ImageFormatAttributesList = [
+    'alt',
+    'height',
+    'width',
+    'style'
+];
+
+ImageFormat.formats = function formats(domNode: any): any {
+	return ImageFormatAttributesList.reduce(
+			(formats, attribute) => {
+					if (domNode.hasAttribute(attribute)) {
+							formats[attribute] = domNode.getAttribute(attribute)
+					}
+					return formats
+			},
+			{}
+	)
+}
+
+ImageFormat.prototype.format = function format(name: string, value: any): void {
+	if (ImageFormatAttributesList.indexOf(name) !== -1) {
+			if (value) {
+					this.domNode.setAttribute(name, value)
+			} else {
+					this.domNode.removeAttribute(name)
+			}
+	} else {
+			this.super.format(name, value)
+	}
+}
+Quill.register(ImageFormat, true)
+
 // Add fonts to whitelist
 var Font = Quill.import('formats/font')
 // We do not add Aref Ruqaa since it is the default
