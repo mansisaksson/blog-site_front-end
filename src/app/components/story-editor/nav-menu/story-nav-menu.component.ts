@@ -1,5 +1,5 @@
 import { Component, OnInit, } from '@angular/core';
-import { StoryEditorService } from './../../../_services'
+import { StoryEditorService, AlertService } from './../../../_services'
 import { ChapterContent, StoryMetaData, ChapterMetaData } from '../../../_models';
 
 interface NavTitle {
@@ -28,7 +28,10 @@ export class StoryNavMenuComponent implements OnInit {
   public story: StoryMetaData = <StoryMetaData>{ title: "..." }
   public titleElements: DrawableElem[] = []
 
-  constructor(private storyEditor: StoryEditorService) {
+  constructor(
+    private storyEditor: StoryEditorService,
+    private alertService: AlertService
+    ) {
 
   }
 
@@ -38,7 +41,7 @@ export class StoryNavMenuComponent implements OnInit {
       if (story) {
         this.story = story
         this.story.chapters.forEach((chapter: ChapterMetaData) => {
-          let elem = <DrawableElem> {
+          let elem = <DrawableElem>{
             tagName: 'h2',
             content: chapter.title,
             payload: chapter.chapterId
@@ -53,6 +56,18 @@ export class StoryNavMenuComponent implements OnInit {
 
   editChapter(chapterId: string) {
     this.storyEditor.editChapter(chapterId)
+  }
+
+  reorderChapter(chapterId: string, moveUp: boolean) {
+    let index = this.titleElements.findIndex(te => te.payload == chapterId)
+    if (index != -1) {
+      let newIndex = moveUp ? index -1 : index + 1
+      if (newIndex < this.titleElements.length) {
+        this.storyEditor.swapChapterOrder(chapterId, this.titleElements[newIndex].payload).then(() => {
+          this.alertService.success("Chapters rearranged!")
+        }).catch(e => { this.alertService.error(e) })
+      }
+    }
   }
 
   parseChapter(chapter: ChapterContent) {

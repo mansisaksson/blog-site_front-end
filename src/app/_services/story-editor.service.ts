@@ -23,33 +23,33 @@ Quill.register('modules/imageResize', ImageResize)
 */
 var ImageFormat = Quill.import('formats/image');
 const ImageFormatAttributesList = [
-    'alt',
-    'height',
-    'width',
-    'style'
+	'alt',
+	'height',
+	'width',
+	'style'
 ];
 
 ImageFormat.formats = function formats(domNode: any): any {
 	return ImageFormatAttributesList.reduce(
-			(formats, attribute) => {
-					if (domNode.hasAttribute(attribute)) {
-							formats[attribute] = domNode.getAttribute(attribute)
-					}
-					return formats
-			},
-			{}
+		(formats, attribute) => {
+			if (domNode.hasAttribute(attribute)) {
+				formats[attribute] = domNode.getAttribute(attribute)
+			}
+			return formats
+		},
+		{}
 	)
 }
 
 ImageFormat.prototype.format = function format(name: string, value: any): void {
 	if (ImageFormatAttributesList.indexOf(name) !== -1) {
-			if (value) {
-					this.domNode.setAttribute(name, value)
-			} else {
-					this.domNode.removeAttribute(name)
-			}
+		if (value) {
+			this.domNode.setAttribute(name, value)
+		} else {
+			this.domNode.removeAttribute(name)
+		}
 	} else {
-			this.super.format(name, value)
+		this.super.format(name, value)
 	}
 }
 Quill.register(ImageFormat, true)
@@ -69,7 +69,7 @@ export class StoryEditorService {
 	constructor(
 		private storyService: StoryService,
 		private alertService: AlertService
-		) {
+	) {
 
 	}
 
@@ -187,7 +187,7 @@ export class StoryEditorService {
 				this.storyService.deleteChapter(chapter.chapterId).then(() => {
 					let story = this.currentStory.getValue()
 					story.chapters = story.chapters.filter(c => c.chapterId != chapter.chapterId)
-				
+
 					this.currentStory.next(story)
 					if (story.chapters.length > 0) {
 						let chapter = story.chapters[story.chapters.length - 1]
@@ -208,7 +208,8 @@ export class StoryEditorService {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let chapter = this.currentChapter.getValue()
 			if (this.editor && chapter) {
-				this.storyService.updateChapter(chapter.chapterId, newChapterProperties).then(() => {
+				this.storyService.updateChapter(chapter.chapterId, newChapterProperties).then((newChapter) => {
+					chapter = newChapter
 					let story = this.currentStory.getValue()
 					let index = story.chapters.findIndex(c => c.chapterId == chapter.chapterId)
 					story.chapters[index] = chapter
@@ -218,6 +219,25 @@ export class StoryEditorService {
 				}).catch(e => reject(e))
 			} else {
 				reject("No valid chapter is being edited")
+			}
+		})
+	}
+
+	public swapChapterOrder(chapter1: string, chapter2: string): Promise<StoryMetaData> {
+		return new Promise<StoryMetaData>((resolve, reject) => {
+			let story = this.currentStory.getValue()
+			let chapter1Index = story.chapters.findIndex(c => c.chapterId == chapter1)
+			let chapter2Index = story.chapters.findIndex(c => c.chapterId == chapter2)
+			if (chapter1Index != -1 && chapter2Index != -1) {
+				let chapterIds = story.chapters.map(c => c.chapterId)
+				let tmp = chapterIds[chapter1Index]
+				chapterIds[chapter1Index] = chapterIds[chapter2Index]
+				chapterIds[chapter2Index] = tmp
+				this.updateStory({ chapters: chapterIds }).then((newStory) => {
+					resolve(newStory)
+				}).catch(e => reject(e))
+			} else {
+				this.alertService.error("Unable to swap chapters")
 			}
 		})
 	}
