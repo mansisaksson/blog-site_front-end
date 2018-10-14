@@ -167,7 +167,6 @@ export class StoryEditorService {
 			let story = this.currentStory.getValue()
 			if (story) {
 				this.storyService.createChapter(story.storyId, title).then((newChapter: ChapterMetaData) => {
-					let story = this.currentStory.getValue()
 					story.chapters.push(newChapter)
 					this.currentStory.next(story)
 					this.editChapter(newChapter.chapterId).subscribe(() => {
@@ -184,10 +183,7 @@ export class StoryEditorService {
 		return new Promise<StoryMetaData>((resolve, reject) => {
 			let chapter = this.currentChapter.getValue()
 			if (this.editor && chapter) {
-				this.storyService.deleteChapter(chapter.chapterId).then(() => {
-					let story = this.currentStory.getValue()
-					story.chapters = story.chapters.filter(c => c.chapterId != chapter.chapterId)
-
+				this.storyService.deleteChapter(chapter.chapterId).then((story) => {
 					this.currentStory.next(story)
 					if (story.chapters.length > 0) {
 						let chapter = story.chapters[story.chapters.length - 1]
