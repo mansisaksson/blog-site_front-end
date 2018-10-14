@@ -23,6 +23,8 @@
 [ ] We get hundreds of duplicate requests for "localhost:3000/api/stories/query?userId=undefined&searchQuery=undefined"
 when opening the story viewer
 
+[x] Fix refresh issue on appache.
+
 [x] Centered images are not saved
 
 [x] Layout/Navigation Re-work
