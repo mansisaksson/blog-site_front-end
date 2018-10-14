@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core'
+import { Component, AfterViewInit, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
-import { StoryEditorService, StoryService, AlertService } from '../../_services'
+import { StoryEditorService, AlertService } from '../../_services'
 import { StoryMetaData, ChapterMetaData } from '../../_models'
 
 @Component({

@@ -14,6 +14,7 @@ import * as Delta from 'quill-delta'
  */
 // add image resize module
 import ImageResize from 'quill-image-resize-module'
+import { AlertService } from './alert.service';
 Quill.register('modules/imageResize', ImageResize)
 
 /*
@@ -65,7 +66,10 @@ export class StoryEditorService {
 	private currentChapter: BehaviorSubject<ChapterMetaData> = new BehaviorSubject<ChapterMetaData>(undefined)
 	private editor: Quill
 
-	constructor(private storyService: StoryService) {
+	constructor(
+		private storyService: StoryService,
+		private alertService: AlertService
+		) {
 
 	}
 
@@ -94,11 +98,22 @@ export class StoryEditorService {
 					modules: { toolbar: { container: toolbarContainer }, imageResize: {} },
 					scrollingContainer: scrollingContainer,
 					theme: 'snow'
-				});
+				})
 
 				this.editor.on("text-change", (delta: Delta) => {
 					//console.log(delta)
 					//this.storyEditorService.updateDocumentContent(this.editor.getContents())
+				})
+
+				// Save shortcut
+				this.editor.keyboard.addBinding({
+					key: 'S',
+					ctrlKey: true,
+					handler: () => {
+						this.saveCurrentChapter().then(() => {
+							this.alertService.success("Chapter saved!")
+						}).catch(e => this.alertService.error(e))
+					}
 				})
 
 				this.currentStory.next(story)

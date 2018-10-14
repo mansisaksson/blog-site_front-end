@@ -1,1 +1,10 @@
-﻿<div *ngIf="message" [ngClass]="{ 'alert': message, 'alert-success': message.type === 'success', 'alert-danger': message.type === 'error' }">{{message.text}}</div>
+﻿<div style="position: fixed; z-index: 999; min-width: 300px; bottom: 0px;">
+	<div *ngFor="let message of getMessages()">
+		<div *ngIf="message" [ngClass]="{ 'alert': message, 'alert-success': message.type === 'success', 'alert-danger': message.type === 'error' }" style="margin: 5px;">
+			{{message.text}}
+			<button class="btn btn-primary" style="width: 25px; height: 25px; padding: 0px; float: right;" (click)="removeMessage(message.key)">
+				X
+			</button>
+		</div>
+	</div>
+</div>
