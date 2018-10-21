@@ -1,12 +1,17 @@
 [ ] Admin tools to delete other peoples posts.
 
+[ ] Add padding under text editor so that text is not at the bottom of the screen while typing
+
+[ ] Improve/remove chapter title, also, should chapters in the story-viewer be the same as in the editor
+e.g. not on the same page?
+
 [ ] User Page, visit a single users page.
+
+[ ] Improve formatting on post description
 
 [ ] Story query
 	[ ] Sort by
 	[ ] Search by name
-
-[ ] Allow chapter re-ordering
 
 [ ] Display author name on stories
 
@@ -18,6 +23,8 @@
 
 [ ] We get hundreds of duplicate requests for "localhost:3000/api/stories/query?userId=undefined&searchQuery=undefined"
 when opening the story viewer
+
+[x] Allow chapter re-ordering
 
 [x] Ctrl + S in editor to save
 
