@@ -195,7 +195,7 @@ export class StoryEditorService {
 					}
 				}).catch(e => reject(e))
 			} else {
-				reject("No valid story being editor")
+				reject("No valid story being edited")
 			}
 		})
 	}
