@@ -13,7 +13,6 @@ export class CacheService {
 	}
 
 	public ClearCache(): void {
-		console.log("Clear cache:", this.cacheId)
 		this.cachedObjects = {}
 		this.cacheTimeStamp = {}
 
