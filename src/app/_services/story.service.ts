@@ -4,13 +4,18 @@ import { HttpClient } from '@angular/common/http'
 import { ChapterContent, StoryMetaData, ChapterMetaData, BackendResponse } from '../_models'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { environment } from '../../environments/environment'
-import { StoryCacheService } from './story-cache.service';
+import { StoryCacheService, ChapterCacheService, ChapterContentCacheService, StoryQueryCacheService } from './caching_services'
 
 @Injectable()
 export class StoryService {
 	private currentStory: BehaviorSubject<StoryMetaData> = new BehaviorSubject<StoryMetaData>(undefined)
 
-	constructor(private http: HttpClient, private cacheService: StoryCacheService) {
+	constructor(
+		private http: HttpClient, 
+		private storyCacheService: StoryCacheService,
+		private chapterCacheService: ChapterCacheService, 
+		private chapterContentCacheService: ChapterContentCacheService, 
+		private storyQueryCacheService: StoryQueryCacheService) {
 	}
 
 	setCurrentlyViewedStory(story: StoryMetaData) {
@@ -38,7 +43,7 @@ export class StoryService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let story = <StoryMetaData>response.body
-					this.cacheService.UpdateStoryCache([story])
+					this.storyCacheService.UpdateStoryCache([story])
 					resolve(story)
 				} else {
 					reject(response.error_code)
@@ -60,7 +65,7 @@ export class StoryService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let story = <StoryMetaData>response.body
-					this.cacheService.UpdateStoryCache([story])
+					this.storyCacheService.UpdateStoryCache([story])
 					resolve(story)
 				} else {
 					reject(response.error_code)
@@ -81,7 +86,7 @@ export class StoryService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					this.cacheService.InvalidateStoryCache([id])
+					this.storyCacheService.InvalidateStoryCache([id])
 					resolve(response.body)
 				} else {
 					reject(response.error_code)
@@ -93,9 +98,9 @@ export class StoryService {
 
 	getStories(userId?: string, searchQuery?: string): Promise<StoryMetaData[]> {
 		return new Promise<StoryMetaData[]>((resolve, reject) => {
-			let cachedIds = this.cacheService.FindQueryCache(userId ? userId : "", searchQuery ? searchQuery : "")
+			let cachedIds = this.storyQueryCacheService.FindQueryCache(userId ? userId : "", searchQuery ? searchQuery : "")
 			if (cachedIds.length > 0) {
-				let cache = this.cacheService.FindStoryCache(cachedIds)
+				let cache = this.storyCacheService.FindStoryCache(cachedIds)
 				if (cache.notFound.length == 0) {
 					return resolve(cache.foundStories)
 				}
@@ -114,9 +119,9 @@ export class StoryService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let stories: StoryMetaData[] = <StoryMetaData[]>response.body
-					this.cacheService.UpdateStoryCache(stories)
+					this.storyCacheService.UpdateStoryCache(stories)
 					let storyIds = stories.map(s => s.storyId)
-					this.cacheService.UpdateQueryCache(userId, searchQuery, storyIds)
+					this.storyQueryCacheService.UpdateQueryCache(userId, searchQuery, storyIds)
 					resolve(stories)
 				} else {
 					reject(response.error_code)
@@ -127,7 +132,7 @@ export class StoryService {
 
 	getStory(id: string): Promise<StoryMetaData> {
 		return new Promise<StoryMetaData>((resolve, reject) => {
-			let cachedStory = this.cacheService.FindStoryCache([id]).foundStories.find(s => { return s.storyId == id })
+			let cachedStory = this.storyCacheService.FindStoryCache([id]).foundStories.find(s => { return s.storyId == id })
 			if (cachedStory != undefined) {
 				return resolve(cachedStory)
 			}
@@ -143,7 +148,7 @@ export class StoryService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let story = <StoryMetaData>response.body
-					this.cacheService.UpdateStoryCache([story])
+					this.storyCacheService.UpdateStoryCache([story])
 					resolve(story)
 				} else {
 					reject(response.error_code)
@@ -185,7 +190,7 @@ export class StoryService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let chapter = <ChapterMetaData>response.body
-					this.cacheService.UpdateChapterCache([chapter])
+					this.chapterCacheService.UpdateChapterCache([chapter])
 					resolve(chapter)
 				} else {
 					reject(response.error_code)
@@ -207,7 +212,7 @@ export class StoryService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let chapter = <ChapterMetaData>response.body
-					this.cacheService.UpdateChapterCache([chapter])
+					this.chapterCacheService.UpdateChapterCache([chapter])
 					resolve(chapter)
 				} else {
 					reject(response.error_code)
@@ -228,9 +233,9 @@ export class StoryService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					this.cacheService.InvalidateChapterCache([chapterId])
+					this.chapterCacheService.InvalidateChapterCache([chapterId])
 					let story = <StoryMetaData>response.body
-					this.cacheService.UpdateStoryCache([story])
+					this.storyCacheService.UpdateStoryCache([story])
 					resolve(story)
 				} else {
 					reject(response.error_code)
@@ -241,7 +246,7 @@ export class StoryService {
 
 	getChapters(chaptersIds: string[]): Promise<ChapterMetaData[]> {
 		return new Promise<ChapterMetaData[]>((resolve, reject) => {
-			let cache = this.cacheService.FindChapterCache(chaptersIds)
+			let cache = this.chapterCacheService.FindChapterCache(chaptersIds)
 			if (cache.notFound.length == 0) {
 				return resolve(cache.foundChapters)
 			}
@@ -257,7 +262,7 @@ export class StoryService {
 			}).subscribe((response) => {
 				if (response.success) {
 					let chapters = <ChapterMetaData[]>response.body
-					this.cacheService.UpdateChapterCache(chapters)
+					this.chapterCacheService.UpdateChapterCache(chapters)
 					chapters.concat(cache.foundChapters)
 					resolve(chapters)
 				} else {
@@ -283,7 +288,7 @@ export class StoryService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let URI = response.body.URI
-					this.cacheService.UpdateChapterContentCache([{ URI: URI, content: content }])
+					this.chapterContentCacheService.UpdateChapterContentCache([{ URI: URI, content: content }])
 					resolve()
 				} else {
 					reject(response.error_code)
@@ -294,7 +299,7 @@ export class StoryService {
 
 	getChapterContents(contentURIs: string[]): Promise<ChapterContent[]> {
 		return new Promise<ChapterContent[]>((resolve, reject) => {
-			let cache = this.cacheService.FindChapterContentCache(contentURIs)
+			let cache = this.chapterContentCacheService.FindChapterContentCache(contentURIs)
 			if (cache.notFound.length == 0) {
 				return resolve(cache.foundContents)
 			}
@@ -310,7 +315,7 @@ export class StoryService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					let contents = <ChapterContent[]>response.body
-					this.cacheService.UpdateChapterContentCache(contents)
+					this.chapterContentCacheService.UpdateChapterContentCache(contents)
 					contents.concat(cache.foundContents)
 					resolve(contents)
 				} else {

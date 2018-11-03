@@ -4,6 +4,7 @@ import { User } from '../_models/index'
 import { UIService } from './ui.service';
 import { UserService } from './user.service';
 import { AlertService } from './alert.service';
+import { CacheManagementService } from './caching_services';
 
 @Injectable()
 export class AuthenticationService {
@@ -15,7 +16,8 @@ export class AuthenticationService {
 	constructor(
 		private userService: UserService,
 		private uiService: UIService,
-		private alertService: AlertService) {
+		private alertService: AlertService,
+		private cacheManagementService: CacheManagementService) {
 		this.validateLoginState()
 	}
 
@@ -38,9 +40,13 @@ export class AuthenticationService {
 	login(username: string, password: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
 			this.userService.authenticate(username, password).then((user: User) => {
+				// Clear out our queries since they give different results depending on whether the user is logged in
+				this.cacheManagementService.GetCacheService('story_query_cache').ClearCache()
 				this.setUserSession(user)
 				resolve(user)
 			}).catch(e => {
+				// Clear out our queries since they give different results depending on whether the user is logged in
+				this.cacheManagementService.GetCacheService('story_query_cache').ClearCache()
 				this.setUserSession(undefined)
 				reject(e)
 			})

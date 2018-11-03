@@ -10,7 +10,10 @@ import { routing } from './app.routing';
 
 import { AlertComponent, LoginComponent, RegisterComponent, FormComponent } from './_directives/index';
 import { AuthGuard } from './_guards/index';
-import { AlertService, AuthenticationService, UserService, StoryService, StoryEditorService, UIService, StoryCacheService } from './_services/index';
+import { AlertService, AuthenticationService, UserService, StoryService, StoryEditorService, UIService } from './_services/index';
+
+import { StoryCacheService, ChapterCacheService, ChapterContentCacheService, StoryQueryCacheService, CacheManagementService } from './_services/caching_services';
+
 import { HomeComponent } from './components/home/index';
 import { EditUserComponent } from './components/edit-user/edit-user.component'
 
@@ -90,7 +93,14 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     UIService,
     UserService,
     StoryService,
+
+    // Caching services
+    CacheManagementService,
     StoryCacheService,
+    ChapterCacheService,
+    ChapterContentCacheService,
+    StoryQueryCacheService,
+
     DuplicateRequestProvider
   ],
   bootstrap: [

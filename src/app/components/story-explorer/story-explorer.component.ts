@@ -25,11 +25,9 @@ export class StoryExplorerComponent implements OnInit {
   ngOnInit() {
     this.authService.getCurrentUser().subscribe(next => {
       this.currentUser = next
-      this.refreshStoryList()
     })
     this.activatedRoute.params.subscribe(params => {
       this.userId = params['user_id']
-      this.refreshStoryList()
     })
 
     this.hasInit = true

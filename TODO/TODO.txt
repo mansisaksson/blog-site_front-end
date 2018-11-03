@@ -1,4 +1,6 @@
-[ ] Admin tools to delete other peoples posts.
+[ ] Add a registration key
+
+[ ] Add Author information in the left sidebar when displaying a story
 
 [ ] Add padding under text editor so that text is not at the bottom of the screen while typing
 
@@ -19,9 +21,9 @@ e.g. not on the same page?
 
 [ ] Remove GET'/api/stories/query' and merge it with GET'/api/stories'
 
-[ ] Allow .jpg for Thumbnails
+[x] Clear story cache on login
 
-[ ] We get hundreds of duplicate requests for "localhost:3000/api/stories/query?userId=undefined&searchQuery=undefined"
+[x] We get hundreds of duplicate requests for "localhost:3000/api/stories/query?userId=undefined&searchQuery=undefined"
 when opening the story viewer
 
 [x] Allow chapter re-ordering
