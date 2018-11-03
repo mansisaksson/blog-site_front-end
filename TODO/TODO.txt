@@ -1,5 +1,3 @@
-[ ] Add a registration key
-
 [ ] Add Author information in the left sidebar when displaying a story
 
 [ ] Add padding under text editor so that text is not at the bottom of the screen while typing
@@ -20,6 +18,8 @@ e.g. not on the same page?
 [ ] Change parameters to express model e.g. "/files/:fileId"
 
 [ ] Remove GET'/api/stories/query' and merge it with GET'/api/stories'
+
+[x] Add a registration key
 
 [x] Clear story cache on login
 

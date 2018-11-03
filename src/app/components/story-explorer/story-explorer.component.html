@@ -5,12 +5,10 @@
         <a [routerLink]="['/story-viewer', metaData.storyId]"><img src="{{getThumbnailURL(metaData.thumbnailURI)}}" width="256" height="151" ></a>
       </th>
       <th style="padding-left: 10px;">
-        <a [routerLink]="['/story-viewer', metaData.storyId]"><h1 style="font-size: 24px; color: black;">{{metaData.title}}</h1></a>
-        <p style="font-size: 14px">submitted {{timeSince(metaData.submittedAt)}} ago by {{metaData.authorName}}</p>
+        <a [routerLink]="['/story-viewer', metaData.storyId]"><h1 style="font-size: 24px; color: black; margin-bottom: 0px;">{{metaData.title}}</h1></a>
+        <p class="meta-data-text">submitted {{timeSince(metaData.submittedAt)}} ago by {{metaData.authorName}}</p>
+        <p class="description-text">{{metaData.description}}</p>
       </th>
-      <p style="font-size: 14px">
-        {{metaData.description}}
-      </p>
     </div>
   </tr>
 </table>
