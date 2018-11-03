@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router'
-import { AuthenticationService, UIService } from '../../_services/index';
-import { User } from '../../_models';
+import { Component, OnInit } from '@angular/core'
+import { Router, Route } from '@angular/router'
+import { AuthenticationService, UIService } from '../../_services/index'
+import { User } from '../../_models'
 
 @Component({
   selector: 'app-navbar',
@@ -27,17 +27,23 @@ export class NavbarComponent implements OnInit {
   }
 
   signIn() {
-    this.uiService.promptUserLogin('/');
+    let onLogin = function() {
+      location.reload()
+    }
+    this.uiService.promptUserLogin(onLogin)
   }
 
   signOut() {
     this.authService.logout().then(() => {
-      this.router.navigate([''])
+      location.reload()
     })
   }
 
   register() {
-    this.uiService.promptUserRegister('/');
+    let onRegister = function() {
+      location.reload()
+    }
+    this.uiService.promptUserRegister(onRegister);
   }
 
   getCurrentUserId(): string {

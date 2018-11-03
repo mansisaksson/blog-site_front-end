@@ -48,9 +48,8 @@ export class LoginComponent implements OnDestroy, OnInit {
 	login() {
 		this.loading = true
 		this.authenticationService.login(this.model.username, this.model.password).then(user => {
-			if (this.message && this.message.url) {
-				this.router.navigate([this.message.url])
-				this.message = undefined
+			if (this.message && this.message.onLogin) {
+				this.message.onLogin()
 			}
 			this.closeModal()
 		}).catch(error => {

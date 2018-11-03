@@ -79,7 +79,9 @@ export class RegisterComponent implements OnDestroy, OnInit {
 		this.userService.createUser(userName, password, registrationKey).then(user => {
 			this.alertService.success('Registration successful', true)
 			this.authenticationService.login(userName, password).then(() => {
-				this.router.navigate([this.message.url])
+				if (this.message && this.message.onRegister) {
+					this.message.onRegister()
+				}
 				this.closeModal()
 			}).catch(error => {
 				this.alertService.error(error)

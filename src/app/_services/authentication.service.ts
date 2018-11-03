@@ -31,7 +31,7 @@ export class AuthenticationService {
 					let onCanceled = () => {
 						reject("Action Canceled")
 					}
-					this.uiService.promptUserLogin('', onCanceled)
+					this.uiService.promptUserLogin(undefined, onCanceled)
 				}
 			})
 		})
@@ -45,8 +45,6 @@ export class AuthenticationService {
 				this.setUserSession(user)
 				resolve(user)
 			}).catch(e => {
-				// Clear out our queries since they give different results depending on whether the user is logged in
-				this.cacheManagementService.GetCacheService('story_query_cache').ClearCache()
 				this.setUserSession(undefined)
 				reject(e)
 			})
@@ -56,6 +54,8 @@ export class AuthenticationService {
 	logout(): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
 			this.userService.invalidateSession().then(() => {
+				// Clear out our queries since they give different results depending on whether the user is logged in
+				this.cacheManagementService.GetCacheService('story_query_cache').ClearCache()
 				this.setUserSession(undefined)
 				resolve(true)
 			}).catch((e) => { 

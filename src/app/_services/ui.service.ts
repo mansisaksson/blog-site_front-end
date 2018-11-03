@@ -202,24 +202,22 @@ export class UIService {
 		private router: Router) {
 		router.events.subscribe(event => {
 			if (event instanceof NavigationStart) {
-				this.loginMessageSubject.next({ event: 'close', url: '/' })
-				this.registerMessageSubject.next({ event: 'close', url: '/' })
+				this.loginMessageSubject.next({ event: 'close' })
+				this.registerMessageSubject.next({ event: 'close' })
 				this.formMessageSubject.next({ event: 'close' })
 			}
 		})
 	}
 
-	promptUserLogin(successRoute: string, onCanceled?: Function) {
-		this.loginMessageSubject.next({ event: 'open', url: successRoute, onCanceled: onCanceled })
+	promptUserLogin(onLogin?: Function, onCanceled?: Function) {
+		this.loginMessageSubject.next({ event: 'open', onLogin: onLogin, onCanceled: onCanceled })
 	}
 
-	promptUserRegister(successRoute: string) {
-		this.registerMessageSubject.next({ event: 'open', url: successRoute })
+	promptUserRegister(onRegister?: Function, onCanceled?: Function) {
+		this.registerMessageSubject.next({ event: 'open', onRegister: onRegister, onCanceled: onCanceled })
 	}
 
 	promptForm(formContent: DynamicForm, autoClose: boolean, onSubmitted: (values: FormValues, closeForm: () => any, showError: (error: string) => any) => any, onCanceled?: (reason: any) => any) {
-		//let onSubmitted = (values: FormValues) => { resolve(values) }
-		//let onCanceled = (error) => { reject(error) }
 		this.formMessageSubject.next({
 			event: 'open',
 			form: formContent,
