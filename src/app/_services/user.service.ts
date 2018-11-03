@@ -101,11 +101,12 @@ export class UserService {
 		})
 	}
 
-	createUser(userName: string, password: string): Promise<User> {
+	createUser(userName: string, password: string, registrationKey: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
 			let body = {
 				userName: userName,
-				userPassword: password
+				userPassword: password,
+				registrationKey: registrationKey
 			}
 			this.http.post<BackendResponse>(environment.backendAddr + '/api/users', JSON.stringify(body), { 
 				headers: { 'Content-Type': 'application/json' },

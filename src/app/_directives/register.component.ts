@@ -43,7 +43,8 @@ export class RegisterComponent implements OnDestroy, OnInit {
 		this.registerForm = this.formBuilder.group({
       userName: ['', [Validators.required, Validators.pattern(environment.userNameRegex)]],
       password: ['', [Validators.pattern(environment.userPasswordRegex)]],
-      confirmPassword: ['']
+			confirmPassword: [''],
+			registrationKey: ['']
     }, {
       validator: RegisterComponent.MatchPassword
     })
@@ -72,9 +73,10 @@ export class RegisterComponent implements OnDestroy, OnInit {
     }
 
     let userName = this.registerForm.get('userName').value
-    let password = this.registerForm.get('password').value
+		let password = this.registerForm.get('password').value
+		let registrationKey = this.registerForm.get('registrationKey').value
     
-		this.userService.createUser(userName, password).then(user => {
+		this.userService.createUser(userName, password, registrationKey).then(user => {
 			this.alertService.success('Registration successful', true)
 			this.authenticationService.login(userName, password).then(() => {
 				this.router.navigate([this.message.url])
