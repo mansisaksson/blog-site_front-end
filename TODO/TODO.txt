@@ -1,8 +1,6 @@
 ---------- TODO ----------
 [ ] Add Author information in the left sidebar when displaying a story
 
-[ ] Add padding under text editor so that text is not at the bottom of the screen while typing
-
 [ ] Improve/remove chapter title, also, should chapters in the story-viewer be the same as in the editor
 e.g. not on the same page?
 
@@ -18,6 +16,8 @@ e.g. not on the same page?
 
 
 ---------- DONE ----------
+[x] Add padding under text editor so that text is not at the bottom of the screen while typing
+
 [x] Improve formatting on post description
 
 [x] Display author name on stories
