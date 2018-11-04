@@ -252,7 +252,7 @@ export class StoryService {
 			}
 
 			let params = {
-				chapterIds: JSON.stringify(cache.notFound)
+				chapterIds: cache.notFound
 			}
 			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters', { 
 				headers: { 'Content-Type': 'application/json' },
@@ -305,7 +305,7 @@ export class StoryService {
 			}
 
 			let params = {
-				contentURIs: JSON.stringify(contentURIs)
+				contentURIs: contentURIs
 			}
 			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories/chapters/content', {
 				headers: { 'Content-Type': 'application/json' },
