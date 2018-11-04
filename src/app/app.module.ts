@@ -12,7 +12,7 @@ import { AlertComponent, LoginComponent, RegisterComponent, FormComponent } from
 import { AuthGuard } from './_guards/index';
 import { AlertService, AuthenticationService, UserService, StoryService, StoryEditorService, UIService } from './_services/index';
 
-import { StoryCacheService, ChapterCacheService, ChapterContentCacheService, StoryQueryCacheService, CacheManagementService } from './_services/caching_services';
+import { UserCacheService, StoryCacheService, ChapterCacheService, ChapterContentCacheService, StoryQueryCacheService, CacheManagementService } from './_services/caching_services';
 
 import { HomeComponent } from './components/home/index';
 import { EditUserComponent } from './components/edit-user/edit-user.component'
@@ -97,6 +97,7 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     // Caching services
     CacheManagementService,
     StoryCacheService,
+    UserCacheService,
     ChapterCacheService,
     ChapterContentCacheService,
     StoryQueryCacheService,

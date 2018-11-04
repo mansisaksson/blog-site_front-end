@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { StoryService, AuthenticationService, AlertService } from '../../_services/index'
+import { StoryService, AuthenticationService, AlertService, UserService } from '../../_services/index'
 import { StoryMetaData, User } from '../../_models/index'
 import { environment } from '../../../environments/environment'
 
@@ -10,22 +10,20 @@ import { environment } from '../../../environments/environment'
   styleUrls: ['./story-explorer.component.css']
 })
 export class StoryExplorerComponent implements OnInit {
-  storyMetaData: StoryMetaData[]
-  userId: string
-  currentUser: User
+  storyMetaData: StoryMetaData[] = []
+  authors: { [key:string]: User } = {}
+  userId: string = ""
 
   constructor(
     private storyService: StoryService,
     private alertService: AlertService,
     private activatedRoute: ActivatedRoute,
-    private authService: AuthenticationService) {
+    private authService: AuthenticationService,
+    private userService: UserService) {
   }
 
   hasInit = false
   ngOnInit() {
-    this.authService.getCurrentUser().subscribe(next => {
-      this.currentUser = next
-    })
     this.activatedRoute.params.subscribe(params => {
       this.userId = params['user_id']
     })
@@ -38,6 +36,14 @@ export class StoryExplorerComponent implements OnInit {
     if (this.hasInit) {
       this.storyService.getStories(this.userId).then((data: StoryMetaData[]) => {
         this.storyMetaData = data
+
+        // Find author information
+        this.authors = {}
+        let authorIds = this.storyMetaData.map(story => story.authorId)
+        authorIds.forEach(id => this.authors[id] = <User>{ username: "..." })
+        this.userService.getUsers(authorIds).then(users => {
+          users.forEach(user => this.authors[user.id] = user)
+        }).catch(e => this.alertService.error(e))
       }).catch(e => this.alertService.error(e))
     }
   }
@@ -85,4 +91,9 @@ export class StoryExplorerComponent implements OnInit {
       return "assets/default_thumbnail.png"
     }
   }
+
+  // getUserObject(userId: string): User {
+  //   let user = this.authors.find(user => user.id == userId)
+  //   return user ? user : <User>{ username: "Unknown User" }
+  // }
 }

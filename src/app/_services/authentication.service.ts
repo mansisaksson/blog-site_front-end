@@ -1,10 +1,11 @@
-﻿import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs/Rx';
-import { User } from '../_models/index'
-import { UIService } from './ui.service';
-import { UserService } from './user.service';
-import { AlertService } from './alert.service';
-import { CacheManagementService } from './caching_services';
+﻿import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { Observable, BehaviorSubject } from 'rxjs/Rx'
+import { User, BackendResponse } from '../_models/index'
+import { UIService } from './ui.service'
+import { AlertService } from './alert.service'
+import { CacheManagementService, UserCacheService } from './caching_services'
+import { environment } from '../../environments/environment'
 
 @Injectable()
 export class AuthenticationService {
@@ -14,9 +15,10 @@ export class AuthenticationService {
 	private revalidateTime: number = 20 * 1000
 
 	constructor(
-		private userService: UserService,
+		private http: HttpClient,
 		private uiService: UIService,
 		private alertService: AlertService,
+		private userCacheService: UserCacheService,
 		private cacheManagementService: CacheManagementService) {
 		this.validateLoginState()
 	}
@@ -39,7 +41,7 @@ export class AuthenticationService {
 
 	login(username: string, password: string): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
-			this.userService.authenticate(username, password).then((user: User) => {
+			this.authenticate(username, password).then((user: User) => {
 				// Clear out our queries since they give different results depending on whether the user is logged in
 				this.cacheManagementService.GetCacheService('story_query_cache').ClearCache()
 				this.setUserSession(user)
@@ -53,7 +55,7 @@ export class AuthenticationService {
 
 	logout(): Promise<boolean> {
 		return new Promise<boolean>((resolve, reject) => {
-			this.userService.invalidateSession().then(() => {
+			this.invalidateSession().then(() => {
 				// Clear out our queries since they give different results depending on whether the user is logged in
 				this.cacheManagementService.GetCacheService('story_query_cache').ClearCache()
 				this.setUserSession(undefined)
@@ -88,7 +90,7 @@ export class AuthenticationService {
 	private validateLoginState() {
 		let timeSinceUpdate = Date.now() - this.lastValidateTime
 		if (timeSinceUpdate > this.revalidateTime) {
-			this.userService.getSession().then((user) => {
+			this.getSession().then((user) => {
 				this.setUserSession(user)
 				this.refreshLoginState()
 			}).catch(error => {
@@ -110,5 +112,61 @@ export class AuthenticationService {
 		if (this.isLoggedIn.getValue() !== isLoggedIn) {
 			this.isLoggedIn.next(isLoggedIn)
 		}
+	}
+
+	authenticate(userName: string, password: string): Promise<User> {
+		return new Promise<User>((resolve, reject) => {
+			let body = {
+				user_name: userName,
+				user_password: password
+			}
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/authenticate', JSON.stringify(body), { 
+				headers: { 'Content-Type': 'application/json' },
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
+				if (response.success) {
+					let user = <User>response.body
+					this.userCacheService.UpdateUserCache([user])
+					resolve(user)
+				} else {
+					reject(response.error_code)
+				}
+			}, (e) => reject(e))
+		})
+	}
+
+	invalidateSession(): Promise<boolean> {
+		return new Promise<boolean>((resolve, reject) => {
+			let body = {}
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/session/invalidate', JSON.stringify(body), { 
+				headers: { 'Content-Type': 'application/json' },
+				responseType: "json",
+				withCredentials: true
+			}).subscribe(data => {
+				let response = <BackendResponse>data
+				if (response.success) {
+					resolve(<boolean>response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (e) => reject(e))
+		})
+	}
+
+	getSession(): Promise<User> {
+		return new Promise<User>((resolve, reject) => {
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/session', { 
+				headers: { 'Content-Type': 'application/json' },
+				responseType: "json",
+				withCredentials: true
+			}).subscribe((response: BackendResponse) => {
+				if (response.success) {
+					resolve(<User>response.body)
+				} else {
+					reject(response.error_code)
+				}
+			}, (e) => reject(e))
+		})
 	}
 }

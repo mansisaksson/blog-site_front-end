@@ -2,98 +2,35 @@
 import { HttpClient } from '@angular/common/http'
 import { User, BackendResponse } from '../_models/index'
 import { environment } from './../../environments/environment'
+import { UserCacheService } from './caching_services';
 
 @Injectable()
 export class UserService {
-	constructor(private http: HttpClient) { }
-
-	authenticate(userName: string, password: string): Promise<User> {
-		return new Promise<User>((resolve, reject) => {
-			let body = {
-				user_name: userName,
-				user_password: password
-			}
-			this.http.post<BackendResponse>(environment.backendAddr + '/api/authenticate', JSON.stringify(body), { 
-				headers: { 'Content-Type': 'application/json' },
-				responseType: "json",
-				withCredentials: true
-			}).subscribe((response: BackendResponse) => {
-				if (response.success) {
-					resolve(<User>response.body)
-				} else {
-					reject(response.error_code)
-				}
-			}, (e) => reject(e))
-		})
+	constructor(
+		private http: HttpClient,
+		private userCacheService: UserCacheService) {
 	}
 
-	invalidateSession(): Promise<boolean> {
-		return new Promise<boolean>((resolve, reject) => {
-			let body = {}
-			this.http.post<BackendResponse>(environment.backendAddr + '/api/session/invalidate', JSON.stringify(body), { 
-				headers: { 'Content-Type': 'application/json' },
-				responseType: "json",
-				withCredentials: true
-			}).subscribe(data => {
-				let response = <BackendResponse>data
-				if (response.success) {
-					resolve(<boolean>response.body)
-				} else {
-					reject(response.error_code)
-				}
-			}, (e) => reject(e))
-		})
-	}
-
-	getSession(): Promise<User> {
-		return new Promise<User>((resolve, reject) => {
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/session', { 
-				headers: { 'Content-Type': 'application/json' },
-				responseType: "json",
-				withCredentials: true
-			}).subscribe((response: BackendResponse) => {
-				if (response.success) {
-					resolve(<User>response.body)
-				} else {
-					reject(response.error_code)
-				}
-			}, (e) => reject(e))
-		})
-	}
-
-	getAll(): Promise<User[]> {
+	getUsers(ids: string[]): Promise<User[]> {
 		return new Promise<User[]>((resolve, reject) => {
-			let params = {
-				// TODO: add search functionality
+			let cache = this.userCacheService.FindUserCache(ids)
+			if (cache.notFound.length == 0) {
+				return resolve(cache.foundUsers)
 			}
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/users/query', { 
-				headers: { 'Content-Type': 'application/json' },
-				params: params,
-				responseType: "json",
-				withCredentials: false
-			}).subscribe((response: BackendResponse) => {
-				if (response.success) {
-					resolve(response.body)
-				} else {
-					reject(response.error_code)
-				}
-			}, (error) => reject(error))
-		})
-	}
 
-	getById(id: string): Promise<User> {
-		return new Promise<User>((resolve, reject) => {
 			let params = {
-				user_id: id
+				user_ids: ids
 			}
-			this.http.get<BackendResponse>(environment.backendAddr + '/api/users', { 
+			this.http.get<BackendResponse>(environment.backendAddr + '/api/users', {
 				headers: { 'Content-Type': 'application/json' },
 				params: params,
 				responseType: "json",
 				withCredentials: false
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					resolve(<User>response.body)
+					let users = <User[]>response.body
+					this.userCacheService.UpdateUserCache(users)
+					resolve(users)
 				} else {
 					reject(response.error_code)
 				}
@@ -108,14 +45,16 @@ export class UserService {
 				userPassword: password,
 				registrationKey: registrationKey
 			}
-			this.http.post<BackendResponse>(environment.backendAddr + '/api/users', JSON.stringify(body), { 
+			this.http.post<BackendResponse>(environment.backendAddr + '/api/users', JSON.stringify(body), {
 				headers: { 'Content-Type': 'application/json' },
 				responseType: "json",
-				withCredentials: true 
+				withCredentials: true
 			}).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
-					resolve(<User>response.body)
+					let user = <User>response.body
+					this.userCacheService.UpdateUserCache([user])
+					resolve(user)
 				} else {
 					reject(response.error_code)
 				}
@@ -128,15 +67,17 @@ export class UserService {
 			let params = {
 				userId: userId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/users', JSON.stringify(newUserProperties), { 
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/users', JSON.stringify(newUserProperties), {
 				headers: { 'Content-Type': 'application/json' },
 				params: params,
 				responseType: "json",
-				withCredentials: true 
+				withCredentials: true
 			}).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
-					resolve(<User>response.body)
+					let user = <User>response.body
+					this.userCacheService.UpdateUserCache([user])
+					resolve(user)
 				} else {
 					reject(response.error_code)
 				}
@@ -150,14 +91,15 @@ export class UserService {
 				userId: id,
 				userPassword: password
 			}
-			this.http.delete<BackendResponse>(environment.backendAddr + '/api/users', { 
+			this.http.delete<BackendResponse>(environment.backendAddr + '/api/users', {
 				headers: { 'Content-Type': 'application/json' },
 				params: params,
 				responseType: "json",
-				withCredentials: true 
+				withCredentials: true
 			}).subscribe((data) => {
 				let response = <BackendResponse>data
 				if (response.success) {
+					this.userCacheService.InvalidateUserCache([id])
 					resolve(response.body)
 				} else {
 					reject(response.error_code)

@@ -1,3 +1,4 @@
+---------- TODO ----------
 [ ] Add Author information in the left sidebar when displaying a story
 
 [ ] Add padding under text editor so that text is not at the bottom of the screen while typing
@@ -7,17 +8,19 @@ e.g. not on the same page?
 
 [ ] User Page, visit a single users page.
 
-[ ] Improve formatting on post description
-
 [ ] Story query
 	[ ] Sort by
 	[ ] Search by name
 
-[ ] Display author name on stories
-
 [ ] Change parameters to express model e.g. "/files/:fileId"
 
 [ ] Remove GET'/api/stories/query' and merge it with GET'/api/stories'
+
+
+---------- DONE ----------
+[x] Improve formatting on post description
+
+[x] Display author name on stories
 
 [x] Add a registration key
 
