@@ -20,7 +20,7 @@ import { unescapeIdentifier } from '@angular/compiler';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent implements OnInit {
-  @ViewChild("navMenuTarget", { read: ViewContainerRef })
+  @ViewChild("navMenuTarget", { read: ViewContainerRef, static: true })
   navMenuTarget: ViewContainerRef
 
   navMenuComponent: ComponentRef<Component>

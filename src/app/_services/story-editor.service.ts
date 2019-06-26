@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StoryService } from './story.service'
+import { AlertService } from './alert.service';
 
 import { StoryMetaData, ChapterMetaData } from '../_models/index';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -7,21 +8,52 @@ import { BehaviorSubject, Observable } from 'rxjs';
 // for some reason the @types/quill are broken, have to use this instead
 import * as Quill from 'quill'
 import * as Delta from 'quill-delta'
+
 /*
  TODO: 
- "Quill.register('modules/imageResize', ImageResize)"
+ Quill.register('modules/imageResize', ImageResize) and Quill.register('modules/videoResize', VideoResize)
  is called in image-resize.min.js which causes a double register, it seams to work anyways but it causes a warning.
  */
 // add image resize module
 import ImageResize from 'quill-image-resize-module'
-import { AlertService } from './alert.service';
 Quill.register('modules/imageResize', ImageResize)
 
+
+// add video resize module
+import VideoResize from 'quill-video-resize-module'
+Quill.register('modules/videoResize', VideoResize)
+
 /*
-	Hack to solve a bug in Quill where image formats are not whitelisted properly.
+	~Begin Hack
+	Hack to solve a bug in Quill where image/video formats are not whitelisted properly.
 	For more info, read: https://github.com/kensnyder/quill-image-resize-module/issues/10
 */
-var ImageFormat = Quill.import('formats/image');
+function WhitelistAttributes(Format, Attributes) {
+	Format.formats = function formats(domNode: any): any {
+		return Attributes.reduce(
+			(formats, attribute) => {
+				if (domNode.hasAttribute(attribute)) {
+					formats[attribute] = domNode.getAttribute(attribute)
+				}
+				return formats
+			},
+			{}
+		)
+	}
+	
+	Format.prototype.format = function format(name: string, value: any): void {
+		if (Attributes.indexOf(name) !== -1) {
+			if (value) {
+				this.domNode.setAttribute(name, value)
+			} else {
+				this.domNode.removeAttribute(name)
+			}
+		} else {
+			this.super.format(name, value)
+		}
+	}
+}
+
 const ImageFormatAttributesList = [
 	'alt',
 	'height',
@@ -29,30 +61,16 @@ const ImageFormatAttributesList = [
 	'style'
 ];
 
-ImageFormat.formats = function formats(domNode: any): any {
-	return ImageFormatAttributesList.reduce(
-		(formats, attribute) => {
-			if (domNode.hasAttribute(attribute)) {
-				formats[attribute] = domNode.getAttribute(attribute)
-			}
-			return formats
-		},
-		{}
-	)
-}
-
-ImageFormat.prototype.format = function format(name: string, value: any): void {
-	if (ImageFormatAttributesList.indexOf(name) !== -1) {
-		if (value) {
-			this.domNode.setAttribute(name, value)
-		} else {
-			this.domNode.removeAttribute(name)
-		}
-	} else {
-		this.super.format(name, value)
-	}
-}
+var ImageFormat = Quill.import('formats/image');
+WhitelistAttributes(ImageFormat, ImageFormatAttributesList)
 Quill.register(ImageFormat, true)
+
+var VideoFormat = Quill.import('formats/video');
+WhitelistAttributes(VideoFormat, ImageFormatAttributesList)
+Quill.register(VideoFormat, true)
+/*
+	~End hack
+*/
 
 // Add fonts to whitelist
 var Font = Quill.import('formats/font')
@@ -95,7 +113,11 @@ export class StoryEditorService {
 				this.storyService.setCurrentlyViewedStory(story)
 
 				this.editor = new Quill(editorContainer, {
-					modules: { toolbar: { container: toolbarContainer }, imageResize: {} },
+					modules: {
+						toolbar: { container: toolbarContainer },
+						imageResize: {},
+						videoResize: {}
+					},
 					scrollingContainer: scrollingContainer,
 					theme: 'snow'
 				})

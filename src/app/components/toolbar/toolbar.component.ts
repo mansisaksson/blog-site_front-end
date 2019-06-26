@@ -16,7 +16,7 @@ import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router'
   styleUrls: ['./toolbar.component.css']
 })
 export class ToolbarComponent  implements OnInit {
-  @ViewChild("toolbarTarget", { read: ViewContainerRef })
+  @ViewChild("toolbarTarget", { read: ViewContainerRef, static: true })
   toolbarTarget: ViewContainerRef
 
   toolbarComponent: ComponentRef<Component>

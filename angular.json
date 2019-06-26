@@ -36,6 +36,7 @@
               "node_modules/quill/dist/quill.min.js",
               "node_modules/quill-mention/dist/quill.mention.min.js",
               "node_modules/quill-image-resize-module/image-resize.min.js",
+              "node_modules/quill-video-resize-module/video-resize.min.js",
               "node_modules/katex/dist/katex.min.js"
             ]
           },

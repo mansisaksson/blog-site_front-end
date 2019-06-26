@@ -6,7 +6,7 @@ import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular
   styleUrls: []
 })
 export class InlineEditorComponent {
-  @ViewChild('content') contentContainer: ElementRef
+  @ViewChild('content', { static: true }) contentContainer: ElementRef
 
   @Output() onEdit: EventEmitter<string> = new EventEmitter<string>()
   

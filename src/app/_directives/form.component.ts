@@ -16,7 +16,7 @@ export class FormComponent implements OnDestroy, OnInit {
 	private autoClose: boolean = true
 	private error: string = ''
 
-	@ViewChild('formModal') formModal
+	@ViewChild('formModal', { static: true }) formModal
 
 	constructor(
 		private uiService: UIService

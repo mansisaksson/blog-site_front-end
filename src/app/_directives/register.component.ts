@@ -19,7 +19,7 @@ export class RegisterComponent implements OnDestroy, OnInit {
 	private subscription: Subscription;
 	private message: any;
 
-	@ViewChild('registerModal') registerModal;
+	@ViewChild('registerModal', { static: true }) registerModal;
 
 	constructor(
 		private router: Router,

@@ -15,7 +15,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 	private loading = false
 	private message: any
 
-	@ViewChild('loginModal') loginModal
+	@ViewChild('loginModal', { static: true }) loginModal
 
 	constructor(
 		private router: Router,

@@ -18,7 +18,7 @@ import { Router, ActivatedRouteSnapshot, Event, NavigationEnd } from '@angular/r
   </div>`
 })
 export class SideBarComponent {
-  @ViewChild("sidebarContainer", { read: ViewContainerRef })
+  @ViewChild("sidebarContainer", { read: ViewContainerRef, static: true })
   container: ViewContainerRef
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {
@@ -38,7 +38,7 @@ export class SideBarComponent {
   </div>`
 })
 export class SideBarsComponent implements OnInit {
-  @ViewChild("sidebarTarget", { read: ViewContainerRef })
+  @ViewChild("sidebarTarget", { read: ViewContainerRef, static: true })
   sidebarTarget: ViewContainerRef;
   sidebarComponents: ComponentRef<SideBarComponent>[] = new Array<ComponentRef<SideBarComponent>>()
 
