@@ -1,7 +1,5 @@
 # story-site
 
-This is the front-end for a personal website which was created with the goal of learning more about web development.
+This is the front-end for a personal website which was created with the goal of learning more about web development, and in particular web frameworks.
 
-This website is developed using Angular 6, with the backend implemented in node.
-
-Backend repo is currently private.
+You can read more about how the web-site was created [here](http://www.mansisaksson.com/story-viewer/5ba798154668222648756aa4)
