@@ -4,7 +4,7 @@ import { CacheService, CacheManagementService } from './cache.service'
 @Injectable()
 export class BlogQueryCacheService extends CacheService {
 	constructor(protected cacheManagementService: CacheManagementService) {
-		super('blog_query_cache', 20, cacheManagementService)
+		super('blog_post_query_cache', 20, cacheManagementService)
 	}
 
 	private resolveQueryId(userId: string, queryString: string): string {

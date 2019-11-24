@@ -129,7 +129,7 @@ export class BlogPostService {
 		})
 	}
 
-	getBlog(id: string): Promise<BlogPostMetaData> {
+	getBlogPost(id: string): Promise<BlogPostMetaData> {
 		return new Promise<BlogPostMetaData>((resolve, reject) => {
 			let cachedBlog = this.BlogCacheService.FindBlogCache([id]).foundBlogPosts.find(s => { return s.storyId == id })
 			if (cachedBlog != undefined) {
@@ -137,7 +137,7 @@ export class BlogPostService {
 			}
 
 			let params = {
-				blogPostId: id
+				storyId: id
 			}
 			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories', { 
 				headers: { 'Content-Type': 'application/json' },

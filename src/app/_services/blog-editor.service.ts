@@ -109,7 +109,7 @@ export class BlogPostEditorService {
 			this.currentBlog.next(undefined)
 			this.currentChapter.next(undefined)
 
-			this.BlogPostService.getBlog(blogPostId).then((blogPost) => {
+			this.BlogPostService.getBlogPost(blogPostId).then((blogPost) => {
 				this.BlogPostService.setCurrentlyViewedBlogPost(blogPost)
 
 				this.editor = new Quill(editorContainer, {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
-import { User } from './../../../_models'
-import { AuthenticationService, AlertService, UIService, DynamicForm, FormValues, BlogPostEditorService } from './../../../_services'
+import { User } from '../../../_models'
+import { AuthenticationService, AlertService, UIService, DynamicForm, FormValues, BlogPostEditorService } from '../../../_services'
 
 @Component({
   selector: 'app-common-tools',
@@ -21,7 +21,7 @@ export class DeleteChapterComponent {
     this.authenticationService.withLoggedInUser().then((user: User) => {
       let form: DynamicForm = new DynamicForm("Delete Chapter", "Delete")
       form.addTextInput("Type DELETE", "delete", { multiline: false }, "")
-      
+
       let onFormSubmit = (values: FormValues) => {
         if (values["delete"] === "DELETE") {
           this.blogEditorService.deleteCurrentChapter().then(() => {

@@ -35,7 +35,7 @@ export class ToolbarComponent  implements OnInit {
   }
 
   private updateContent(snapshot: ActivatedRouteSnapshot): void {
-    this.clearSidebar()
+    this.clearToolbar()
     let toolbar: any = (snapshot.data as { toolbar: Component }).toolbar
 
     if (toolbar != undefined) {
@@ -49,7 +49,7 @@ export class ToolbarComponent  implements OnInit {
     }
   }
 
-  private clearSidebar() {
+  private clearToolbar() {
     if (this.toolbarComponent) {
       this.toolbarComponent.destroy()
     }

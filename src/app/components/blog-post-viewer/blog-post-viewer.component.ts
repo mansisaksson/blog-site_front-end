@@ -32,7 +32,7 @@ export class BlogPostViewerComponent implements OnInit {
   }
 
   refreshBlog() {
-    this.BlogPostService.getBlog(this.blogPostId).then((blogPost) => {
+    this.BlogPostService.getBlogPost(this.blogPostId).then((blogPost) => {
       this.blogPost = blogPost
       this.BlogPostService.setCurrentlyViewedBlogPost(blogPost)
 

@@ -35,7 +35,7 @@ export class ContextInfoComponent implements OnInit {
   }
 
   private updateContent(snapshot: ActivatedRouteSnapshot): void {
-    this.clearSidebar()
+    this.clearContextInfo()
     let contextInfo: any = (snapshot.data as { contextInfo: Component }).contextInfo
 
     if (contextInfo != undefined) {
@@ -49,7 +49,7 @@ export class ContextInfoComponent implements OnInit {
     }
   }
 
-  private clearSidebar() {
+  private clearContextInfo() {
     if (this.contextInfoComponent) {
       this.contextInfoComponent.destroy()
     }

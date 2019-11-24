@@ -25,8 +25,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { InlineEditorComponent } from './components/utility'
 import { ContextInfoComponent } from './components/context-info/context-info.component';
-import { CreateBlogPostComponent, DeleteBlogPostComponent, DeleteChapterComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, BlogPostSettingsComponent } from './components/side-bars/common-tools/';
-import { SideBarsComponent, SideBarComponent } from './components/side-bars/side-bars.component';
+import { CreateBlogPostComponent, DeleteBlogPostComponent, DeleteChapterComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, BlogPostSettingsComponent } from './components/context-menu/common-tools';
+import { ContextMenuComponent, ContextMenuSectionComponent } from './components/context-menu/context-menu.component';
 
 @NgModule({
   imports: [
@@ -63,8 +63,8 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     SaveBlogPostComponent,
     AddChapterComponent,
     BlogPostSettingsComponent,
-    SideBarsComponent,
-    SideBarComponent
+    ContextMenuComponent,
+    ContextMenuSectionComponent
   ],
   entryComponents: [
     EditorToolbarComponent,
@@ -73,7 +73,6 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     ToolbarComponent,
     InlineEditorComponent,
     
-    SideBarComponent,
     ContextInfoComponent,
     CreateBlogPostComponent,
     DeleteBlogPostComponent,
@@ -82,8 +81,8 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     SaveBlogPostComponent,
     AddChapterComponent,
     BlogPostSettingsComponent,
-    SideBarsComponent,
-    SideBarComponent
+    ContextMenuComponent,
+    ContextMenuSectionComponent
   ],
   providers: [
     AuthGuard,

@@ -1,5 +1,3 @@
-<div id="toolbar-container">
-  <nav [hidden]="!isEnabled()">
-      <ng-container #toolbarTarget></ng-container>
-  </nav>
+<div id="toolbar-container" [hidden]="!isEnabled()">
+  <ng-container #toolbarTarget></ng-container>
 </div>
