@@ -5,7 +5,7 @@ import { ChapterMetaData } from '../../_models'
 @Injectable()
 export class ChapterCacheService extends CacheService {
 	constructor(protected cacheManagementService: CacheManagementService) {
-		super('story_chapter_cache', 20, cacheManagementService)
+		super('blog_chapter_cache', 20, cacheManagementService)
 	}
 
 	public UpdateChapterCache(chapters: ChapterMetaData[]) {
@@ -13,17 +13,17 @@ export class ChapterCacheService extends CacheService {
 			// Update Chapter cache
 			this.SetObjectCache(chapter.chapterId, chapter, true)
 			
-			// Update story cache
-			let storyCache = this.cacheManagementService.GetCacheService('story_cache')
-			let story = storyCache.GetCachedObjects()[chapter.storyId]
-			if (story) {
-				let index = story.chapters.findIndex(c => c.chapterId == chapter.chapterId)
+			// Update blogPost cache
+			let blogCache = this.cacheManagementService.GetCacheService('blog_cache')
+			let blogPost = blogCache.GetCachedObjects()[chapter.storyId]
+			if (blogPost) {
+				let index = blogPost.chapters.findIndex(c => c.chapterId == chapter.chapterId)
 				if (index != -1) {
-					story.chapters[index] = chapter
+					blogPost.chapters[index] = chapter
 				} else {
-					story.chapters.push(chapter)
+					blogPost.chapters.push(chapter)
 				}
-				storyCache.SetObjectCache(story.storyId, story, true)
+				blogCache.SetObjectCache(blogPost.storyId, blogPost, true)
 			}
 		})
 	}

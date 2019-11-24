@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* CSS Document */
 
-.story-link {
+.blog-post-link {
     padding: 5px;
     margin: 5px;
     background-color: white;
@@ -16,7 +16,7 @@
     vertical-align: middle;
 }
 
-.story-container {
+.blog-post-container {
     width: 800px;
     margin: auto;
 }

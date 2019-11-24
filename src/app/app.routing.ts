@@ -3,44 +3,44 @@
 import { HomeComponent } from './components/home/index'
 import { AuthGuard } from './_guards/index'
 
-import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component'
-import { StoryViewerComponent } from './components/story-viewer/story-viewer.component'
+import { BlogPostExplorerComponent } from './components/blog-post-explorer/blog-post-explorer.component'
+import { BlogPostViewerComponent } from './components/blog-post-viewer/blog-post-viewer.component'
 import { EditUserComponent } from './components/edit-user/edit-user.component'
-import { StoryEditorComponent, StoryEditorToolbarComponent, StoryNavMenuComponent } from './components/story-editor'
-import { CreateStoryComponent, DeleteStoryComponent, EditStoryComponent, SaveStoryComponent, AddChapterComponent, DeleteChapterComponent, StorySettingsComponent } from './components/side-bars/common-tools/'
+import { BlogPostEditorComponent, EditorToolbarComponent, EditorContextInfoComponent } from './components/blog-post-editor'
+import { CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, DeleteChapterComponent, BlogPostSettingsComponent } from './components/side-bars/common-tools/'
 
 const appRoutes: Routes = [
     { 
         path: '',
         component: HomeComponent,
         /*canActivate: [AuthGuard],*/
-        data: { sidebars: [ CreateStoryComponent ]}
+        data: { sidebars: [ CreateBlogPostComponent ]}
     },
     {
-        path: 'story-explorer',
-        component: StoryExplorerComponent,
-        data: { sidebars: [ CreateStoryComponent ] }
+        path: 'blog-post-explorer',
+        component: BlogPostExplorerComponent,
+        data: { sidebars: [ CreateBlogPostComponent ] }
     },
     {
-        path: 'story-explorer/:user_id',
-        component: StoryExplorerComponent,
-        data: { sidebars: [ CreateStoryComponent ] }
+        path: 'blog-post-explorer/:user_id',
+        component: BlogPostExplorerComponent,
+        data: { sidebars: [ CreateBlogPostComponent ] }
     },
     { 
-        path: 'story-viewer/:story_id',
-        component: StoryViewerComponent,
-        data: { sidebars: [ [ CreateStoryComponent, DeleteStoryComponent, EditStoryComponent ] ]}
+        path: 'blog-post-viewer/:blog_id',
+        component: BlogPostViewerComponent,
+        data: { sidebars: [ [ CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent ] ]}
     },
     { 
-        path: 'story-editor/:story_id',
-        component: StoryEditorComponent,
+        path: 'blog-post-editor/:blog_id',
+        component: BlogPostEditorComponent,
         data: { 
             sidebars: [ 
-                [ CreateStoryComponent, DeleteStoryComponent ], 
-                [ StorySettingsComponent, AddChapterComponent, DeleteChapterComponent, SaveStoryComponent ] 
+                [ CreateBlogPostComponent, DeleteBlogPostComponent ], 
+                [ BlogPostSettingsComponent, AddChapterComponent, DeleteChapterComponent, SaveBlogPostComponent ] 
             ],
-            toolbar: StoryEditorToolbarComponent,
-            navMenu: StoryNavMenuComponent
+            toolbar: EditorToolbarComponent,
+            contextInfo: EditorContextInfoComponent
         }
     },
     { 

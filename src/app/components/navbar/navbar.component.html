@@ -5,15 +5,15 @@
         <a class="nav-link"  routerLink="/">Home <span class="sr-only">(current)</span></a>
       </li>
 
-      <!-- Stories -->
+      <!-- Blog Posts -->
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Stories
+          Blog Posts
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="/story-explorer">All Stories</a>
+          <a class="dropdown-item" routerLink="/blog-post-explorer">All Posts</a>
           <div class="dropdown-divider"></div>
-          <a *ngIf="isLoggedIn" class="dropdown-item" routerLink="/story-explorer/{{getCurrentUserId()}}">My Stories</a>
+          <a *ngIf="isLoggedIn" class="dropdown-item" routerLink="/blog-post-explorer/{{getCurrentUserId()}}">My Posts</a>
         </div>
       </li>
 

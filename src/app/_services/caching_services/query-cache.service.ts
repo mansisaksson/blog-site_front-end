@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core'
 import { CacheService, CacheManagementService } from './cache.service'
 
 @Injectable()
-export class StoryQueryCacheService extends CacheService {
+export class BlogQueryCacheService extends CacheService {
 	constructor(protected cacheManagementService: CacheManagementService) {
-		super('story_query_cache', 20, cacheManagementService)
+		super('blog_query_cache', 20, cacheManagementService)
 	}
 
 	private resolveQueryId(userId: string, queryString: string): string {
@@ -18,9 +18,9 @@ export class StoryQueryCacheService extends CacheService {
 		return cacheId
 	}
 
-	public UpdateQueryCache(userId: string, queryString: string, storyIds: string[]) {
+	public UpdateQueryCache(userId: string, queryString: string, blogPostIds: string[]) {
 		let cacheId = this.resolveQueryId(userId, queryString)
-		this.SetObjectCache(cacheId, storyIds, true)
+		this.SetObjectCache(cacheId, blogPostIds, true)
 	}
 
 	public FindQueryCache(userId: string, queryString: string): string[] {

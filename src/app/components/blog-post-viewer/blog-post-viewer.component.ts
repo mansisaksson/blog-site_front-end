@@ -1,48 +1,48 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
-import { StoryService, AlertService } from '../../_services/index'
-import { ChapterContent, StoryMetaData, ChapterMetaData } from '../../_models/index'
+import { BlogPostService, AlertService } from '../../_services/index'
+import { ChapterContent, BlogPostMetaData, ChapterMetaData } from '../../_models/index'
 
 import * as Quill from 'quill'
 
 @Component({
-  selector: 'app-story-viewer',
-  templateUrl: './story-viewer.component.html',
-  styleUrls: ['./story-viewer.component.css']
+  selector: 'app-blog-post-viewer',
+  templateUrl: './blog-post-viewer.component.html',
+  styleUrls: ['./blog-post-viewer.component.css']
 })
-export class StoryViewerComponent implements OnInit {
-  private tempStory = <StoryMetaData>{
+export class BlogPostViewerComponent implements OnInit {
+  private tempBlog = <BlogPostMetaData>{
     title: "...",
     chapters: []
   }
-  public story: StoryMetaData = this.tempStory
-  private storyId: string
+  public blogPost: BlogPostMetaData = this.tempBlog
+  private blogPostId: string
 
   constructor(
-    private storyService: StoryService,
+    private BlogPostService: BlogPostService,
     private alertService: AlertService,
     private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.storyId = params['story_id']
-      this.refreshStory()
+      this.blogPostId = params['blog_id']
+      this.refreshBlog()
     })
   }
 
-  refreshStory() {
-    this.storyService.getStory(this.storyId).then((story) => {
-      this.story = story
-      this.storyService.setCurrentlyViewedStory(story)
+  refreshBlog() {
+    this.BlogPostService.getBlog(this.blogPostId).then((blogPost) => {
+      this.blogPost = blogPost
+      this.BlogPostService.setCurrentlyViewedBlogPost(blogPost)
 
-      if (!this.story) {
-        this.story = this.tempStory
+      if (!this.blogPost) {
+        this.blogPost = this.tempBlog
       }
 
       setTimeout(() => { // One frame delay to let the html update
-        let chapterURIs = story.chapters.map(a => a.URI)
-        this.storyService.getChapterContents(chapterURIs).then((contents: ChapterContent[]) => {
+        let chapterURIs = blogPost.chapters.map(a => a.URI)
+        this.BlogPostService.getChapterContents(chapterURIs).then((contents: ChapterContent[]) => {
           var options = {
             modules: {
               toolbar: ''
@@ -51,7 +51,7 @@ export class StoryViewerComponent implements OnInit {
             readOnly: true,
             theme: 'bubble'
           }
-          story.chapters.forEach((chapter: ChapterMetaData) => {
+          blogPost.chapters.forEach((chapter: ChapterMetaData) => {
             try {
               var editor = new Quill('#' + 'quill_content_' + chapter.chapterId, options)
               let content = contents.find(a => { return chapter.URI == a.URI })

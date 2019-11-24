@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { User } from './../../../_models'
-import { AuthenticationService, AlertService, UIService, DynamicForm, FormValues, StoryEditorService } from './../../../_services'
+import { AuthenticationService, AlertService, UIService, DynamicForm, FormValues, BlogPostEditorService } from './../../../_services'
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class AddChapterComponent {
 
   constructor(
-    private storyEditorService: StoryEditorService,
+    private blogEditorService: BlogPostEditorService,
     private uiService: UIService,
     private authenticationService: AuthenticationService,
     private alertService: AlertService
@@ -24,7 +24,7 @@ export class AddChapterComponent {
       let form: DynamicForm = new DynamicForm("Create Chapter", "Create!")
       form.addTextInput("Chapter Title", "chapter_title", { multiline: false }, "Chapter 1")
       let onFormSubmit = (values: FormValues) => {
-        this.storyEditorService.createNewChapter(values["chapter_title"]).then(() => {
+        this.blogEditorService.createNewChapter(values["chapter_title"]).then(() => {
           this.alertService.success("Chapter added!")
         }).catch(e => this.alertService.error(e))
       }

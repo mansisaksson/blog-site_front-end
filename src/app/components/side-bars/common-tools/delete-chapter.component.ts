@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { User } from './../../../_models'
-import { AuthenticationService, AlertService, UIService, DynamicForm, FormValues, StoryEditorService } from './../../../_services'
+import { AuthenticationService, AlertService, UIService, DynamicForm, FormValues, BlogPostEditorService } from './../../../_services'
 
 @Component({
   selector: 'app-common-tools',
@@ -12,7 +12,7 @@ import { AuthenticationService, AlertService, UIService, DynamicForm, FormValues
 export class DeleteChapterComponent {
   constructor(
     private uiService: UIService,
-    private storyEditorService: StoryEditorService,
+    private blogEditorService: BlogPostEditorService,
     private authenticationService: AuthenticationService,
     private alertService: AlertService
   ) { }
@@ -24,7 +24,7 @@ export class DeleteChapterComponent {
       
       let onFormSubmit = (values: FormValues) => {
         if (values["delete"] === "DELETE") {
-          this.storyEditorService.deleteCurrentChapter().then(() => {
+          this.blogEditorService.deleteCurrentChapter().then(() => {
             this.alertService.success("Chapter Deleted!")
           }).catch(e => this.alertService.error(e))
         } else {

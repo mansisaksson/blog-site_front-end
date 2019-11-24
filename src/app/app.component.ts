@@ -8,7 +8,7 @@ import { ISubscription } from 'rxjs/Subscription';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  private bIsNavMenuEnabled: boolean = false
+  private bIsContextInfoEnabled: boolean = false
 
   constructor(
     private router: Router,
@@ -16,11 +16,11 @@ export class AppComponent {
     router.events
       .filter(e => e instanceof NavigationEnd)
       .forEach(e => {
-        this.bIsNavMenuEnabled = route.root.firstChild.snapshot.data['navMenu'] ? true : false
+        this.bIsContextInfoEnabled = route.root.firstChild.snapshot.data['contextInfo'] ? true : false
       })
   }
 
-  isNavMenuEnabled(): boolean {
-    return this.bIsNavMenuEnabled
+  isContextInfoEnabled(): boolean {
+    return this.bIsContextInfoEnabled
   }
 }

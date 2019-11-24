@@ -10,22 +10,22 @@ import { routing } from './app.routing';
 
 import { AlertComponent, LoginComponent, RegisterComponent, FormComponent } from './_directives/index';
 import { AuthGuard } from './_guards/index';
-import { AlertService, AuthenticationService, UserService, StoryService, StoryEditorService, UIService } from './_services/index';
+import { AlertService, AuthenticationService, UserService, BlogPostService, BlogPostEditorService, UIService } from './_services/index';
 
-import { UserCacheService, StoryCacheService, ChapterCacheService, ChapterContentCacheService, StoryQueryCacheService, CacheManagementService } from './_services/caching_services';
+import { UserCacheService, BlogCacheService, ChapterCacheService, ChapterContentCacheService, BlogQueryCacheService, CacheManagementService } from './_services/caching_services';
 
 import { HomeComponent } from './components/home/index';
 import { EditUserComponent } from './components/edit-user/edit-user.component'
 
-import { StoryExplorerComponent } from './components/story-explorer/story-explorer.component';
-import { StoryViewerComponent } from './components/story-viewer/story-viewer.component';
+import { BlogPostExplorerComponent } from './components/blog-post-explorer/blog-post-explorer.component';
+import { BlogPostViewerComponent } from './components/blog-post-viewer/blog-post-viewer.component';
 
-import { StoryEditorComponent, StoryEditorToolbarComponent, StoryNavMenuComponent } from './components/story-editor';
+import { BlogPostEditorComponent, EditorToolbarComponent, EditorContextInfoComponent } from './components/blog-post-editor';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { InlineEditorComponent } from './components/utility'
-import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
-import { CreateStoryComponent, DeleteStoryComponent, DeleteChapterComponent, EditStoryComponent, SaveStoryComponent, AddChapterComponent, StorySettingsComponent } from './components/side-bars/common-tools/';
+import { ContextInfoComponent } from './components/context-info/context-info.component';
+import { CreateBlogPostComponent, DeleteBlogPostComponent, DeleteChapterComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, BlogPostSettingsComponent } from './components/side-bars/common-tools/';
 import { SideBarsComponent, SideBarComponent } from './components/side-bars/side-bars.component';
 
 @NgModule({
@@ -45,43 +45,43 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     FormComponent,
     EditUserComponent,
     
-    StoryExplorerComponent,
-    StoryViewerComponent,
-    StoryEditorComponent,
+    BlogPostExplorerComponent,
+    BlogPostViewerComponent,
+    BlogPostEditorComponent,
 
-    StoryEditorToolbarComponent,
-    StoryNavMenuComponent,
+    EditorToolbarComponent,
+    EditorContextInfoComponent,
     NavbarComponent,
     ToolbarComponent,
     InlineEditorComponent,
 
-    NavMenuComponent,
-    CreateStoryComponent,
-    DeleteStoryComponent,
+    ContextInfoComponent,
+    CreateBlogPostComponent,
+    DeleteBlogPostComponent,
     DeleteChapterComponent,
-    EditStoryComponent,
-    SaveStoryComponent,
+    EditBlogPostComponent,
+    SaveBlogPostComponent,
     AddChapterComponent,
-    StorySettingsComponent,
+    BlogPostSettingsComponent,
     SideBarsComponent,
     SideBarComponent
   ],
   entryComponents: [
-    StoryEditorToolbarComponent,
-    StoryNavMenuComponent,
+    EditorToolbarComponent,
+    EditorContextInfoComponent,
     NavbarComponent,
     ToolbarComponent,
     InlineEditorComponent,
     
     SideBarComponent,
-    NavMenuComponent,
-    CreateStoryComponent,
-    DeleteStoryComponent,
+    ContextInfoComponent,
+    CreateBlogPostComponent,
+    DeleteBlogPostComponent,
     DeleteChapterComponent,
-    EditStoryComponent,
-    SaveStoryComponent,
+    EditBlogPostComponent,
+    SaveBlogPostComponent,
     AddChapterComponent,
-    StorySettingsComponent,
+    BlogPostSettingsComponent,
     SideBarsComponent,
     SideBarComponent
   ],
@@ -89,18 +89,18 @@ import { SideBarsComponent, SideBarComponent } from './components/side-bars/side
     AuthGuard,
     AlertService,
     AuthenticationService,
-    StoryEditorService,
+    BlogPostEditorService,
     UIService,
     UserService,
-    StoryService,
+    BlogPostService,
 
     // Caching services
     CacheManagementService,
-    StoryCacheService,
+    BlogCacheService,
     UserCacheService,
     ChapterCacheService,
     ChapterContentCacheService,
-    StoryQueryCacheService,
+    BlogQueryCacheService,
 
     DuplicateRequestProvider
   ],

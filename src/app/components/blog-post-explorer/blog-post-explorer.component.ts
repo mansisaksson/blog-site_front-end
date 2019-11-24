@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { StoryService, AuthenticationService, AlertService, UserService } from '../../_services/index'
-import { StoryMetaData, User } from '../../_models/index'
+import { BlogPostService, AuthenticationService, AlertService, UserService } from '../../_services/index'
+import { BlogPostMetaData, User } from '../../_models/index'
 import { environment } from '../../../environments/environment'
 
 @Component({
-  selector: 'app-story-explorer',
-  templateUrl: './story-explorer.component.html',
-  styleUrls: ['./story-explorer.component.css']
+  selector: 'app-blog-post-explorer',
+  templateUrl: './blog-post-explorer.component.html',
+  styleUrls: ['./blog-post-explorer.component.css']
 })
-export class StoryExplorerComponent implements OnInit {
-  storyMetaData: StoryMetaData[] = []
+export class BlogPostExplorerComponent implements OnInit {
+  BlogPostMetaData: BlogPostMetaData[] = []
   authors: { [key:string]: User } = {}
   userId: string = ""
 
   constructor(
-    private storyService: StoryService,
+    private BlogPostService: BlogPostService,
     private alertService: AlertService,
     private activatedRoute: ActivatedRoute,
     private authService: AuthenticationService,
@@ -29,17 +29,17 @@ export class StoryExplorerComponent implements OnInit {
     })
 
     this.hasInit = true
-    this.refreshStoryList()
+    this.refreshBlogList()
   }
 
-  refreshStoryList() {
+  refreshBlogList() {
     if (this.hasInit) {
-      this.storyService.getStories(this.userId).then((data: StoryMetaData[]) => {
-        this.storyMetaData = data
+      this.BlogPostService.getBlogPosts(this.userId).then((data: BlogPostMetaData[]) => {
+        this.BlogPostMetaData = data
 
         // Find author information
         this.authors = {}
-        let authorIds = this.storyMetaData.map(story => story.authorId)
+        let authorIds = this.BlogPostMetaData.map(blogPost => blogPost.authorId)
         authorIds.forEach(id => this.authors[id] = <User>{ username: "..." })
         this.userService.getUsers(authorIds).then(users => {
           users.forEach(user => this.authors[user.id] = user)

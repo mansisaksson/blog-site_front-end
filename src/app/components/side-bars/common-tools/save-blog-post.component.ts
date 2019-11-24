@@ -1,32 +1,32 @@
 import { Component, OnInit } from '@angular/core'
-import { User, StoryMetaData } from './../../../_models'
-import { StoryEditorService, AuthenticationService, AlertService } from './../../../_services'
+import { User, BlogPostMetaData } from '../../../_models'
+import { BlogPostEditorService, AuthenticationService, AlertService } from '../../../_services'
 
 @Component({
   selector: 'app-common-tools',
   template: `
   <div *ngIf="enabled" style="padding-top: 5px;">
-    <button (click)="saveStory()" class="btn btn-primary" style="width: 100%">Save Chapter</button>
+    <button (click)="saveBlog()" class="btn btn-primary" style="width: 100%">Save Chapter</button>
   </div>`
 })
-export class SaveStoryComponent implements OnInit {
+export class SaveBlogPostComponent implements OnInit {
   public enabled: boolean
-  private story: StoryMetaData
+  private blogPost: BlogPostMetaData
 
   constructor(
-    private storyEditorService: StoryEditorService,
+    private blogEditorService: BlogPostEditorService,
     private authenticationService: AuthenticationService,
     private alertService: AlertService
   ) { }
 
   ngOnInit() {
-    this.storyEditorService.getCurrentStory().subscribe((story: StoryMetaData) => {
+    this.blogEditorService.getCurrentBlog().subscribe((blogPost: BlogPostMetaData) => {
       this.enabled = false;
-      this.story = story;
-      if (story != undefined) {
+      this.blogPost = blogPost;
+      if (blogPost != undefined) {
         this.authenticationService.getCurrentUser().subscribe((user: User) => {
           if (user != undefined) {
-            this.enabled = (user.id == story.authorId) ? true : false
+            this.enabled = (user.id == blogPost.authorId) ? true : false
           }
         })
       } else {
@@ -35,15 +35,15 @@ export class SaveStoryComponent implements OnInit {
     })
   }
 
-  saveStory() {
+  saveBlog() {
     if (this.enabled) {
       this.authenticationService.withLoggedInUser().then((user: User) => {
-        if (this.story != undefined) {
-          this.storyEditorService.saveCurrentChapter().then(() => {
+        if (this.blogPost != undefined) {
+          this.blogEditorService.saveCurrentChapter().then(() => {
             this.alertService.success("Chapter saved!")
           }).catch(e => this.alertService.error(e))
         } else {
-          this.alertService.error("No Valid story currently being edited")
+          this.alertService.error("No Valid blogPost post currently being edited")
         }
       }).catch(e => {
         this.alertService.error(e)

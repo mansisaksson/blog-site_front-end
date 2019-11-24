@@ -1,6 +1,6 @@
 import { Component, OnInit, } from '@angular/core';
-import { StoryEditorService, AlertService } from './../../../_services'
-import { ChapterContent, StoryMetaData, ChapterMetaData } from '../../../_models';
+import { BlogPostEditorService, AlertService } from '../../../_services'
+import { ChapterContent, BlogPostMetaData, ChapterMetaData } from '../../../_models';
 
 interface NavTitle {
   fontSize: number,
@@ -14,33 +14,33 @@ class DrawableElem {
 }
 
 @Component({
-  selector: 'app-story-nav-menu',
-  templateUrl: './story-nav-menu.component.html',
-  styleUrls: ['./story-nav-menu.component.css']
+  selector: 'app-editor-context-info',
+  templateUrl: './editor-context-info.component.html',
+  styleUrls: ['./editor-context-info.component.css']
 })
-export class StoryNavMenuComponent implements OnInit {
+export class EditorContextInfoComponent implements OnInit {
   private navTitles: { [key: string]: NavTitle } = {
     "h1": { fontSize: 12, padding: 10 },
     "h2": { fontSize: 10, padding: 15 },
     "h3": { fontSize: 8, padding: 20 },
   }
 
-  public story: StoryMetaData = <StoryMetaData>{ title: "..." }
+  public blogPost: BlogPostMetaData = <BlogPostMetaData>{ title: "..." }
   public titleElements: DrawableElem[] = []
 
   constructor(
-    private storyEditor: StoryEditorService,
+    private blogEditor: BlogPostEditorService,
     private alertService: AlertService
     ) {
 
   }
 
   ngOnInit() {
-    this.storyEditor.getCurrentStory().subscribe((story) => {
+    this.blogEditor.getCurrentBlog().subscribe((blogPost) => {
       this.titleElements = []
-      if (story) {
-        this.story = story
-        this.story.chapters.forEach((chapter: ChapterMetaData) => {
+      if (blogPost) {
+        this.blogPost = blogPost
+        this.blogPost.chapters.forEach((chapter: ChapterMetaData) => {
           let elem = <DrawableElem>{
             tagName: 'h2',
             content: chapter.title,
@@ -49,13 +49,13 @@ export class StoryNavMenuComponent implements OnInit {
           this.titleElements.push(elem)
         })
       } else {
-        story = <StoryMetaData>{ title: "..." }
+        blogPost = <BlogPostMetaData>{ title: "..." }
       }
     })
   }
 
   editChapter(chapterId: string) {
-    this.storyEditor.editChapter(chapterId)
+    this.blogEditor.editChapter(chapterId)
   }
 
   reorderChapter(chapterId: string, moveUp: boolean) {
@@ -63,7 +63,7 @@ export class StoryNavMenuComponent implements OnInit {
     if (index != -1) {
       let newIndex = moveUp ? index -1 : index + 1
       if (newIndex < this.titleElements.length) {
-        this.storyEditor.swapChapterOrder(chapterId, this.titleElements[newIndex].payload).then(() => {
+        this.blogEditor.swapChapterOrder(chapterId, this.titleElements[newIndex].payload).then(() => {
           this.alertService.success("Chapters rearranged!")
         }).catch(e => { this.alertService.error(e) })
       }

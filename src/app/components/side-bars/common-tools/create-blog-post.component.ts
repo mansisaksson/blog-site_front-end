@@ -1,34 +1,34 @@
 import { Component } from '@angular/core'
-import { User, StoryMetaData } from './../../../_models'
-import { StoryService, AuthenticationService, AlertService, UIService, DynamicForm, FormValues } from './../../../_services'
+import { User, BlogPostMetaData } from '../../../_models'
+import { BlogPostService, AuthenticationService, AlertService, UIService, DynamicForm, FormValues } from '../../../_services'
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-common-tools',
   template: `
   <div style="padding-top: 5px;">
-    <button (click)="createStory()" class="btn btn-primary" style="width: 100%">Create New Story</button>
+    <button (click)="createBlogPost()" class="btn btn-primary" style="width: 100%">Create New Blog Post</button>
   </div>`
 })
-export class CreateStoryComponent {
+export class CreateBlogPostComponent {
 
   constructor(
     private router: Router,
-    private storyService: StoryService,
+    private BlogPostService: BlogPostService,
     private uiService: UIService,
     private authenticationService: AuthenticationService,
     private alertService: AlertService
   ) { }
 
-  createStory() {
+  createBlogPost() {
     this.authenticationService.withLoggedInUser().then((user: User) => {
-      let form: DynamicForm = new DynamicForm("Create Story", "Create!")
-      form.addTextInput("Story Title", "title", { multiline: false }, "Title Here")
+      let form: DynamicForm = new DynamicForm("Create Blog", "Create!")
+      form.addTextInput("Blog Post Title", "title", { multiline: false }, "Title Here")
       form.addTextInput("Chapter 1 Title", "chapter_title", { multiline: false }, "Chapter 1")
 
       let onFormSubmit = (values: FormValues) => {
-        this.storyService.createStory(user.id, values["title"], values["chapter_title"]).then((story: StoryMetaData) => {
-          this.router.navigate(['story-editor/'+story.storyId])
+        this.BlogPostService.createBlogPost(user.id, values["title"], values["chapter_title"]).then((blogPost: BlogPostMetaData) => {
+          this.router.navigate(['blog-post-editor/'+blogPost.storyId])
         }).catch((error) => {
           this.alertService.error(error)
         })

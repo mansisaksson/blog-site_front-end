@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core'
-import { User, StoryMetaData } from './../../../_models'
-import { StoryEditorService, AuthenticationService, AlertService, DynamicForm, FormValues, UIService } from './../../../_services'
+import { User, BlogPostMetaData } from '../../../_models'
+import { BlogPostEditorService, AuthenticationService, AlertService, DynamicForm, FormValues, UIService } from '../../../_services'
 
 @Component({
   selector: 'app-common-tools',
   template: `
   <div *ngIf="enabled" style="padding-top: 5px;">
-    <button (click)="publishStory()" class="btn btn-primary" style="width: 100%">Story Settings</button>
+    <button (click)="publishBlog()" class="btn btn-primary" style="width: 100%">Blog Post Settings</button>
   </div>`
 })
-export class StorySettingsComponent implements OnInit {
+export class BlogPostSettingsComponent implements OnInit {
   public enabled: boolean
-  private story: StoryMetaData = <StoryMetaData>{ storyId: "", accessibility: 'private' }
+  private blogPost: BlogPostMetaData = <BlogPostMetaData>{ storyId: "", accessibility: 'private' }
 
   constructor(
-    private storyEditor: StoryEditorService,
+    private blogEditor: BlogPostEditorService,
     private authenticationService: AuthenticationService,
     private alertService: AlertService,
     private uiService: UIService
@@ -22,40 +22,40 @@ export class StorySettingsComponent implements OnInit {
 
   ngOnInit() {
     this.enabled = false
-    this.storyEditor.getCurrentStory().subscribe((story: StoryMetaData) => {
-      if (story != undefined) {
+    this.blogEditor.getCurrentBlog().subscribe((blogPost: BlogPostMetaData) => {
+      if (blogPost != undefined) {
         this.authenticationService.getCurrentUser().subscribe((user: User) => {
           if (user != undefined) {
-            this.enabled = (user.id == story.authorId) ? true : false
-            this.story = story
+            this.enabled = (user.id == blogPost.authorId) ? true : false
+            this.blogPost = blogPost
           }
         })
       } else {
         this.enabled = false
-        this.story = <StoryMetaData>{ storyId: "", accessibility: 'private' }
+        this.blogPost = <BlogPostMetaData>{ storyId: "", accessibility: 'private' }
       }
     })
   }
 
-  publishStory() {
-    let form: DynamicForm = new DynamicForm("Story Settings", "Apply")
-    form.addTextInput('Title', 'title', { multiline: false }, this.story.title)
-    form.addTextInput('Description', 'description', { multiline: true, rows: 4, charLimit: 500 }, this.story.description)
-    form.addDropdown('Accessibility', 'accessibility', this.story.accessibility)
+  publishBlog() {
+    let form: DynamicForm = new DynamicForm("Blog Post Settings", "Apply")
+    form.addTextInput('Title', 'title', { multiline: false }, this.blogPost.title)
+    form.addTextInput('Description', 'description', { multiline: true, rows: 4, charLimit: 500 }, this.blogPost.description)
+    form.addDropdown('Accessibility', 'accessibility', this.blogPost.accessibility)
     .addDropdownEntry('public', 'Public')
     .addDropdownEntry('private', 'Private')
     form.addFileSelection('Thumbnail', 'thumbnail', { fileTypes: ['.png'], fileLimit: '1mb' })
 
     let onSubmit = (values: FormValues, closeForm, showError) => {
-      let newStoryProperties = {
+      let newBlogProperties = {
         title: values['title'],
         description: values['description'],
         accessibility: values['accessibility']
       }
 
-      let updateStory = () => {
-        this.storyEditor.updateStory(newStoryProperties).then(() => {
-          this.alertService.success('Story Updated!')
+      let updateBlogPost = () => {
+        this.blogEditor.updateBlogPost(newBlogProperties).then(() => {
+          this.alertService.success('Blog Post Updated!')
           closeForm()
         }).catch(e => {
           this.alertService.error(e)
@@ -71,8 +71,8 @@ export class StorySettingsComponent implements OnInit {
           let fileReader = new FileReader()
           fileReader.onload = (e) => {
             let base64String = btoa(<string>fileReader.result)
-            newStoryProperties['thumbnail']  = base64String
-            updateStory()
+            newBlogProperties['thumbnail']  = base64String
+            updateBlogPost()
           }
           fileReader.readAsBinaryString(newThumbnail)
         } else {
@@ -80,7 +80,7 @@ export class StorySettingsComponent implements OnInit {
           return
         }
       } else {
-        updateStory()
+        updateBlogPost()
       }
     }
     this.uiService.promptForm(form, false, onSubmit)

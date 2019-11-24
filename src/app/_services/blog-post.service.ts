@@ -1,33 +1,33 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 
-import { ChapterContent, StoryMetaData, ChapterMetaData, BackendResponse } from '../_models'
+import { ChapterContent, BlogPostMetaData, ChapterMetaData, BackendResponse } from '../_models'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { environment } from '../../environments/environment'
-import { StoryCacheService, ChapterCacheService, ChapterContentCacheService, StoryQueryCacheService } from './caching_services'
+import { BlogCacheService, ChapterCacheService, ChapterContentCacheService, BlogQueryCacheService } from './caching_services'
 
 @Injectable()
-export class StoryService {
-	private currentStory: BehaviorSubject<StoryMetaData> = new BehaviorSubject<StoryMetaData>(undefined)
+export class BlogPostService {
+	private currentBlogPost: BehaviorSubject<BlogPostMetaData> = new BehaviorSubject<BlogPostMetaData>(undefined)
 
 	constructor(
 		private http: HttpClient, 
-		private storyCacheService: StoryCacheService,
+		private BlogCacheService: BlogCacheService,
 		private chapterCacheService: ChapterCacheService, 
 		private chapterContentCacheService: ChapterContentCacheService, 
-		private storyQueryCacheService: StoryQueryCacheService) {
+		private blogQueryCacheService: BlogQueryCacheService) {
 	}
 
-	setCurrentlyViewedStory(story: StoryMetaData) {
-		this.currentStory.next(story)
+	setCurrentlyViewedBlogPost(blogPost: BlogPostMetaData) {
+		this.currentBlogPost.next(blogPost)
 	}
 
-	getCurrentlyViewedStory(): Observable<StoryMetaData> {
-		return this.currentStory.asObservable()
+	getCurrentlyViewedBlogPost(): Observable<BlogPostMetaData> {
+		return this.currentBlogPost.asObservable()
 	}
 
-	createStory(userId: string, title: string, chapter1Title: string): Promise<StoryMetaData> {
-		return new Promise<StoryMetaData>((resolve, reject) => {
+	createBlogPost(userId: string, title: string, chapter1Title: string): Promise<BlogPostMetaData> {
+		return new Promise<BlogPostMetaData>((resolve, reject) => {
 			let params = {
 				userId: userId
 			}
@@ -42,9 +42,9 @@ export class StoryService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let story = <StoryMetaData>response.body
-					this.storyCacheService.UpdateStoryCache([story])
-					resolve(story)
+					let blogPost = <BlogPostMetaData>response.body
+					this.BlogCacheService.UpdateBlogCache([blogPost])
+					resolve(blogPost)
 				} else {
 					reject(response.error_code)
 				}
@@ -52,21 +52,21 @@ export class StoryService {
 		})
 	}
 
-	updateStory(storyId: string, newStoryProperties: object): Promise<StoryMetaData> {
-		return new Promise<StoryMetaData>((resolve, reject) => {
+	updateBlogPost(blogPostId: string, newBlogProperties: object): Promise<BlogPostMetaData> {
+		return new Promise<BlogPostMetaData>((resolve, reject) => {
 			let params = {
-				storyId: storyId
+				blogPostId: blogPostId
 			}
-			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories', JSON.stringify(newStoryProperties), { 
+			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories', JSON.stringify(newBlogProperties), { 
 				headers: { 'Content-Type': 'application/json' },
 				params: params,
 				responseType: "json",
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let story = <StoryMetaData>response.body
-					this.storyCacheService.UpdateStoryCache([story])
-					resolve(story)
+					let blogPost = <BlogPostMetaData>response.body
+					this.BlogCacheService.UpdateBlogCache([blogPost])
+					resolve(blogPost)
 				} else {
 					reject(response.error_code)
 				}
@@ -74,10 +74,10 @@ export class StoryService {
 		})
 	}
 
-	deleteStory(id: string): Promise<any> {
+	deleteBlogPost(id: string): Promise<any> {
 		return new Promise<any>((resolve, reject) => {
 			let params = {
-				storyId: id
+				blogPostId: id
 			}
 			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories', { 
 				headers: { 'Content-Type': 'application/json' },
@@ -86,23 +86,22 @@ export class StoryService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					this.storyCacheService.InvalidateStoryCache([id])
+					this.BlogCacheService.InvalidateBlogCache([id])
 					resolve(response.body)
 				} else {
 					reject(response.error_code)
 				}
 			}, (error) => reject(error))
 		})
-
 	}
 
-	getStories(userId?: string, searchQuery?: string): Promise<StoryMetaData[]> {
-		return new Promise<StoryMetaData[]>((resolve, reject) => {
-			let cachedIds = this.storyQueryCacheService.FindQueryCache(userId ? userId : "", searchQuery ? searchQuery : "")
+	getBlogPosts(userId?: string, searchQuery?: string): Promise<BlogPostMetaData[]> {
+		return new Promise<BlogPostMetaData[]>((resolve, reject) => {
+			let cachedIds = this.blogQueryCacheService.FindQueryCache(userId ? userId : "", searchQuery ? searchQuery : "")
 			if (cachedIds.length > 0) {
-				let cache = this.storyCacheService.FindStoryCache(cachedIds)
+				let cache = this.BlogCacheService.FindBlogCache(cachedIds)
 				if (cache.notFound.length == 0) {
-					return resolve(cache.foundStories)
+					return resolve(cache.foundBlogPosts)
 				}
 			}
 
@@ -118,10 +117,10 @@ export class StoryService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let stories: StoryMetaData[] = <StoryMetaData[]>response.body
-					this.storyCacheService.UpdateStoryCache(stories)
-					let storyIds = stories.map(s => s.storyId)
-					this.storyQueryCacheService.UpdateQueryCache(userId, searchQuery, storyIds)
+					let stories: BlogPostMetaData[] = <BlogPostMetaData[]>response.body
+					this.BlogCacheService.UpdateBlogCache(stories)
+					let blogPostIds = stories.map(s => s.storyId)
+					this.blogQueryCacheService.UpdateQueryCache(userId, searchQuery, blogPostIds)
 					resolve(stories)
 				} else {
 					reject(response.error_code)
@@ -130,15 +129,15 @@ export class StoryService {
 		})
 	}
 
-	getStory(id: string): Promise<StoryMetaData> {
-		return new Promise<StoryMetaData>((resolve, reject) => {
-			let cachedStory = this.storyCacheService.FindStoryCache([id]).foundStories.find(s => { return s.storyId == id })
-			if (cachedStory != undefined) {
-				return resolve(cachedStory)
+	getBlog(id: string): Promise<BlogPostMetaData> {
+		return new Promise<BlogPostMetaData>((resolve, reject) => {
+			let cachedBlog = this.BlogCacheService.FindBlogCache([id]).foundBlogPosts.find(s => { return s.storyId == id })
+			if (cachedBlog != undefined) {
+				return resolve(cachedBlog)
 			}
 
 			let params = {
-				storyId: id
+				blogPostId: id
 			}
 			this.http.get<BackendResponse>(environment.backendAddr + '/api/stories', { 
 				headers: { 'Content-Type': 'application/json' },
@@ -147,9 +146,9 @@ export class StoryService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let story = <StoryMetaData>response.body
-					this.storyCacheService.UpdateStoryCache([story])
-					resolve(story)
+					let blogPost = <BlogPostMetaData>response.body
+					this.BlogCacheService.UpdateBlogCache([blogPost])
+					resolve(blogPost)
 				} else {
 					reject(response.error_code)
 				}
@@ -157,7 +156,7 @@ export class StoryService {
 		})
 	}
 
-	getStoryChapter(chapterId: string): Promise<ChapterMetaData> {
+	getBlogChapter(chapterId: string): Promise<ChapterMetaData> {
 		return new Promise<ChapterMetaData>((resolve, reject) => {
 			this.getChapters([chapterId]).then((data) => {
 				resolve(data[0])
@@ -174,10 +173,10 @@ export class StoryService {
 	}
 
 	// *** Chapters
-	createChapter(storyId: string, chapterTitle: string): Promise<ChapterMetaData> {
+	createChapter(blogPostId: string, chapterTitle: string): Promise<ChapterMetaData> {
 		return new Promise<ChapterMetaData>((resolve, reject) => {
 			let params = {
-				storyId: storyId
+				blogPostId: blogPostId
 			}
 			let body = {
 				title: chapterTitle
@@ -221,8 +220,8 @@ export class StoryService {
 		})
 	}
 
-	deleteChapter(chapterId: string): Promise<StoryMetaData> {
-		return new Promise<StoryMetaData>((resolve, reject) => {
+	deleteChapter(chapterId: string): Promise<BlogPostMetaData> {
+		return new Promise<BlogPostMetaData>((resolve, reject) => {
 			let params = {
 				chapterId: chapterId
 			}
@@ -234,9 +233,9 @@ export class StoryService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					this.chapterCacheService.InvalidateChapterCache([chapterId])
-					let story = <StoryMetaData>response.body
-					this.storyCacheService.UpdateStoryCache([story])
-					resolve(story)
+					let blogPost = <BlogPostMetaData>response.body
+					this.BlogCacheService.UpdateBlogCache([blogPost])
+					resolve(blogPost)
 				} else {
 					reject(response.error_code)
 				}

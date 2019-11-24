@@ -1,6 +1,6 @@
 export interface ChapterMetaData {
     chapterId: string
-    storyId: string
+    storyId: string // TODO: Rename to blogPostId
     URI: string
     title: string
 }
@@ -10,8 +10,8 @@ export class ChapterContent {
     content: string
 }
 
-export interface StoryMetaData {
-    storyId: string
+export interface BlogPostMetaData {
+    storyId: string // TODO: Rename to blogPostId, or just id
     authorId: string
     title: string
     description: string

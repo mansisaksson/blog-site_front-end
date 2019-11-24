@@ -43,7 +43,7 @@ export class AuthenticationService {
 		return new Promise<User>((resolve, reject) => {
 			this.authenticate(username, password).then((user: User) => {
 				// Clear out our queries since they give different results depending on whether the user is logged in
-				this.cacheManagementService.GetCacheService('story_query_cache').ClearCache()
+				this.cacheManagementService.GetCacheService('blog_query_cache').ClearCache()
 				this.setUserSession(user)
 				resolve(user)
 			}).catch(e => {
@@ -57,7 +57,7 @@ export class AuthenticationService {
 		return new Promise<boolean>((resolve, reject) => {
 			this.invalidateSession().then(() => {
 				// Clear out our queries since they give different results depending on whether the user is logged in
-				this.cacheManagementService.GetCacheService('story_query_cache').ClearCache()
+				this.cacheManagementService.GetCacheService('blog_query_cache').ClearCache()
 				this.setUserSession(undefined)
 				resolve(true)
 			}).catch((e) => { 

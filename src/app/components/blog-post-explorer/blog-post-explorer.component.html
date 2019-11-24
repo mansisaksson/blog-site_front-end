@@ -1,0 +1,14 @@
+<table class="blog-post-container">
+  <tr *ngFor="let metaData of BlogPostMetaData">
+    <div class="blog-post-link" [style.background-color]="getAccessibilityColor(metaData.accessibility)">
+      <th class="thumbnail">
+        <a [routerLink]="['/blog-post-viewer', metaData.storyId]"><img src="{{getThumbnailURL(metaData.thumbnailURI)}}" width="256" height="151" ></a>
+      </th>
+      <th style="padding-left: 10px;">
+        <a [routerLink]="['/blog-post-viewer', metaData.storyId]"><h1 style="font-size: 24px; color: black; margin-bottom: 0px;">{{metaData.title}}</h1></a>
+        <p class="meta-data-text">submitted {{timeSince(metaData.submittedAt)}} ago by {{authors[metaData.authorId].username}}</p>
+        <p class="description-text">{{metaData.description}}</p>
+      </th>
+    </div>
+  </tr>
+</table>

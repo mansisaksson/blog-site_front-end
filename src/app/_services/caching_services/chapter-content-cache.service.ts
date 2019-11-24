@@ -5,7 +5,7 @@ import { CacheService, CacheManagementService } from './cache.service';
 @Injectable()
 export class ChapterContentCacheService extends CacheService {
 	constructor(protected cacheManagementService: CacheManagementService) {
-		super('story_chapter_content_cache', 20, cacheManagementService)
+		super('blog_chapter_content_cache', 20, cacheManagementService)
 	}
 
 	public UpdateChapterContentCache(contents: ChapterContent[]) {
