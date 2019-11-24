@@ -1,7 +1,7 @@
 ---------- TODO ----------
+[ ] Move context menu into a drop-down, or slide-out, menu
+
 [ ] Re-work CSS
-	[ ] Front page
-	[ ] Blog viewer
 	
 [ ] Add Author information in the left sidebar when displaying a blog-post
 
