@@ -1,14 +1,14 @@
 ---------- TODO ----------
 [ ] Move context menu into a drop-down, or slide-out, menu
 
+[ ] User Page, visit a single users page.
+
 [ ] Re-work CSS
 	
 [ ] Add Author information in the left sidebar when displaying a blog-post
 
 [ ] Improve/remove chapter title, also, should chapters in the blog-viewer be the same as in the editor
 e.g. not on the same page?
-
-[ ] User Page, visit a single users page.
 
 [ ] Blog query
 	[ ] Sort by

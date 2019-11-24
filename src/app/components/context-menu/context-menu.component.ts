@@ -31,7 +31,7 @@ export class ContextMenuSectionComponent {
 }
 
 @Component({
-  selector: 'app-side-bars',
+  selector: 'app-context-menu',
   template: `
   <div class="container-fluid">
     <ng-container #contextMenuContainer></ng-container>
