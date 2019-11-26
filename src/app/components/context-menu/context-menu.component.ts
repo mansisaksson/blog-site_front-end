@@ -9,7 +9,11 @@ import {
   Type
 } from '@angular/core';
 
+import { faAlignLeft, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
 import { Router, ActivatedRouteSnapshot, Event, NavigationEnd } from '@angular/router'
+
+declare let $: any
 
 @Component({
   template: `
@@ -32,15 +36,16 @@ export class ContextMenuSectionComponent {
 
 @Component({
   selector: 'app-context-menu',
-  template: `
-  <div class="container-fluid">
-    <ng-container #contextMenuContainer></ng-container>
-  </div>`
+  templateUrl: './context-menu.component.html',
+  styleUrls: ['./context-menu.component.css']
 })
 export class ContextMenuComponent implements OnInit {
   @ViewChild("contextMenuContainer", { read: ViewContainerRef, static: true })
   contextMenuContainer: ViewContainerRef;
   contextMenuSectionComponents: ComponentRef<ContextMenuSectionComponent>[] = new Array<ComponentRef<ContextMenuSectionComponent>>()
+
+  faAlignLeft = faAlignLeft
+  faArrowLeft = faArrowLeft
 
   constructor(private router: Router,
     private componentFactoryResolver: ComponentFactoryResolver) {
@@ -48,10 +53,10 @@ export class ContextMenuComponent implements OnInit {
 
   ngOnInit() {
     this.router.events
-    .filter(e => e instanceof NavigationEnd)
-    .forEach(e => {
-      this.updateContextMenuContent(this.router.routerState.snapshot.root)
-    })
+      .filter(e => e instanceof NavigationEnd)
+      .forEach(e => {
+        this.updateContextMenuContent(this.router.routerState.snapshot.root)
+      })
   }
 
 
@@ -86,6 +91,18 @@ export class ContextMenuComponent implements OnInit {
     }
     this.contextMenuContainer.clear()
     this.contextMenuSectionComponents = []
+  }
+
+  public openContextMenu() {
+    $('#sidebar').addClass('active');
+    $('.overlay').addClass('active');
+    $('.collapse.in').toggleClass('in');
+    $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+  }
+
+  public closeContextMenu() {
+    $('#sidebar').removeClass('active');
+    $('.overlay').removeClass('active');
   }
 
 }
