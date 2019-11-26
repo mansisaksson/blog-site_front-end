@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 import { DuplicateRequestProvider } from './_helpers/index';
 
 import { AppComponent } from './app.component';
@@ -34,7 +36,8 @@ import { ContextMenuComponent, ContextMenuSectionComponent } from './components/
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    routing
+    routing,
+    FontAwesomeModule
   ],
   declarations: [
     AppComponent,

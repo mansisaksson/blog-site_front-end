@@ -4,8 +4,9 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse" id="navbarToggler">
-  
+
     <!-- Left Side -->
     <ul class="navbar-nav mr-auto">
 
@@ -31,7 +32,7 @@
 
     <!-- Right Side -->
     <div *ngIf="isLoggedIn; then loggedInBlock else loggedOutBlock"></div>
-    
+
     <!-- Sign Out -->
     <ng-template #loggedInBlock>
       <div>
@@ -44,10 +45,10 @@
     <ng-template #loggedOutBlock>
       <div>
         <button (click)="signIn()" class="btn btn-info" style="margin-right: 5px;">Sign In</button>
-        <button (click)="register()" class="btn btn-outline-dark">Register</button> 
+        <button (click)="register()" class="btn btn-outline-dark">Register</button>
       </div>
     </ng-template>
 
-</div>
+  </div>
 
 </nav>
