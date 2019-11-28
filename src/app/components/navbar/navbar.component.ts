@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
-import { Router, Route } from '@angular/router'
 import { AuthenticationService, UIService } from '../../_services/index'
 import { User } from '../../_models'
+import { faAlignLeft } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-navbar',
@@ -11,11 +11,11 @@ import { User } from '../../_models'
 export class NavbarComponent implements OnInit {
   isLoggedIn: boolean;
   currentUser: User = new User()
+  faAlignLeft = faAlignLeft
 
   constructor(
     private authService: AuthenticationService,
-    private uiService: UIService,
-    private router: Router
+    private uiService: UIService
   ) { 
   }
   
@@ -50,6 +50,10 @@ export class NavbarComponent implements OnInit {
     if (this.currentUser != undefined) {
       return this.currentUser.id
     }
+  }
+
+  openContextMenu() {
+    this.uiService.openContextMenu()
   }
 
 }

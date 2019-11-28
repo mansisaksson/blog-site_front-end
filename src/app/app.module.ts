@@ -27,8 +27,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { InlineEditorComponent } from './components/utility'
 import { ContextInfoComponent } from './components/context-info/context-info.component';
-import { CreateBlogPostComponent, DeleteBlogPostComponent, DeleteChapterComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, BlogPostSettingsComponent } from './components/context-menu/common-tools';
-import { ContextMenuComponent, ContextMenuSectionComponent } from './components/context-menu/context-menu.component';
+import { CreateBlogPostComponent, DeleteBlogPostComponent, DeleteChapterComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, BlogPostSettingsComponent } from './components/context-menu';
+import { ContextMenuComponent, ContextMenuSectionComponent } from './_directives/context-menu.component';
 
 @NgModule({
   imports: [

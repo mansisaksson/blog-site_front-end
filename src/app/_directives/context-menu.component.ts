@@ -11,15 +11,14 @@ import {
 
 import { faAlignLeft, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-import { Router, ActivatedRouteSnapshot, Event, NavigationEnd } from '@angular/router'
+import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router'
+
+import { UIService } from '../_services/ui.service';
 
 declare let $: any
 
 @Component({
-  template: `
-  <div class="card" style="padding: 10px; padding-top: 5px; margin-top: 10px;">
-    <ng-container #contextMenuSectionContainer ></ng-container>
-  </div>`
+  template: `<ng-container #contextMenuSectionContainer ></ng-container>`
 })
 export class ContextMenuSectionComponent {
   @ViewChild("contextMenuSectionContainer", { read: ViewContainerRef, static: true })
@@ -48,7 +47,16 @@ export class ContextMenuComponent implements OnInit {
   faArrowLeft = faArrowLeft
 
   constructor(private router: Router,
-    private componentFactoryResolver: ComponentFactoryResolver) {
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private uiService: UIService) {
+      uiService.getContextMenuPrompt().subscribe(message => {
+        if (message.event == 'open') {
+          this.openContextMenu()
+        }
+        else {
+          this.closeContextMenu()
+        }
+      })
   }
 
   ngOnInit() {
@@ -58,7 +66,6 @@ export class ContextMenuComponent implements OnInit {
         this.updateContextMenuContent(this.router.routerState.snapshot.root)
       })
   }
-
 
   private updateContextMenuContent(snapshot: ActivatedRouteSnapshot): void {
     this.clearContextMenu();

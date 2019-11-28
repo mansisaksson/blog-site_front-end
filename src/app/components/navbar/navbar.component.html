@@ -29,11 +29,15 @@
 
     </ul>
 
+    <button type="button" class="btn btn-info" (click)="openContextMenu()" style="margin-right: 5px;">
+      <fa-icon [icon]="faAlignLeft"></fa-icon>
+      <!--<span>Toggle Sidebar</span>-->
+    </button>
 
     <!-- Right Side -->
     <div *ngIf="isLoggedIn; then loggedInBlock else loggedOutBlock"></div>
 
-    <!-- Sign Out -->
+     <!-- Sign Out -->
     <ng-template #loggedInBlock>
       <div>
         <a class="btn btn-outline-dark" style="margin-right: 5px;" routerLink="/edit-user">{{currentUser.username}}</a>

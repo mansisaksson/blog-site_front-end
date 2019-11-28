@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
-import { User, BlogPostMetaData } from '../../../_models'
-import { BlogPostService, AuthenticationService, AlertService, UIService, DynamicForm, FormValues } from '../../../_services'
+import { User, BlogPostMetaData } from '../../_models'
+import { BlogPostService, AuthenticationService, AlertService, UIService, DynamicForm, FormValues } from '../../_services'
 import { Router } from '@angular/router';
 
 @Component({

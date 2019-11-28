@@ -1,28 +1,3 @@
-<!--
-<button class="btn btn-info context-button" type="button">
-  <span class="navbar-toggler-icon"></span>
-</button>
-
-
-<button type="button context-button" id="sidebarCollapse" class="btn btn-info">
-  <i class="fas fa-align-left"></i>
-  <span>Toggle Sidebar</span>
-</button>
--->
-<div class="container-fluid">
-  <ng-container #contextMenuContainer></ng-container>
-
-  <!-- Open Context Menu Button -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <button type="button" id="sidebarCollapse" class="btn btn-info" (click)="openContextMenu()">
-        <fa-icon [icon]="faAlignLeft"></fa-icon>
-        <span>Toggle Sidebar</span>
-      </button>
-    </div>
-  </nav>
-</div>
-
 <!-- Sidebar -->
 <nav id="sidebar">
   <div id="dismiss" (click)="closeContextMenu()">
@@ -30,9 +5,12 @@
   </div>
 
   <div class="sidebar-header">
-    <h3>Bootstrap Sidebar</h3>
+    <h3>Context Menu</h3>
   </div>
 
+  <ng-container #contextMenuContainer></ng-container>
+
+  <!--
   <ul class="list-unstyled components">
     <p>Dummy Heading</p>
     <li class="active">
@@ -55,6 +33,7 @@
     <li><a href="#">Portfolio</a></li>
     <li><a href="#">Contact</a></li>
   </ul>
+  -->
 </nav>
 
 <!-- Dark Overlay element -->

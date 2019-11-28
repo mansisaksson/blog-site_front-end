@@ -197,10 +197,11 @@ export class UIService {
 	private loginMessageSubject = new Subject<any>()
 	private registerMessageSubject = new Subject<any>()
 	private formMessageSubject = new Subject<any>()
+	private contextMenuMessageSubject = new Subject<any>()
 
 	constructor(
 		private router: Router) {
-		router.events.subscribe(event => {
+		this.router.events.subscribe(event => {
 			if (event instanceof NavigationStart) {
 				this.loginMessageSubject.next({ event: 'close' })
 				this.registerMessageSubject.next({ event: 'close' })
@@ -227,6 +228,12 @@ export class UIService {
 		})
 	}
 
+	openContextMenu() {
+    this.contextMenuMessageSubject.next({
+			event: 'open'
+		})
+	}
+
 	getShowLoginPrompt(): Observable<any> {
 		return this.loginMessageSubject.asObservable();
 	}
@@ -238,4 +245,9 @@ export class UIService {
 	getFormPrompt(): Observable<any> {
 		return this.formMessageSubject.asObservable();
 	}
+
+	getContextMenuPrompt(): Observable<any> {
+		return this.contextMenuMessageSubject.asObservable();
+	}
+	
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
-import { User, BlogPostMetaData } from '../../../_models'
-import { BlogPostEditorService, AuthenticationService, AlertService, DynamicForm, FormValues, UIService } from '../../../_services'
+import { User, BlogPostMetaData } from '../../_models'
+import { BlogPostEditorService, AuthenticationService, AlertService, DynamicForm, FormValues, UIService } from '../../_services'
 
 @Component({
   selector: 'app-common-tools',

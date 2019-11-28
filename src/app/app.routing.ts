@@ -7,7 +7,7 @@ import { BlogPostExplorerComponent } from './components/blog-post-explorer/blog-
 import { BlogPostViewerComponent } from './components/blog-post-viewer/blog-post-viewer.component'
 import { EditUserComponent } from './components/edit-user/edit-user.component'
 import { BlogPostEditorComponent, EditorToolbarComponent, EditorContextInfoComponent } from './components/blog-post-editor'
-import { CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, DeleteChapterComponent, BlogPostSettingsComponent } from './components/context-menu/common-tools'
+import { CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, DeleteChapterComponent, BlogPostSettingsComponent } from './components/context-menu'
 
 const appRoutes: Routes = [
   {
