@@ -11,11 +11,12 @@ export class AppComponent {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute) {
-    router.events
+    private route: ActivatedRoute
+  ) {
+    this.router.events
       .filter(e => e instanceof NavigationEnd)
       .forEach(e => {
-        this.bIsContextInfoEnabled = route.root.firstChild.snapshot.data['contextInfo'] ? true : false
+        this.bIsContextInfoEnabled = this.route.root.firstChild.snapshot.data['contextInfo'] ? true : false
       })
   }
 
