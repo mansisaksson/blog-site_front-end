@@ -20,7 +20,7 @@ import { HomeComponent } from './components/home/index';
 import { EditUserComponent } from './components/edit-user/edit-user.component'
 
 import { BlogPostExplorerComponent } from './components/blog-post-explorer/blog-post-explorer.component';
-import { BlogPostViewerComponent } from './components/blog-post-viewer/blog-post-viewer.component';
+import { BlogPostViewerComponent, BlogPostContextInfoComponent } from './components/blog-post-viewer';
 
 import { BlogPostEditorComponent, EditorToolbarComponent, EditorContextInfoComponent } from './components/blog-post-editor';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -50,6 +50,7 @@ import { ContextMenuComponent, ContextMenuSectionComponent } from './_directives
     
     BlogPostExplorerComponent,
     BlogPostViewerComponent,
+    BlogPostContextInfoComponent,
     BlogPostEditorComponent,
 
     EditorToolbarComponent,
@@ -72,6 +73,7 @@ import { ContextMenuComponent, ContextMenuSectionComponent } from './_directives
   entryComponents: [
     EditorToolbarComponent,
     EditorContextInfoComponent,
+    BlogPostContextInfoComponent,
     NavbarComponent,
     ToolbarComponent,
     InlineEditorComponent,

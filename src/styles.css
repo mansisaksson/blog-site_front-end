@@ -1,13 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
 .centered-document {
-	padding: 5px;
-	margin-left: 100px;
-	margin-top: 40px;
-	max-width: 1300px;
-	min-height: 900px;
+	margin-left: 5em;
+	margin-top: 2em;
+	max-width: 80em;
+	min-height: 50em;
 	background-color: #ffffff;
-
 }
 
 /* A bit of a hack to allow for re-sizing of videos in editor */

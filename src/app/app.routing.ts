@@ -4,7 +4,7 @@ import { HomeComponent } from './components/home/index'
 import { AuthGuard } from './_guards/index'
 
 import { BlogPostExplorerComponent } from './components/blog-post-explorer/blog-post-explorer.component'
-import { BlogPostViewerComponent } from './components/blog-post-viewer/blog-post-viewer.component'
+import { BlogPostViewerComponent, BlogPostContextInfoComponent } from './components/blog-post-viewer'
 import { EditUserComponent } from './components/edit-user/edit-user.component'
 import { BlogPostEditorComponent, EditorToolbarComponent, EditorContextInfoComponent } from './components/blog-post-editor'
 import { CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, DeleteChapterComponent, BlogPostSettingsComponent } from './components/context-menu'
@@ -29,7 +29,10 @@ const appRoutes: Routes = [
   {
     path: 'blog-post-viewer/:blog_id',
     component: BlogPostViewerComponent,
-    data: { contextMenu: [[CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent]] }
+    data: { 
+      contextMenu: [[CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent]],
+      contextInfo: BlogPostContextInfoComponent
+    }
   },
   {
     path: 'blog-post-editor/:blog_id',

@@ -6,21 +6,14 @@
 	background-color: #ffffff;
 }
 
-#main-document-container {
+.main-document-container {
 	height: calc(100vh - 108px);
 	overflow-y: auto;
 	width: 100%;
 }
 
-.main-container {
-	width: 100%;
-}
-
 .context-info-container {
-	width: 40vw;
-	min-height: 200px;
-	max-width: 500px;
-	background-color: red;
+	width: 40em;
 }
 
 /* small windows */
