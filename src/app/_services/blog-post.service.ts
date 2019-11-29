@@ -55,7 +55,7 @@ export class BlogPostService {
 	updateBlogPost(blogPostId: string, newBlogProperties: object): Promise<BlogPostMetaData> {
 		return new Promise<BlogPostMetaData>((resolve, reject) => {
 			let params = {
-				blogPostId: blogPostId
+				storyId: blogPostId
 			}
 			this.http.put<BackendResponse>(environment.backendAddr + '/api/stories', JSON.stringify(newBlogProperties), { 
 				headers: { 'Content-Type': 'application/json' },
@@ -77,7 +77,7 @@ export class BlogPostService {
 	deleteBlogPost(id: string): Promise<any> {
 		return new Promise<any>((resolve, reject) => {
 			let params = {
-				blogPostId: id
+				storyId: id
 			}
 			this.http.delete<BackendResponse>(environment.backendAddr + '/api/stories', { 
 				headers: { 'Content-Type': 'application/json' },
@@ -176,7 +176,7 @@ export class BlogPostService {
 	createChapter(blogPostId: string, chapterTitle: string): Promise<ChapterMetaData> {
 		return new Promise<ChapterMetaData>((resolve, reject) => {
 			let params = {
-				blogPostId: blogPostId
+				storyId: blogPostId
 			}
 			let body = {
 				title: chapterTitle
