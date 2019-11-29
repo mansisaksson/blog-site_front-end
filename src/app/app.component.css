@@ -1,16 +1,36 @@
 @charset "utf-8";
 /* CSS Document */
 .body-container {
+	display: flex;
 	height: calc(100vh - 57px);
 	background-color: #ffffff;
 }
 
-#main-container {
+#main-document-container {
 	height: calc(100vh - 108px);
 	overflow-y: auto;
+	width: 100%;
+}
+
+.main-container {
+	width: 100%;
 }
 
 .context-info-container {
+	width: 40vw;
+	min-height: 200px;
+	max-width: 500px;
 	background-color: red;
-	min-width: 300px;
+}
+
+/* small windows */
+@media (max-width: 1000px) { 
+  .context-info-container {
+		width: 100%;
+		max-width: 100%;
+	}
+	
+	.body-container {
+		flex-direction: column;
+	}
 }
