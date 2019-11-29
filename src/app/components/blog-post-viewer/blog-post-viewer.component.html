@@ -1,11 +1,12 @@
+
+
 <div class="centered-document">
-	<h1>{{blogPost.title}}</h1>
+	<h1 class="main-title">{{blogPost.title}}</h1>
 	<div id="documentContainer" *ngFor="let chapter of blogPost.chapters">
 		<div class="chapter-title">
-			<div class="chapter-title-line"></div>
 			<h2 class="chapter-title-text">{{chapter.title}}</h2>
-			<div class="chapter-title-line"></div>
 		</div>
 		<div id="{{'quill_content_' + chapter.chapterId}}"></div>
+		<hr class="divider">
 	</div>
 </div>

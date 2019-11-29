@@ -10,7 +10,7 @@
 
       <p class="description-text">{{metaData.description}}</p>
 
-      <button class="btn btn-info">
+      <button class="btn btn-info" [routerLink]="['/blog-post-viewer', metaData.storyId]">
         <span>Read More</span>
       </button>
       
@@ -18,6 +18,6 @@
 
     </div>
     
-    <hr class="post-list__divider">
+    <hr class="divider">
   </tr>
 </table>

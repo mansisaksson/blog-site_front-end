@@ -1,14 +1,19 @@
-.chapter-title {
-	text-align: center;
+.main-title {
+	margin-bottom: 50px;
 }
 
-.chapter-title-line {
-	display: inline-block;
-	background-color: black;
-	height: 2px;
-	width: 200px;
+.chapter-title {
+	text-align: left;
+	margin-bottom: 10px;
 }
 
 .chapter-title-text {
 	display: inline-block;
+}
+
+.divider {
+	width: 40%;
+	margin-left: 0px;
+	margin-bottom: 25px;
+	border-top: 1px solid #dddddd;
 }

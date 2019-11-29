@@ -2,20 +2,23 @@
 
 .centered-document {
 	padding: 5px;
-	margin: auto;
-	margin-top: 10px;
-	max-width: 1200px;
+	margin-left: 100px;
+	margin-top: 75px;
+	max-width: 1300px;
 	min-height: 900px;
 	background-color: #ffffff;
-	
-	/* Border */
-	border-style: solid;
-	border-width: 1px;
-	border-color: #CCCCCC;
-	/*box-shadow: 0px 0px 5px #000;*/
+
 }
 
 /* A bit of a hack to allow for re-sizing of videos in editor */
 .quill-editor iframe {
-    pointer-events: none;
+	pointer-events: none;
+}
+
+.ql-editor {
+	padding: 0px !important;
+  padding-top: 0px !important;
+  padding-right: 0px !important;
+  padding-bottom: 0px !important;
+  padding-left: 0px !important;
 }

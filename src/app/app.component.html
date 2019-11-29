@@ -7,18 +7,15 @@
 <app-navbar></app-navbar>
 
 <div class="row no-gutters body-container">
-    <div class="col-2 context-info" [hidden]="!isContextInfoEnabled()">
+    <!--<div class="col-2 context-info" [hidden]="!isContextInfoEnabled()">-->
+    <div class="col-2 context-info-container">
         <app-context-info></app-context-info>
     </div>
 
     <div class="col">
         <app-toolbar></app-toolbar>
-        <div class="row no-gutters">
-            <div class="col">
-                <div id="main-container">
-                    <router-outlet></router-outlet>
-                </div>
-            </div>
+        <div id="main-container">
+            <router-outlet></router-outlet>
         </div>
     </div>
 </div>
