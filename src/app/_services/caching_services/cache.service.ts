@@ -32,8 +32,13 @@ export class CacheService {
 	}
 
 	public SaveCache() {
-		localStorage.setItem(this.cacheId, JSON.stringify(this.cachedObjects))
-		localStorage.setItem(this.cacheId + '_timestamps', JSON.stringify(this.cacheTimeStamp))
+		try {
+			localStorage.setItem(this.cacheId, JSON.stringify(this.cachedObjects))
+			localStorage.setItem(this.cacheId + '_timestamps', JSON.stringify(this.cacheTimeStamp))
+		} catch (error) {
+			localStorage.clear()
+		}
+		
 		
 		this.LoadCache() // Makes sure that any object saved in the cache lists are destroyed
 	}
