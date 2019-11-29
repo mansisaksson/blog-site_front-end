@@ -5,10 +5,6 @@
    /* border-style: none; */
 }
 
-.centered-document {
-    margin-bottom: 300px;
-}
-
 /* Specify our own scrolling container */
 #scrolling-container {
     height: 100%;

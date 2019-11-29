@@ -9,6 +9,9 @@ import {
 } from '@angular/core';
 
 import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router'
+import { UIService } from '../../_services/index'
+
+import { faAlignLeft, faCog } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-toolbar',
@@ -21,8 +24,12 @@ export class ToolbarComponent  implements OnInit {
 
   toolbarComponent: ComponentRef<Component>
 
-  constructor(private router: Router,
-    private componentFactoryResolver: ComponentFactoryResolver) {
+  faCog = faCog
+
+  constructor(
+    private router: Router,
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private uiService: UIService) {
 
   }
 
@@ -61,5 +68,9 @@ export class ToolbarComponent  implements OnInit {
 
   isEnabled(): boolean {
     return this.toolbarComponent ? true : false
+  }
+
+  openContextMenu() {
+    this.uiService.openContextMenu()
   }
 }

@@ -1,3 +1,11 @@
-<div id="toolbar-container" [hidden]="!isEnabled()">
-  <ng-container #toolbarTarget></ng-container>
+<!--<div id="toolbar-container" [hidden]="!isEnabled()">-->
+<div id="toolbar-container">
+  <tr>
+    <th>
+      <button class="btn btn-info" (click)="openContextMenu()" style="margin-left: 4px; margin-top: 4px;">
+        <fa-icon [icon]="faCog"></fa-icon>
+      </button>
+    </th>
+    <th><ng-container #toolbarTarget></ng-container></th>
+  </tr>
 </div>
