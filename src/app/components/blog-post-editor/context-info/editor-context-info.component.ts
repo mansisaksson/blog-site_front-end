@@ -1,6 +1,7 @@
 import { Component, OnInit, } from '@angular/core';
 import { BlogPostEditorService, AlertService } from '../../../_services'
-import { ChapterContent, BlogPostMetaData, ChapterMetaData } from '../../../_models';
+import { BlogPostMetaData, ChapterMetaData } from '../../../_models';
+import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 interface NavTitle {
   fontSize: number,
@@ -19,10 +20,13 @@ class DrawableElem {
   styleUrls: ['./editor-context-info.component.css']
 })
 export class EditorContextInfoComponent implements OnInit {
+  faArrowUp = faArrowUp
+  faArrowDown = faArrowDown
+
   private navTitles: { [key: string]: NavTitle } = {
-    "h1": { fontSize: 12, padding: 10 },
-    "h2": { fontSize: 10, padding: 15 },
-    "h3": { fontSize: 8, padding: 20 },
+    "h1": { fontSize: 12, padding: 0 },
+    "h2": { fontSize: 10, padding: 0 },
+    "h3": { fontSize: 8, padding: 0 },
   }
 
   public blogPost: BlogPostMetaData = <BlogPostMetaData>{ title: "..." }
@@ -70,16 +74,4 @@ export class EditorContextInfoComponent implements OnInit {
     }
   }
 
-  parseChapter(chapter: ChapterContent) {
-    // let parser = new DOMParser()
-    // let htmlDoc = parser.parseFromString(chapter.content, "text/html")
-    // let elements = htmlDoc.querySelectorAll('h1, h2, h3')
-    // this.titleElements = []
-    // for (let index = 0; index < elements.length; index++) {
-    //   const element = elements[index]
-    //   if (this.navTitles[element.tagName.toLowerCase()]) {
-    //     this.titleElements.push(element)
-    //   }
-    // }
-  }
 }
