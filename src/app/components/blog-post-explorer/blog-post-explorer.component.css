@@ -1,35 +1,46 @@
 @charset "utf-8";
 /* CSS Document */
 
-.blog-post-link {
-    padding: 5px;
-    margin: 5px;
-    background-color: white;
-
-    border-style: solid;
-	border-width: 1px;
-    border-color: #CCCCCC;
-    /*box-shadow: 0px 0px 5px #000;*/
+.post-list__divider {
+    width: 30%;
+    margin: 2.2em 0 2.1em 0;
+    border-top: 1px solid #dddddd;
 }
 
 .thumbnail {
     vertical-align: middle;
 }
 
+.thumbnail-image {
+    width: 64px;
+    height: 38x;
+
+    border: 1px solid #ddd;
+    border-radius: 4px;
+
+    padding: 5px;
+}
+
+.thumbnail-image:hover {
+    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+  
+
 .blog-post-container {
-    width: 800px;
-    margin: auto;
+    width: 100%;
+    max-width: 800px;
+    margin-left: 100px;
+    margin-top: 75px;
 }
 
 .meta-data-text {
-    margin-bottom: 5px;
+    margin-top: 10px;
     font-size: 12px;
     font-style: normal;
     font-weight: bold;
 }
 
 .description-text {
-    margin: 0px;
     font-size: 16px;
     font-style: normal;
     font-weight: normal;
