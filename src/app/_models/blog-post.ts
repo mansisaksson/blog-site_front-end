@@ -19,6 +19,7 @@ export interface BlogPostMetaData {
     upvotes: number
     downvotes: number
     thumbnailURI: string
+    bannerURI: string
     submittedAt: number
     lastUpdated: number
     revision: number

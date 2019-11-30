@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BlogPostService } from './blog-post.service'
+import { FileService } from './file-service'
 import { AlertService } from './alert.service';
 
 import { BlogPostMetaData, ChapterMetaData } from '../_models/index';
@@ -40,7 +41,7 @@ function WhitelistAttributes(Format, Attributes) {
 			{}
 		)
 	}
-	
+
 	Format.prototype.format = function format(name: string, value: any): void {
 		if (Attributes.indexOf(name) !== -1) {
 			if (value) {
@@ -86,6 +87,7 @@ export class BlogPostEditorService {
 
 	constructor(
 		private BlogPostService: BlogPostService,
+		private fileService: FileService,
 		private alertService: AlertService
 	) {
 
@@ -273,4 +275,5 @@ export class BlogPostEditorService {
 			}
 		})
 	}
+
 }

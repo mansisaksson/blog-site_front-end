@@ -5,7 +5,8 @@
 
 export const environment = {
   production: false,
-  backendAddr: 'http://story-site-backend.mansisaksson.com:3000',
+  //backendAddr: 'http://story-site-backend.mansisaksson.com:3000',
+  backendAddr: 'http://localhost:3000',
   userNameRegex: '^[A-Za-z0-9_-]{4,15}$',
   userPasswordRegex: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$'
 }

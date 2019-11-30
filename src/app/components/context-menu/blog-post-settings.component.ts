@@ -42,46 +42,58 @@ export class BlogPostSettingsComponent implements OnInit {
     form.addTextInput('Title', 'title', { multiline: false }, this.blogPost.title)
     form.addTextInput('Description', 'description', { multiline: true, rows: 4, charLimit: 500 }, this.blogPost.description)
     form.addDropdown('Accessibility', 'accessibility', this.blogPost.accessibility)
-    .addDropdownEntry('public', 'Public')
-    .addDropdownEntry('private', 'Private')
+      .addDropdownEntry('public', 'Public')
+      .addDropdownEntry('private', 'Private')
     form.addFileSelection('Thumbnail', 'thumbnail', { fileTypes: ['.png'], fileLimit: '1mb' })
+    form.addFileSelection('Banner', 'banner', { fileTypes: ['.png'], fileLimit: '1mb' })
 
-    let onSubmit = (values: FormValues, closeForm, showError) => {
+    let onSubmit = async (values: FormValues, closeForm, showError) => {
       let newBlogProperties = {
         title: values['title'],
         description: values['description'],
         accessibility: values['accessibility']
       }
 
-      let updateBlogPost = () => {
-        this.blogEditor.updateBlogPost(newBlogProperties).then(() => {
-          this.alertService.success('Blog Post Updated!')
-          closeForm()
-        }).catch(e => {
-          this.alertService.error(e)
-          closeForm()
+      function getThumbnailImage(): Promise<string> {
+        return new Promise<string>((resolve) => {
+          let newThumbnail = <File>values['thumbnail']
+          if (newThumbnail) {
+            let fileReader = new FileReader()
+            fileReader.onload = (e) => {
+              resolve(btoa(<string>fileReader.result))
+            }
+            fileReader.readAsBinaryString(newThumbnail)
+          } else {
+            resolve(undefined)
+          }
         })
       }
 
-      // Set thumbnail property
-      let newThumbnail = <File>values['thumbnail']
-      if (newThumbnail) {
-        let fileSize = newThumbnail.size / 1024 / 1024 // in MB
-        if (fileSize <= 2) {
-          let fileReader = new FileReader()
-          fileReader.onload = (e) => {
-            let base64String = btoa(<string>fileReader.result)
-            newBlogProperties['thumbnail']  = base64String
-            updateBlogPost()
+      function getBannerImage(): Promise<string> {
+        return new Promise<string>((resolve) => {
+          let newBanner = <File>values['banner']
+          if (newBanner) {
+            let fileReader = new FileReader()
+            fileReader.onload = (e) => {
+              resolve(btoa(<string>fileReader.result))
+            }
+            fileReader.readAsBinaryString(newBanner)
+          } else {
+            resolve(undefined)
           }
-          fileReader.readAsBinaryString(newThumbnail)
-        } else {
-          showError('Thumbnail file size too big')
-          return
-        }
-      } else {
-        updateBlogPost()
+        })
       }
+
+      newBlogProperties['thumbnail'] = await getThumbnailImage()
+      newBlogProperties['banner'] = await getBannerImage()
+
+      this.blogEditor.updateBlogPost(newBlogProperties).then(() => {
+        this.alertService.success('Blog Post Updated!')
+        closeForm()
+      }).catch(e => {
+        this.alertService.error(e)
+        closeForm()
+      })
     }
     this.uiService.promptForm(form, false, onSubmit)
   }

@@ -198,6 +198,7 @@ export class UIService {
 	private registerMessageSubject = new Subject<any>()
 	private formMessageSubject = new Subject<any>()
 	private contextMenuMessageSubject = new Subject<any>()
+	private bannerURISubject = new Subject<string>()
 
 	constructor(
 		private router: Router) {
@@ -228,6 +229,10 @@ export class UIService {
 		})
 	}
 
+	setBannerURI(bannerURI: string) {
+		this.bannerURISubject.next(bannerURI)
+	}
+
 	openContextMenu() {
     this.contextMenuMessageSubject.next({
 			event: 'open'
@@ -248,6 +253,10 @@ export class UIService {
 
 	getContextMenuPrompt(): Observable<any> {
 		return this.contextMenuMessageSubject.asObservable();
+	}
+
+	getBannerURIObserver(): Observable<any> {
+		return this.bannerURISubject.asObservable();
 	}
 	
 }

@@ -5,11 +5,13 @@ import {
   ViewChild,
   ComponentRef,
   ComponentFactoryResolver,
-  ComponentFactory,
-  Type
+  ComponentFactory
 } from '@angular/core';
 
 import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router'
+
+import { environment } from '../../../environments/environment'
+import { UIService } from './../../_services'
 
 @Component({
   selector: 'app-context-info',
@@ -22,15 +24,28 @@ export class ContextInfoComponent implements OnInit {
 
   contextInfoComponent: ComponentRef<Component>
 
-  constructor(private router: Router,
-    private componentFactoryResolver: ComponentFactoryResolver) { 
+  bannerURL = "assets/default_banner.png"
+
+  constructor(
+    private router: Router,
+    private uiService: UIService,
+    private componentFactoryResolver: ComponentFactoryResolver
+  ) {
   }
 
   ngOnInit() {
     this.router.events
-    .filter(e => e instanceof NavigationEnd)
-    .forEach(e => {
-      this.updateContent(this.router.routerState.snapshot.root)
+      .filter(e => e instanceof NavigationEnd)
+      .forEach(e => {
+        this.updateContent(this.router.routerState.snapshot.root)
+      })
+
+    this.uiService.getBannerURIObserver().subscribe(uri => {
+      if (uri) {
+        this.bannerURL = environment.backendAddr + '/api/file/content/' + uri
+      } else {
+        this.bannerURL = "assets/default_banner.png"
+      }
     })
   }
 

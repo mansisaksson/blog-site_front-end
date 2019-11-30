@@ -1,5 +1,5 @@
 import { Component, OnInit, } from '@angular/core';
-import { BlogPostEditorService, AlertService } from '../../../_services'
+import { BlogPostEditorService, AlertService, UIService } from '../../../_services'
 import { BlogPostMetaData, ChapterMetaData } from '../../../_models';
 import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -22,6 +22,7 @@ class DrawableElem {
 export class EditorContextInfoComponent implements OnInit {
   faArrowUp = faArrowUp
   faArrowDown = faArrowDown
+  public bannerURI = "" // Hacky way of linking banner to ContextInfoComponent
 
   private navTitles: { [key: string]: NavTitle } = {
     "h1": { fontSize: 12, padding: 0 },
@@ -34,6 +35,7 @@ export class EditorContextInfoComponent implements OnInit {
 
   constructor(
     private blogEditor: BlogPostEditorService,
+    private uiService: UIService,
     private alertService: AlertService
     ) {
 
@@ -44,6 +46,7 @@ export class EditorContextInfoComponent implements OnInit {
       this.titleElements = []
       if (blogPost) {
         this.blogPost = blogPost
+        this.uiService.setBannerURI(blogPost.bannerURI)
         this.blogPost.chapters.forEach((chapter: ChapterMetaData) => {
           let elem = <DrawableElem>{
             tagName: 'h2',

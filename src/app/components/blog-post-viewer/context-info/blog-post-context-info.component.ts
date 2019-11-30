@@ -1,5 +1,5 @@
 import { Component, OnInit, } from '@angular/core'
-import { BlogPostService, UserService, AlertService } from '../../../_services'
+import { BlogPostService, UserService, UIService } from '../../../_services'
 import { BlogPostMetaData, User } from '../../../_models'
 import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 
@@ -17,7 +17,7 @@ export class BlogPostContextInfoComponent implements OnInit {
 
   constructor(
     private blogPostService: BlogPostService,
-    private alertService: AlertService,
+    private uiService: UIService,
     private userService: UserService
     ) {
       
@@ -30,6 +30,7 @@ export class BlogPostContextInfoComponent implements OnInit {
       }
 
       this.blogPost = blogPost
+      this.uiService.setBannerURI(blogPost.bannerURI)
       this.userService.getUsers([this.blogPost.authorId]).then(users => {
         if (users !== undefined && users.length > 0) {
           this.author = users[0]
@@ -40,4 +41,5 @@ export class BlogPostContextInfoComponent implements OnInit {
       })
     })
   }
+
 }

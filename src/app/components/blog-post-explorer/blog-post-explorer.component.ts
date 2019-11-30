@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { BlogPostService, AuthenticationService, AlertService, UserService } from '../../_services/index'
+import { BlogPostService, AlertService, UserService, UIService } from '../../_services/index'
 import { BlogPostMetaData, User } from '../../_models/index'
 import { environment } from '../../../environments/environment'
 
@@ -18,7 +18,7 @@ export class BlogPostExplorerComponent implements OnInit {
     private BlogPostService: BlogPostService,
     private alertService: AlertService,
     private activatedRoute: ActivatedRoute,
-    private authService: AuthenticationService,
+    private uiService: UIService,
     private userService: UserService) {
   }
 
@@ -28,6 +28,7 @@ export class BlogPostExplorerComponent implements OnInit {
       this.userId = params['user_id']
     })
 
+    this.uiService.setBannerURI(undefined)
     this.hasInit = true
     this.refreshBlogList()
   }
@@ -86,7 +87,7 @@ export class BlogPostExplorerComponent implements OnInit {
 
   getThumbnailURL(thumbnailURI): string {
     if (thumbnailURI && thumbnailURI.length > 0) {
-      return environment.backendAddr + '/files/' + thumbnailURI
+      return environment.backendAddr + '/api/file/content/' + thumbnailURI
     } else {
       return "assets/default_thumbnail.png"
     }
