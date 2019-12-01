@@ -54,38 +54,22 @@ export class BlogPostSettingsComponent implements OnInit {
         accessibility: values['accessibility']
       }
 
-      function getThumbnailImage(): Promise<string> {
+      function getImageData(file: File): Promise<string> {
         return new Promise<string>((resolve) => {
-          let newThumbnail = <File>values['thumbnail']
-          if (newThumbnail) {
+          if (file) {
             let fileReader = new FileReader()
             fileReader.onload = (e) => {
               resolve(btoa(<string>fileReader.result))
             }
-            fileReader.readAsBinaryString(newThumbnail)
+            fileReader.readAsBinaryString(file)
           } else {
             resolve(undefined)
           }
         })
       }
 
-      function getBannerImage(): Promise<string> {
-        return new Promise<string>((resolve) => {
-          let newBanner = <File>values['banner']
-          if (newBanner) {
-            let fileReader = new FileReader()
-            fileReader.onload = (e) => {
-              resolve(btoa(<string>fileReader.result))
-            }
-            fileReader.readAsBinaryString(newBanner)
-          } else {
-            resolve(undefined)
-          }
-        })
-      }
-
-      newBlogProperties['thumbnail'] = await getThumbnailImage()
-      newBlogProperties['banner'] = await getBannerImage()
+      newBlogProperties['thumbnail'] = await getImageData(<File>values['thumbnail'])
+      newBlogProperties['banner'] = await getImageData(<File>values['banner'])
 
       this.blogEditor.updateBlogPost(newBlogProperties).then(() => {
         this.alertService.success('Blog Post Updated!')

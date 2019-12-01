@@ -4,12 +4,20 @@ import { HomeComponent } from './components/home/index'
 import { AuthGuard } from './_guards/index'
 
 import { BlogPostExplorerComponent } from './components/blog-post-explorer/blog-post-explorer.component'
-import { BlogPostViewerComponent, BlogPostContextInfoComponent } from './components/blog-post-viewer'
+import { BlogPostViewerComponent } from './components/blog-post-viewer'
 import { EditUserComponent } from './components/edit-user/edit-user.component'
+import { AuthorContextInfoComponent } from './components/context-info'
 import { BlogPostEditorComponent, EditorToolbarComponent, EditorContextInfoComponent } from './components/blog-post-editor'
 import { CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent, SaveBlogPostComponent, AddChapterComponent, DeleteChapterComponent, BlogPostSettingsComponent } from './components/context-menu'
 
 const appRoutes: Routes = [
+  // Redirects
+  { path: 'story-explorer', redirectTo: 'blog-post-explorer' },
+  { path: 'story-explorer/:user_id', redirectTo: 'blog-post-explorer/:user_id' },
+  { path: 'story-viewer', redirectTo: 'blog-post-viewer' },
+  { path: 'blog-post-editor/:blog_id', redirectTo: 'story-editor/:blog_id' },
+
+
   {
     path: '',
     component: HomeComponent,
@@ -31,7 +39,8 @@ const appRoutes: Routes = [
     component: BlogPostViewerComponent,
     data: { 
       contextMenu: [[CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent]],
-      contextInfo: BlogPostContextInfoComponent
+      contextInfo: AuthorContextInfoComponent,
+      contextInfoParams: [ "blog-post-context" ]
     }
   },
   {
@@ -49,7 +58,11 @@ const appRoutes: Routes = [
   {
     path: 'edit-user',
     component: EditUserComponent,
-    data: { contextMenu: [] }
+    data: { 
+      contextMenu: [],
+      contextInfo: AuthorContextInfoComponent,
+      contextInfoParams: [ "user-editor-context" ]
+    }
   },
 
   // otherwise redirect to home

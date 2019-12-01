@@ -18,7 +18,7 @@ export class BlogPostEditorComponent implements AfterViewInit, OnDestroy {
     private blogEditorService: BlogPostEditorService,
     private activatedRoute: ActivatedRoute) {
 
-    // Default values to avout NULL reads
+    // Default values to avoid NULL reads
     this.blogPost = <BlogPostMetaData>{
       title: "..."
     }

@@ -1,45 +1,67 @@
 <div class="centered-document">
-	<div style="max-width: 600px; margin: auto;">
+  <div style="max-width: 600px; margin: auto;">
 
-		<h1>Edit {{user.username}}</h1>
-		<form [formGroup]="registerForm">
+    <h1>Edit {{user.username}}</h1>
+    <form [formGroup]="registerForm">
+
+      <div class="form-group">
+        <label>User Name</label>
+        <input type="text" formControlName="userName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.userName.errors }" />
+        <div *ngIf="submitted && f.userName.errors" class="invalid-feedback">
+          <div *ngIf="f.userName.errors.required">User Name is required</div>
+          <div *ngIf="f.userName.errors.pattern">Invalid User Name</div>
+				</div>
+				
+        <label>Display Name</label>
+				<input type="text" formControlName="displayName" class="form-control" />
+				
+				<label>Description</label>
+        <input type="text" formControlName="description" class="form-control" />
+      </div>
+
+      <hr>
+
+      <div class="form-group">
+        <label>Change Password</label>
+        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.pattern">Invalid Password</div>
+          <div *ngIf="f.password.errors.pattern">- At least one upper case letter</div>
+          <div *ngIf="f.password.errors.pattern">- At least one lower case English letter</div>
+          <div *ngIf="f.password.errors.pattern">- At least one digit</div>
+          <div *ngIf="f.password.errors.pattern">- Minimum eight in length</div>
+        </div>
+
+        <label>Confirm Password</label>
+        <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+        <div *ngIf="submitted && f.confirmPassword.errors?.MatchPassword" class="invalid-feedback">
+          <div *ngIf="f.confirmPassword.errors?.MatchPassword">Passwords does not match</div>
+        </div>
+      </div>
+
+			<hr>
 			
-			<div class="form-group">
-				<label>User Name</label>
-				<input type="text" formControlName="userName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.userName.errors }" />
-				<div *ngIf="submitted && f.userName.errors" class="invalid-feedback">
-					<div *ngIf="f.userName.errors.required">User Name is required</div>
-					<div *ngIf="f.userName.errors.pattern">Invalid User Name</div>
-				</div>
+      <div class="form-group">
+        <label>Profile Picture</label>
+				<input type="file" formControlName="profilePicture" class="form-control-file" accept=".png" (change)="uploadProfilePicture($event)" />
+				
 			</div>
-
 			<div class="form-group">
-				<label>Change Password</label>
-				<input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-				<div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-					<div *ngIf="f.password.errors.pattern">Invalid Password</div>
-					<div *ngIf="f.password.errors.pattern">- At least one upper case letter</div>
-					<div *ngIf="f.password.errors.pattern">- At least one lower case English letter</div>
-					<div *ngIf="f.password.errors.pattern">- At least one digit</div>
-					<div *ngIf="f.password.errors.pattern">- Minimum eight in length</div>
-				</div>
-
-				<label>Confirm Password</label>
-				<input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
-				<div *ngIf="submitted && f.confirmPassword.errors?.MatchPassword" class="invalid-feedback">
-					<div *ngIf="f.confirmPassword.errors?.MatchPassword">Passwords does not match</div>
-				</div>
+				<label>Banner</label>
+				<input type="file" formControlName="banner" class="form-control-file" accept=".png" (change)="uploadBanner($event)" />
 			</div>
+			
+			<hr>
 
-			<div class="form-group">
-				<button [disabled]="loading" class="btn btn-primary" (click)="onSubmit()">Update User</button>
-			</div>
+      <div class="form-group">
+        <button [disabled]="loading" class="btn btn-primary" (click)="onSubmit()">Update User</button>
+      </div>
 
-			<div class="form-group">
-				<button [disabled]="loading" class="btn" (click)="onDeleteUser()">Delete User</button>
-			</div>
+      <div class="form-group">
+        <button [disabled]="loading" class="btn" (click)="onDeleteUser()">Delete User</button>
+      </div>
 
-		</form>
-	
-	</div>
+    </form>
+
+  </div>
 </div>

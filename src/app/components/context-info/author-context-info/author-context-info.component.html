@@ -2,10 +2,10 @@
 <div class="blog-post-context-info-container">
   <div class="center-info">
     <div class="center-info-content">
-        <img class="author-image" src="assets/default_thumbnail.png" >
-        <h3>{{author.username}}</h3>
+        <img class="author-image" src="{{getAuthorProfilePicture()}}" >
+        <h3>{{getAuthorDisplayName()}}</h3>
         <hr class="divider">
-        <p>todo: description</p>
+        <p>{{author.description}}</p>
     </div>
   </div>
 </div>

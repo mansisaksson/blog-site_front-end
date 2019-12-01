@@ -52,11 +52,16 @@ export class ContextInfoComponent implements OnInit {
   private updateContent(snapshot: ActivatedRouteSnapshot): void {
     this.clearContextInfo()
     let contextInfo: any = (snapshot.data as { contextInfo: Component }).contextInfo
+    let contextInfoParams: any = (snapshot.data as { contextInfoParams: string[] }).contextInfoParams
 
     if (contextInfo != undefined) {
       let factory: ComponentFactory<Component> = this.componentFactoryResolver.resolveComponentFactory(contextInfo)
       let componentRef: ComponentRef<Component> = this.contextInfoTarget.createComponent(factory)
       this.contextInfoComponent = componentRef
+
+      if (this.contextInfoComponent && this.contextInfoComponent.instance['contextInfoParams'] != undefined) {
+        this.contextInfoComponent.instance['contextInfoParams'] = contextInfoParams
+      }
     }
 
     for (let childSnapshot of snapshot.children) {
