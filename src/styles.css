@@ -1,19 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
 .centered-document {
-	margin-left: 3em;
+	margin-left: 4em;
 	margin-right: 2em;
 	margin-top: 2em;
 	max-width: 80em;
 	min-height: 50em;
 	background-color: #ffffff;
-}
-
-/* small windows */
-@media (max-width: 1000px) {
-  .centered-document {
-		margin-left: 2em;
-	}
 }
 
 /* A bit of a hack to allow for re-sizing of videos in editor */
@@ -27,4 +20,20 @@
   padding-right: 0px !important;
   padding-bottom: 0px !important;
   padding-left: 0px !important;
+}
+
+.h2, h2 {
+	font-size: 2rem !important;
+	color: black;
+}
+
+/* small windows */
+@media (max-width: 1000px) {
+	.centered-document {
+		margin-left: 2em;
+	}
+
+  .h2, h2 {
+		font-size: 1.5rem !important;
+	}
 }
