@@ -1,7 +1,7 @@
 ﻿import { Routes, RouterModule } from '@angular/router'
 
 import { HomeComponent } from './components/home/index'
-import { AuthGuard } from './_guards/index'
+//import { AuthGuard } from './_guards/index'
 
 import { BlogPostExplorerComponent } from './components/blog-post-explorer/blog-post-explorer.component'
 import { BlogPostViewerComponent } from './components/blog-post-viewer'

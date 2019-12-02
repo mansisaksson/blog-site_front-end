@@ -14,7 +14,7 @@ export class AlertComponent implements OnDestroy {
 
 	constructor(private alertService: AlertService) {
 		// subscribe to alert messages
-		this.subscription = alertService.getMessage().subscribe(message => {
+		this.subscription = this.alertService.getMessage().subscribe(message => {
 			if (message) {
 				let key = this.makeid()
 				message["key"] = key

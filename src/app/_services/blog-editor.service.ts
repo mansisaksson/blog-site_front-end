@@ -87,7 +87,6 @@ export class BlogPostEditorService {
 
 	constructor(
 		private BlogPostService: BlogPostService,
-		private fileService: FileService,
 		private alertService: AlertService
 	) {
 

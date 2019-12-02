@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http'
 import { Observable, BehaviorSubject } from 'rxjs/Rx'
 import { User, BackendResponse } from '../_models/index'
 import { UIService } from './ui.service'
-import { AlertService } from './alert.service'
 import { CacheManagementService, UserCacheService } from './caching_services'
 import { environment } from '../../environments/environment'
 
@@ -17,7 +16,6 @@ export class AuthenticationService {
   constructor(
     private http: HttpClient,
     private uiService: UIService,
-    private alertService: AlertService,
     private userCacheService: UserCacheService,
     private cacheManagementService: CacheManagementService) {
     this.validateLoginState()

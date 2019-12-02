@@ -11,7 +11,7 @@ import {
 import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router'
 import { UIService } from '../../_services/index'
 
-import { faAlignLeft, faCog } from '@fortawesome/free-solid-svg-icons'
+import { faCog } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-toolbar',

@@ -93,8 +93,4 @@ export class BlogPostExplorerComponent implements OnInit {
     }
   }
 
-  // getUserObject(userId: string): User {
-  //   let user = this.authors.find(user => user.id == userId)
-  //   return user ? user : <User>{ username: "Unknown User" }
-  // }
 }
