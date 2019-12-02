@@ -1,15 +1,8 @@
 ---------- TODO ----------
-[ ] Add Blog post banner
-
-[ ] Show blog post banner + description + summary in the context info
-	
-[ ] Add Author information in the left sidebar when displaying a blog-post
 
 [ ] If viable, re-work context menu to be a service/directive instead of being defined by the routing table
 	
 [ ] User Page, visit a single users page.
-
-[ ] Expand content to fill entire page
 
 [ ] Go over default font + font sizes
 
@@ -28,6 +21,14 @@ e.g. not on the same page?
 
 
 ---------- DONE ----------
+[x] Add Blog post banner
+
+[x] Show blog post banner + description + summary in the context info
+	
+[x] Add Author information in the left sidebar when displaying a blog-post
+
+[x] Expand content to fill entire page
+
 [x] Move context menu into a drop-down, or slide-out, menu
 
 [x] Add padding under text editor so that text is not at the bottom of the screen while typing
