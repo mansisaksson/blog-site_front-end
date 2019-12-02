@@ -7,23 +7,38 @@
 }
 
 .main-document-container {
+	width: 100%;
+}
+
+.router-outlet-container {
 	height: calc(100vh - 108px);
 	overflow-y: auto;
 	width: 100%;
 }
 
-.context-info-container {
+.vertical-context-info-container {
 	width: 40em;
+	visibility: visible;
+}
+
+.horizontal-context-info-container {
+	height: 0px;
+	visibility: hidden;
 }
 
 /* small windows */
-@media (max-width: 1000px) { 
-  .context-info-container {
-		width: 100%;
-		max-width: 100%;
+@media (max-width: 1000px) {
+  .vertical-context-info-container {
+		width: 0px;
+		visibility: hidden;
+	}
+
+	.horizontal-context-info-container {
+		height: 20em;
+		visibility: visible;
 	}
 	
-	.body-container {
+	/*.body-container {
 		flex-direction: column;
-	}
+	}*/
 }

@@ -7,20 +7,7 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  private bIsContextInfoEnabled: boolean = false
+  constructor() {
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
-    this.router.events
-      .filter(e => e instanceof NavigationEnd)
-      .forEach(e => {
-        this.bIsContextInfoEnabled = this.route.root.firstChild.snapshot.data['contextInfo'] ? true : false
-      })
-  }
-
-  isContextInfoEnabled(): boolean {
-    return this.bIsContextInfoEnabled
   }
 }

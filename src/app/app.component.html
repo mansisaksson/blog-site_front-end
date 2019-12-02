@@ -7,13 +7,17 @@
 <app-navbar></app-navbar>
 
 <div class="body-container">
-    <!--<div class="col-2 context-info" [hidden]="!isContextInfoEnabled()">-->
-    <div class="context-info-container">
-        <app-context-info></app-context-info>
-    </div>
+  <div class="vertical-context-info-container">
+    <app-context-info></app-context-info>
+  </div>
 
-    <div class="main-document-container">
-        <app-toolbar></app-toolbar>
-        <router-outlet></router-outlet>
+  <div class="main-document-container">
+    <app-toolbar></app-toolbar>
+    <div class="router-outlet-container">
+      <div class="horizontal-context-info-container">
+        <app-context-info></app-context-info>
+      </div>
+      <router-outlet></router-outlet>
     </div>
+  </div>
 </div>
