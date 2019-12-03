@@ -3,12 +3,31 @@ import { HttpClient } from '@angular/common/http'
 import { User, BackendResponse } from '../_models/index'
 import { environment } from './../../environments/environment'
 import { UserCacheService } from './caching_services';
+import { BehaviorSubject, Observable } from 'rxjs'
 
 @Injectable()
 export class UserService {
+	private currentlyViewedUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined)
+
 	constructor(
 		private http: HttpClient,
 		private userCacheService: UserCacheService) {
+	}
+
+	getUser(id: string): Promise<User> {
+		return new Promise<User>((resolve, reject) => {
+			return this.getUsers([id]).then(users => {
+				resolve(users && users.length > 0 ? users[0] : undefined)
+			}).catch(e => reject(e))
+		})
+	}
+
+	setCurrentlyViewedUser(user: User) {
+		this.currentlyViewedUser.next(user)
+	}
+
+	getCurrentlyViewedUser(): Observable<User> {
+		return this.currentlyViewedUser.asObservable()
 	}
 
 	getUsers(ids: string[]): Promise<User[]> {

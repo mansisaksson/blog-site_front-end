@@ -47,7 +47,9 @@ export class EditUserComponent implements OnInit {
       if (!this.user) {
         this.user = new User()
       }
+      this.userService.setCurrentlyViewedUser(user)
       this.uiService.setBannerURI(this.user.bannerURI)
+
       this.registerForm.get('userName').setValue(this.user.username)
       this.registerForm.get('displayName').setValue(this.user.displayName)
       this.registerForm.get('description').setValue(this.user.description)

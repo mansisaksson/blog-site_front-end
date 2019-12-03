@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterContentInit } from '@angular/core'
-import { BlogPostService, UserService, UIService, AuthenticationService } from '../../../_services'
+import { UserService } from '../../../_services'
 import { BlogPostMetaData, User } from '../../../_models'
 import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { environment } from './../../../../environments/environment'
+import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-author-context-info',
@@ -16,46 +17,20 @@ export class AuthorContextInfoComponent implements OnInit {
   public blogPost: BlogPostMetaData = <BlogPostMetaData>{ title: "..." }
   public author: User = <User>{ username: "..." }
 
-  contextInfoParams : string[] = []
-
   constructor(
-    private blogPostService: BlogPostService,
-    private uiService: UIService,
-    private userService: UserService,
-    private authService: AuthenticationService
+    private userService: UserService
   ) {
-
   }
 
   ngOnInit() {
-    if (this.contextInfoParams && this.contextInfoParams.includes('blog-post-context')) {
-      this.blogPostService.getCurrentlyViewedBlogPost().subscribe(blogPost => {
-        if (!blogPost) {
-          return;
-        }
-
-        this.blogPost = blogPost
-        this.uiService.setBannerURI(blogPost.bannerURI)
-
-        this.userService.getUsers([this.blogPost.authorId]).then(users => {
-          if (users !== undefined && users.length > 0) {
-            this.author = users[0]
-          }
-          else {
-            this.author = <User>{ username: "error" }
-          }
-        })
-      })
-    }
-    else if (this.contextInfoParams && this.contextInfoParams.includes('user-editor-context')) {
-      this.authService.getCurrentUser().subscribe(user => {
-        if (!user) {
-          return;
-        }
+    this.userService.getCurrentlyViewedUser().subscribe(user => {
+      if (user) {
         this.author = user
-        this.uiService.setBannerURI(this.author.bannerURI)
-      })
-    }
+      }
+      else {
+        this.author = <User>{ username: "error" }
+      }
+    })
   }
 
   getAuthorProfilePicture() {

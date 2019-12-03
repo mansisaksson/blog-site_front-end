@@ -32,15 +32,17 @@ const appRoutes: Routes = [
   {
     path: 'blog-post-explorer/:user_id',
     component: BlogPostExplorerComponent,
-    data: { contextMenu: [CreateBlogPostComponent] }
+    data: { 
+      contextMenu: [CreateBlogPostComponent],
+      contextInfo: AuthorContextInfoComponent
+    }
   },
   {
     path: 'blog-post-viewer/:blog_id',
     component: BlogPostViewerComponent,
     data: { 
       contextMenu: [[CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent]],
-      contextInfo: AuthorContextInfoComponent,
-      contextInfoParams: [ "blog-post-context" ]
+      contextInfo: AuthorContextInfoComponent
     }
   },
   {
@@ -60,8 +62,7 @@ const appRoutes: Routes = [
     component: EditUserComponent,
     data: { 
       contextMenu: [],
-      contextInfo: AuthorContextInfoComponent,
-      contextInfoParams: [ "user-editor-context" ]
+      contextInfo: AuthorContextInfoComponent
     }
   },
 

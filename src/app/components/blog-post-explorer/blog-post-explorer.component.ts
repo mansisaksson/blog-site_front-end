@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment'
 })
 export class BlogPostExplorerComponent implements OnInit {
   BlogPostMetaData: BlogPostMetaData[] = []
-  authors: { [key:string]: User } = {}
+  authors: { [key: string]: User } = {}
   userId: string = ""
 
   constructor(
@@ -24,11 +24,18 @@ export class BlogPostExplorerComponent implements OnInit {
 
   hasInit = false
   ngOnInit() {
+    this.uiService.setBannerURI(undefined)
+
     this.activatedRoute.params.subscribe(params => {
       this.userId = params['user_id']
+      if (this.userId) {
+        this.userService.getUser(this.userId).then(user => {
+          this.uiService.setBannerURI(user.bannerURI)
+          this.userService.setCurrentlyViewedUser(user)
+        }).catch(e => { })
+      }
     })
 
-    this.uiService.setBannerURI(undefined)
     this.hasInit = true
     this.refreshBlogList()
   }
@@ -83,14 +90,14 @@ export class BlogPostExplorerComponent implements OnInit {
         "Aug", "Sep", "Oct",
         "Nov", "Dec"
       ];
-    
+
       var day = date.getDate();
       var monthIndex = date.getMonth();
       var year = date.getFullYear();
-    
+
       return day + ' ' + monthNames[monthIndex] + ' ' + year;
     }
-    
+
     return formatDate(new Date(date))
   }
 
