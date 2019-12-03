@@ -36,15 +36,15 @@
     <!-- Sign Out -->
     <ng-template #loggedInBlock>
       <div>
-        <a class="btn btn-outline-dark" style="margin-right: 5px;" routerLink="/edit-user">{{currentUser.username}}</a>
-        <a (click)="signOut()" class="btn btn-info my-2 my-sm-0">Sign Out</a>
+        <button class="btn btn-outline-dark" style="margin-right: 5px;" routerLink="/edit-user">{{currentUser.username}}</button>
+        <button class="btn btn-primary" (click)="signOut()">Sign Out</button>
       </div>
     </ng-template>
 
     <!-- Sign In -->
     <ng-template #loggedOutBlock>
       <div>
-        <button (click)="signIn()" class="btn btn-info" style="margin-right: 5px;">Sign In</button>
+        <button (click)="signIn()" class="btn btn-primary" style="margin-right: 5px;">Sign In</button>
         <button (click)="register()" class="btn btn-outline-dark">Register</button>
       </div>
     </ng-template>

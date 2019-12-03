@@ -75,6 +75,29 @@ export class BlogPostExplorerComponent implements OnInit {
     return Math.floor(seconds) + " seconds"
   }
 
+  formatedTime(date: number) {
+    function formatDate(date) {
+      var monthNames = [
+        "Jan", "Feb", "Mar",
+        "Apr", "May", "Jun", "Jul",
+        "Aug", "Sep", "Oct",
+        "Nov", "Dec"
+      ];
+    
+      var day = date.getDate();
+      var monthIndex = date.getMonth();
+      var year = date.getFullYear();
+    
+      return day + ' ' + monthNames[monthIndex] + ' ' + year;
+    }
+    
+    return formatDate(new Date(date))
+  }
+
+  getAuthorName(author: User) {
+    return author.displayName ? author.displayName : author.username
+  }
+
   getAccessibilityColor(accessibility: string): string {
     switch (accessibility) {
       case 'public':

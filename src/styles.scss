@@ -1,0 +1,51 @@
+/* custom.scss */    
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+
+$primary:       $gray-800;
+$secondary:     $gray-600;
+$success:       $teal;
+$info:          $gray-400;
+$warning:       $yellow;
+$danger:        $red;
+$light:         $gray-200;
+$dark:          $gray-900;
+
+$theme-colors: (
+  "primary":   $primary,
+  "secondary": $secondary,
+  "success":   $success,
+  "info":      $info,
+  "warning":   $warning,
+  "danger":    $danger,
+  "light":     $light,
+  "dark":      $dark
+);
+
+$link-color: rgb(138, 1, 138);
+
+$btn-border-radius: 0;
+$btn-border-radius-lg: 0;
+$btn-border-radius-sm: 0;
+
+$input-border-radius: 0;
+$input-border-radius-lg: 0;
+$input-border-radius-sm: 0;
+
+$nav-tabs-border-radius: 0;
+$nav-pills-border-radius: 0;
+$navbar-toggler-border-radius: 0;
+$dropdown-border-radius: 0;
+$dropdown-inner-border-radius: 0;
+
+$card-border-radius: 0;
+$card-inner-border-radius: 0;
+$tooltip-border-radius: 0;
+
+$modal-content-border-radius: 0;
+
+$alert-border-radius: 0;
+$progress-border-radius: 0;
+
+/* finally, import Bootstrap to set the changes! */
+@import "../node_modules/bootstrap/scss/bootstrap";

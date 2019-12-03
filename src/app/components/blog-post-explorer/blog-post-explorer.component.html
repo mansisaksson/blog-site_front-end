@@ -14,7 +14,7 @@
         <span>Read More</span>
       </button>
       
-      <p class="meta-data-text">submitted {{timeSince(metaData.submittedAt)}} ago by {{authors[metaData.authorId].username}}</p>
+      <p class="meta-data-text">{{formatedTime(metaData.submittedAt)}} • <a [routerLink]="['/blog-post-explorer', metaData.authorId]">{{getAuthorName(authors[metaData.authorId])}}</a></p>
 
     </div>
     
