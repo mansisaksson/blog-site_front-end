@@ -117,7 +117,8 @@ export class BlogPostEditorService {
 					modules: {
 						toolbar: { container: toolbarContainer },
 						imageResize: {},
-						videoResize: {}
+						videoResize: {},
+						syntax: true
 					},
 					scrollingContainer: scrollingContainer,
 					theme: 'snow'

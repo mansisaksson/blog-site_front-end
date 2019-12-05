@@ -1,5 +1,28 @@
 import { Component } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+
+declare let hljs: any
+
+hljs.configure({
+  languages: [
+    'javascript', 
+    'typescript', 
+    'json',
+    'ruby',
+    'pearl',
+    'cmake',
+    'css',
+    'scss',
+    'shell',
+    'sql',
+    'xml',
+    'ini',
+    'java',
+    'lua',
+    'cs',
+    'python', 
+    'php'
+  ]
+});
 
 @Component({
   selector: 'app-root',

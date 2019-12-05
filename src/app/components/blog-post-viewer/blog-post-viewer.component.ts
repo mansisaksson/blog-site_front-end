@@ -42,13 +42,14 @@ export class BlogPostViewerComponent implements OnInit {
       if (!this.blogPost) {
         this.blogPost = this.tempBlog
       }
-
+      
       setTimeout(() => { // One frame delay to let the html update
         let chapterURIs = blogPost.chapters.map(a => a.URI)
         this.BlogPostService.getChapterContents(chapterURIs).then((contents: ChapterContent[]) => {
           var options = {
             modules: {
-              toolbar: ''
+              toolbar: '',
+              syntax: true
             },
             placeholder: 'Nothing here yet...',
             readOnly: true,
