@@ -16,6 +16,7 @@ export interface BlogPostMetaData {
     title: string
     description: string
     accessibility: string
+    tags: string[]
     upvotes: number
     downvotes: number
     thumbnailURI: string

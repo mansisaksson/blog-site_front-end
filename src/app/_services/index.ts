@@ -5,5 +5,6 @@ export * from './blog-post.service'
 export * from './blog-editor.service'
 export * from './file-service'
 export * from './ui.service'
+export * from './seo.service'
 
 export * from './caching_services'

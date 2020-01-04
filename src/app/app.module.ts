@@ -12,7 +12,7 @@ import { routing } from './app.routing';
 
 import { AlertComponent, LoginComponent, RegisterComponent, FormComponent } from './_directives/index';
 import { AuthGuard } from './_guards/index';
-import { AlertService, AuthenticationService, UserService, BlogPostService, BlogPostEditorService, FileService, UIService } from './_services/index';
+import { AlertService, AuthenticationService, UserService, SEOService, BlogPostService, BlogPostEditorService, FileService, UIService } from './_services/index';
 
 import { UserCacheService, BlogCacheService, ChapterCacheService, ChapterContentCacheService, BlogQueryCacheService, CacheManagementService } from './_services/caching_services';
 
@@ -97,6 +97,7 @@ import { ContextMenuComponent, ContextMenuSectionComponent } from './_directives
     FileService,
     UIService,
     UserService,
+    SEOService,
     BlogPostService,
 
     // Caching services

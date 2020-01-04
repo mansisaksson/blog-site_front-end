@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
-import { BlogPostService, UserService, UIService } from '../../_services/index'
+import { BlogPostService, UserService, SEOService, UIService } from '../../_services/index'
 import { ChapterContent, BlogPostMetaData, ChapterMetaData } from '../../_models/index'
 
 import * as Quill from 'quill'
@@ -14,7 +14,8 @@ export class BlogPostViewerComponent implements OnInit {
   private tempBlog = <BlogPostMetaData>{
     authorId: "",
     title: "...",
-    chapters: []
+    chapters: [],
+    tags: []
   }
   public blogPost: BlogPostMetaData = this.tempBlog
   private blogPostId: string
@@ -23,7 +24,8 @@ export class BlogPostViewerComponent implements OnInit {
     private BlogPostService: BlogPostService,
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
-    private uiService: UIService
+    private uiService: UIService,
+    private seoService: SEOService
   ) { }
 
   ngOnInit() {
@@ -31,6 +33,10 @@ export class BlogPostViewerComponent implements OnInit {
       this.blogPostId = params['blog_id']
       this.refreshBlog()
     })
+  }
+
+  ngOnDestroy() {
+    this.seoService.clearPageMeta()
   }
 
   refreshBlog() {
@@ -42,6 +48,10 @@ export class BlogPostViewerComponent implements OnInit {
       if (!this.blogPost) {
         this.blogPost = this.tempBlog
       }
+
+      // Update post meta tags
+      this.seoService.setPageTags(this.blogPost.tags)
+      this.seoService.setPageDescription(this.blogPost.description)
       
       setTimeout(() => { // One frame delay to let the html update
         let chapterURIs = blogPost.chapters.map(a => a.URI)

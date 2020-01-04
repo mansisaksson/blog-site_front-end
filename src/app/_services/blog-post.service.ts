@@ -10,6 +10,29 @@ import { BlogCacheService, ChapterCacheService, ChapterContentCacheService, Blog
 export class BlogPostService {
 	private currentBlogPost: BehaviorSubject<BlogPostMetaData> = new BehaviorSubject<BlogPostMetaData>(undefined)
 
+	private parseBlogPost(responseObject): BlogPostMetaData {
+		let outBlog = <BlogPostMetaData>responseObject;
+
+		// Some properties are new and might be undefined, better to handle it here
+		if (outBlog.tags == undefined) {
+			outBlog.tags = []
+		}
+
+		if (outBlog.bannerURI == undefined) {
+			outBlog.bannerURI = ""
+		}
+
+		return outBlog;
+	}
+
+	private parseBlogPosts(responseObject): BlogPostMetaData[] {
+		let blogPosts = <BlogPostMetaData[]>responseObject;
+		blogPosts.forEach(x => {
+			x = this.parseBlogPost(x)
+		})
+		return blogPosts
+	}
+
 	constructor(
 		private http: HttpClient, 
 		private BlogCacheService: BlogCacheService,
@@ -42,7 +65,7 @@ export class BlogPostService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let blogPost = <BlogPostMetaData>response.body
+					let blogPost = this.parseBlogPost(response.body)
 					this.BlogCacheService.UpdateBlogCache([blogPost])
 					resolve(blogPost)
 				} else {
@@ -64,7 +87,7 @@ export class BlogPostService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let blogPost = <BlogPostMetaData>response.body
+					let blogPost = this.parseBlogPost(response.body)
 					this.BlogCacheService.UpdateBlogCache([blogPost])
 					resolve(blogPost)
 				} else {
@@ -117,11 +140,11 @@ export class BlogPostService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let stories: BlogPostMetaData[] = <BlogPostMetaData[]>response.body
-					this.BlogCacheService.UpdateBlogCache(stories)
-					let blogPostIds = stories.map(s => s.storyId)
+					let blogPosts: BlogPostMetaData[] = this.parseBlogPosts(response.body)
+					this.BlogCacheService.UpdateBlogCache(blogPosts)
+					let blogPostIds = blogPosts.map(s => s.storyId)
 					this.blogQueryCacheService.UpdateQueryCache(userId, searchQuery, blogPostIds)
-					resolve(stories)
+					resolve(blogPosts)
 				} else {
 					reject(response.error_code)
 				}
@@ -146,7 +169,7 @@ export class BlogPostService {
 				withCredentials: true
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let blogPost = <BlogPostMetaData>response.body
+					let blogPost = this.parseBlogPost(response.body)
 					this.BlogCacheService.UpdateBlogCache([blogPost])
 					resolve(blogPost)
 				} else {
@@ -233,7 +256,7 @@ export class BlogPostService {
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
 					this.chapterCacheService.InvalidateChapterCache([chapterId])
-					let blogPost = <BlogPostMetaData>response.body
+					let blogPost = this.parseBlogPost(response.body)
 					this.BlogCacheService.UpdateBlogCache([blogPost])
 					resolve(blogPost)
 				} else {

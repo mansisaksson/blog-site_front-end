@@ -46,12 +46,14 @@ export class BlogPostSettingsComponent implements OnInit {
       .addDropdownEntry('private', 'Private')
     form.addFileSelection('Thumbnail', 'thumbnail', { fileTypes: ['.png'], fileLimit: '1mb' })
     form.addFileSelection('Banner', 'banner', { fileTypes: ['.png'], fileLimit: '1mb' })
+    form.addTextInput('Tags', 'tags', { multiline: false, charLimit: 500 }, this.blogPost.tags.join(';'))
 
     let onSubmit = async (values: FormValues, closeForm, showError) => {
       let newBlogProperties = {
         title: values['title'],
         description: values['description'],
-        accessibility: values['accessibility']
+        accessibility: values['accessibility'],
+        tags: [new Set(values['tags'].split(';'))]
       }
 
       function getImageData(file: File): Promise<string> {
