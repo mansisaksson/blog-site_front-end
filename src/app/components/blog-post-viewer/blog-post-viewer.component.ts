@@ -50,8 +50,8 @@ export class BlogPostViewerComponent implements OnInit {
       }
 
       // Update post meta tags
-      this.seoService.setPageTags(this.blogPost.tags)
       this.seoService.setPageDescription(this.blogPost.description)
+      this.seoService.setPageTags(this.blogPost.tags)
       
       setTimeout(() => { // One frame delay to let the html update
         let chapterURIs = blogPost.chapters.map(a => a.URI)
@@ -77,6 +77,7 @@ export class BlogPostViewerComponent implements OnInit {
       }, 0)
 
       this.userService.getUser(this.blogPost.authorId).then(user => {
+        this.seoService.setPageAuthor(user.displayName)
         if (!this.blogPost.bannerURI) {
           this.uiService.setBannerURI(user.bannerURI)
         }

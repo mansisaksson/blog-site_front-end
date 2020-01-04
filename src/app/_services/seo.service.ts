@@ -8,27 +8,37 @@ export class SEOService {
 
 	}
 
-	public setPageTags(tags: string[]) {
-		this.clearPageTags()
-		this.meta.addTag({ name: 'page-tags', content: tags.join(', ') }, true)
+	public setPageDescription(description: string) {
+		this.clearPageDescription()
+		this.meta.addTag({ name: 'description', content: description }, true)
 	}
 
-	public setPageDescription(description) {
-		this.clearPageDescription()
-		this.meta.addTag({ name: 'page-description', content: description }, true)
+	public setPageTags(tags: string[]) {
+		this.clearPageTags()
+		this.meta.addTag({ name: 'tags', content: tags.join(', ') }, true)
+	}
+
+	public setPageAuthor(description: string) {
+		this.clearPageAuthor()
+		this.meta.addTag({ name: 'author', content: description }, true)
+	}
+	
+	public clearPageDescription() {
+		this.meta.removeTag('name = "description"')
 	}
 
 	public clearPageTags() {
-		this.meta.removeTag('name = "page-tags"')
+		this.meta.removeTag('name = "tags"')
 	}
 
-	public clearPageDescription() {
-		this.meta.removeTag('name = "page-description"')
+	public clearPageAuthor() {
+		this.meta.removeTag('name = "author"')
 	}
 
 	public clearPageMeta() {
-		this.clearPageTags()
 		this.clearPageDescription()
+		this.clearPageAuthor()
+		this.clearPageTags()
 	}
 
 }
