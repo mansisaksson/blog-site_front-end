@@ -8,6 +8,11 @@ export class SEOService {
 
 	}
 
+	public setPageTitle(title: string) {
+		this.clearPageTitle()
+		this.meta.addTag({ name: 'title', content: title }, true)
+	}
+	
 	public setPageDescription(description: string) {
 		this.clearPageDescription()
 		this.meta.addTag({ name: 'description', content: description }, true)
@@ -21,6 +26,10 @@ export class SEOService {
 	public setPageAuthor(description: string) {
 		this.clearPageAuthor()
 		this.meta.addTag({ name: 'author', content: description }, true)
+	}
+
+	public clearPageTitle() {
+		this.meta.removeTag('name = "title"')
 	}
 	
 	public clearPageDescription() {
@@ -36,6 +45,7 @@ export class SEOService {
 	}
 
 	public clearPageMeta() {
+		this.clearPageTitle()
 		this.clearPageDescription()
 		this.clearPageAuthor()
 		this.clearPageTags()

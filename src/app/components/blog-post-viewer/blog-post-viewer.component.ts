@@ -50,6 +50,7 @@ export class BlogPostViewerComponent implements OnInit {
       }
 
       // Update post meta tags
+      this.seoService.setPageTitle(this.blogPost.title)
       this.seoService.setPageDescription(this.blogPost.description)
       this.seoService.setPageTags(this.blogPost.tags)
       
