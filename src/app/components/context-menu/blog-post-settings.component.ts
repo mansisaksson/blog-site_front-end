@@ -53,7 +53,7 @@ export class BlogPostSettingsComponent implements OnInit {
         title: values['title'],
         description: values['description'],
         accessibility: values['accessibility'],
-        tags: [new Set(values['tags'].split(';'))]
+        tags: Array.from(new Set(values['tags'].split(';')))
       }
 
       function getImageData(file: File): Promise<string> {
