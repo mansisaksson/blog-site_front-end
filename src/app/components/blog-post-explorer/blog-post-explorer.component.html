@@ -2,15 +2,15 @@
   <tr *ngFor="let metaData of BlogPostMetaData">
     <div class="blog-post-link">
       <th class="thumbnail">
-        <a [routerLink]="['/view', metaData.storyId]"><img class="thumbnail-image" src="{{getThumbnailURL(metaData.thumbnailURI)}}" ></a>
+        <a [routerLink]="['/view', getBlogURL(metaData)]"><img class="thumbnail-image" src="{{getThumbnailURL(metaData.thumbnailURI)}}" ></a>
       </th>
       <th style="padding-left: 10px;" [style.background-color]="getAccessibilityColor(metaData.accessibility)">
-        <a [routerLink]="['/view', metaData.storyId]"><h2>{{metaData.title}}</h2></a>
+        <a [routerLink]="['/view', getBlogURL(metaData)]"><h2>{{metaData.title}}</h2></a>
       </th>
 
       <p class="description-text">{{metaData.description}}</p>
 
-      <button class="btn btn-info" [routerLink]="['/view', metaData.storyId]">
+      <button class="btn btn-info" [routerLink]="['/view', getBlogURL(metaData)]">
         <span>Read More</span>
       </button>
       

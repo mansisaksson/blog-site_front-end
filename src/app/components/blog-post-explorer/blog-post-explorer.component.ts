@@ -123,4 +123,11 @@ export class BlogPostExplorerComponent implements OnInit {
     }
   }
 
+  getBlogURL(blogPost: BlogPostMetaData): string {
+    if (blogPost.friendlyId != undefined && blogPost.friendlyId != "") {
+      return blogPost.friendlyId
+    }
+    return blogPost.storyId
+  }
+
 }
