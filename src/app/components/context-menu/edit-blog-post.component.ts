@@ -41,7 +41,7 @@ export class EditBlogPostComponent implements OnInit {
   editBlog() {
     if (this.enabled) {
       this.authenticationService.withLoggedInUser().then((user: User) => {
-        this.router.navigate(['blog-post-editor/' + this.blogPostId])
+        this.router.navigate(['edit/' + this.blogPostId])
       }).catch(e => {
         this.alertService.error(e)
       })

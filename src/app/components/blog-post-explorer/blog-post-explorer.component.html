@@ -2,19 +2,19 @@
   <tr *ngFor="let metaData of BlogPostMetaData">
     <div class="blog-post-link">
       <th class="thumbnail">
-        <a [routerLink]="['/blog-post-viewer', metaData.storyId]"><img class="thumbnail-image" src="{{getThumbnailURL(metaData.thumbnailURI)}}" ></a>
+        <a [routerLink]="['/view', metaData.storyId]"><img class="thumbnail-image" src="{{getThumbnailURL(metaData.thumbnailURI)}}" ></a>
       </th>
       <th style="padding-left: 10px;" [style.background-color]="getAccessibilityColor(metaData.accessibility)">
-        <a [routerLink]="['/blog-post-viewer', metaData.storyId]"><h2>{{metaData.title}}</h2></a>
+        <a [routerLink]="['/view', metaData.storyId]"><h2>{{metaData.title}}</h2></a>
       </th>
 
       <p class="description-text">{{metaData.description}}</p>
 
-      <button class="btn btn-info" [routerLink]="['/blog-post-viewer', metaData.storyId]">
+      <button class="btn btn-info" [routerLink]="['/view', metaData.storyId]">
         <span>Read More</span>
       </button>
       
-      <p class="meta-data-text">{{formatedTime(metaData.submittedAt)}} • <a [routerLink]="['/blog-post-explorer', metaData.authorId]">{{getAuthorName(authors[metaData.authorId])}}</a></p>
+      <p class="meta-data-text">{{formatedTime(metaData.submittedAt)}} • <a [routerLink]="['/posts', metaData.authorId]">{{getAuthorName(authors[metaData.authorId])}}</a></p>
 
     </div>
     

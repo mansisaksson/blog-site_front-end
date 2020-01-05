@@ -28,7 +28,7 @@ export class CreateBlogPostComponent {
 
       let onFormSubmit = (values: FormValues) => {
         this.BlogPostService.createBlogPost(user.id, values["title"], values["chapter_title"]).then((blogPost: BlogPostMetaData) => {
-          this.router.navigate(['blog-post-editor/'+blogPost.storyId])
+          this.router.navigate(['edit/'+blogPost.storyId])
         }).catch((error) => {
           this.alertService.error(error)
         })

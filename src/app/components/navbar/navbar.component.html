@@ -21,9 +21,9 @@
             Blog Posts
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" routerLink="/blog-post-explorer">All Posts</a>
+            <a class="dropdown-item" routerLink="/posts">All Posts</a>
             <div class="dropdown-divider"></div>
-            <a *ngIf="isLoggedIn" class="dropdown-item" routerLink="/blog-post-explorer/{{getCurrentUserId()}}">My Posts</a>
+            <a *ngIf="isLoggedIn" class="dropdown-item" routerLink="/posts/{{getCurrentUserId()}}">My Posts</a>
           </div>
         </div>
       </li>

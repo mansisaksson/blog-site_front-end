@@ -12,10 +12,17 @@ import { CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent
 
 const appRoutes: Routes = [
   // Redirects
-  { path: 'story-explorer', redirectTo: 'blog-post-explorer' },
-  { path: 'story-explorer/:user_id', redirectTo: 'blog-post-explorer/:user_id' },
-  { path: 'story-viewer', redirectTo: 'blog-post-viewer' },
-  { path: 'blog-post-editor/:blog_id', redirectTo: 'story-editor/:blog_id' },
+  { path: 'story-explorer', redirectTo: 'posts' },
+  { path: 'blog-post-explorer', redirectTo: 'posts' },
+
+  { path: 'story-explorer/:user_id', redirectTo: 'posts/:user_id' },
+  { path: 'blog-post-explorer/:user_id', redirectTo: 'posts/:user_id' },
+
+  { path: 'story-viewer', redirectTo: 'view' },
+  { path: 'blog-post-viewer', redirectTo: 'view' },
+
+  { path: 'story-editor/:blog_id', redirectTo: 'edit/:blog_id' },
+  { path: 'blog-post-editor/:blog_id', redirectTo: 'edit/:blog_id' },
 
 
   {
@@ -25,12 +32,12 @@ const appRoutes: Routes = [
     data: { contextMenu: [CreateBlogPostComponent] }
   },
   {
-    path: 'blog-post-explorer',
+    path: 'posts',
     component: BlogPostExplorerComponent,
     data: { contextMenu: [CreateBlogPostComponent] }
   },
   {
-    path: 'blog-post-explorer/:user_id',
+    path: 'posts/:user_id',
     component: BlogPostExplorerComponent,
     data: { 
       contextMenu: [CreateBlogPostComponent],
@@ -38,7 +45,7 @@ const appRoutes: Routes = [
     }
   },
   {
-    path: 'blog-post-viewer/:blog_id',
+    path: 'view/:blog_id',
     component: BlogPostViewerComponent,
     data: { 
       contextMenu: [[CreateBlogPostComponent, DeleteBlogPostComponent, EditBlogPostComponent]],
@@ -46,7 +53,7 @@ const appRoutes: Routes = [
     }
   },
   {
-    path: 'blog-post-editor/:blog_id',
+    path: 'edit/:blog_id',
     component: BlogPostEditorComponent,
     data: {
       contextMenu: [
