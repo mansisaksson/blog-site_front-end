@@ -41,6 +41,8 @@ export class BlogPostSettingsComponent implements OnInit {
     let form: DynamicForm = new DynamicForm("Blog Post Settings", "Apply")
     form.addTextInput('Title', 'title', { multiline: false }, this.blogPost.title)
     form.addTextInput('Description', 'description', { multiline: true, rows: 4, charLimit: 500 }, this.blogPost.description)
+    form.addTextInput('Friendly URL', 'friendlyId', { multiline: false, charLimit: 50 }, this.blogPost.friendlyId)
+
     form.addDropdown('Accessibility', 'accessibility', this.blogPost.accessibility)
       .addDropdownEntry('public', 'Public')
       .addDropdownEntry('private', 'Private')
@@ -53,6 +55,7 @@ export class BlogPostSettingsComponent implements OnInit {
         title: values['title'],
         description: values['description'],
         accessibility: values['accessibility'],
+        friendlyId: values['friendlyId'],
         tags: Array.from(new Set(values['tags'].split(';')))
       }
 

@@ -22,6 +22,10 @@ export class BlogPostService {
 			outBlog.bannerURI = ""
 		}
 
+		if (outBlog.friendlyId == undefined) {
+			outBlog.friendlyId = ""
+		}
+
 		return outBlog;
 	}
 

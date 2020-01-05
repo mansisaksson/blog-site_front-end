@@ -15,6 +15,7 @@ export interface BlogPostMetaData {
     authorId: string
     title: string
     description: string
+    friendlyId: string
     accessibility: string
     tags: string[]
     upvotes: number
