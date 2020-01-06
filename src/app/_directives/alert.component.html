@@ -1,4 +1,4 @@
-﻿<div style="position: fixed; z-index: 999; min-width: 300px; bottom: 0px;">
+﻿<div style="position: fixed; z-index: 9999999; min-width: 300px; bottom: 0px;">
 	<div *ngFor="let message of getMessages()">
 		<div *ngIf="message" [ngClass]="{ 'alert': message, 'alert-success': message.type === 'success', 'alert-danger': message.type === 'error' }" style="margin: 5px;">
 			{{message.text}}
