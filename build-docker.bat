@@ -1,1 +1,0 @@
-ng build --prod --build-optimizer --prod && docker build %0/../ -t dockerregistry.mansisaksson.com:5000/story-site-frontend:latest

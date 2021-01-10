@@ -1,0 +1,1 @@
+docker run -p 80:80 dockerregistry.mansisaksson.com:5000/story-site-frontend
