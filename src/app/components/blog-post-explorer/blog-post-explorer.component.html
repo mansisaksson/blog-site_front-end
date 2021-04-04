@@ -5,7 +5,7 @@
         <a [routerLink]="['/view', getBlogURL(metaData)]"><img class="thumbnail-image" src="{{getThumbnailURL(metaData.thumbnailURI)}}" ></a>
       </th>
       <th style="padding-left: 10px;" [style.background-color]="getAccessibilityColor(metaData.accessibility)">
-        <a [routerLink]="['/view', getBlogURL(metaData)]"><h2>{{metaData.title}}</h2></a>
+        <a [routerLink]="['/view', getBlogURL(metaData)]"><h2 class="blog-post-link">{{metaData.title}}</h2></a>
       </th>
 
       <p class="description-text">{{metaData.description}}</p>
