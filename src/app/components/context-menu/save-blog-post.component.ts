@@ -5,13 +5,13 @@ import { BlogPostEditorService, AuthenticationService, AlertService } from '../.
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div *ngIf="enabled" style="padding-top: 5px;">
+  <div *ngIf="isEnabled()" style="padding-top: 5px;">
     <button (click)="saveBlog()" class="btn btn-primary" style="width: 100%">Save Chapter</button>
   </div>`
 })
 export class SaveBlogPostComponent implements OnInit {
-  public enabled: boolean
-  private blogPost: BlogPostMetaData
+  private blogPost: BlogPostMetaData = BlogPostMetaData.EmptyBlogPost;
+  private currentUser: User = User.EmptyUser
 
   constructor(
     private blogEditorService: BlogPostEditorService,
@@ -20,34 +20,31 @@ export class SaveBlogPostComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.blogEditorService.getCurrentBlog().subscribe((blogPost: BlogPostMetaData) => {
-      this.enabled = false;
-      this.blogPost = blogPost;
-      if (blogPost != undefined) {
-        this.authenticationService.getCurrentUser().subscribe((user: User) => {
-          if (user != undefined) {
-            this.enabled = (user.id == blogPost.authorId) ? true : false
-          }
-        })
-      } else {
-        this.enabled = false
-      }
-    })
+    this.blogEditorService.getCurrentBlog().subscribe((blogPost: BlogPostMetaData) => this.blogPost = blogPost);
+    this.authenticationService.getCurrentUser().subscribe((user: User) => this.currentUser = user);
   }
 
-  saveBlog() {
-    if (this.enabled) {
-      this.authenticationService.withLoggedInUser().then((user: User) => {
-        if (this.blogPost != undefined) {
-          this.blogEditorService.saveCurrentChapter().then(() => {
-            this.alertService.success("Chapter saved!")
-          }).catch(e => this.alertService.error(e))
-        } else {
-          this.alertService.error("No Valid blogPost post currently being edited")
-        }
-      }).catch(e => {
-        this.alertService.error(e)
-      })
+  isEnabled(): boolean {
+    return this.currentUser != undefined && this.blogPost != undefined
+      && this.blogPost.authorId != "" && this.currentUser.id == this.blogPost.authorId;
+  }
+
+  async saveBlog(): Promise<void> {
+    if (!this.isEnabled()) {
+      return;
+    }
+
+    try {
+      await this.authenticationService.ensureWithLoggedInUser();
+      
+      if (this.blogPost != undefined) {
+        await this.blogEditorService.saveCurrentChapter();
+        this.alertService.success("Chapter saved!");
+      } else {
+        this.alertService.error("No Valid blogPost post currently being edited");
+      }
+    } catch (error) {
+      this.alertService.error(error);
     }
   }
 

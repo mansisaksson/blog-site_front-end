@@ -6,13 +6,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div *ngIf="enabled" style="padding-top: 5px;">
+  <div *ngIf="isEnabled()" style="padding-top: 5px;">
     <button (click)="deleteBlogPost()" class="btn btn-primary" style="width: 100%">Delete Blog Post</button>
   </div>`
 })
 export class DeleteBlogPostComponent implements OnInit {
-  public enabled: boolean
-  private blogPostId: string
+  private blogPost: BlogPostMetaData = BlogPostMetaData.EmptyBlogPost;
+  private currentUser: User = User.EmptyUser
 
   constructor(
     private router: Router,
@@ -23,43 +23,42 @@ export class DeleteBlogPostComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.enabled = false;
-    this.BlogPostService.getCurrentlyViewedBlogPost().subscribe((blogPost: BlogPostMetaData) => {
-      if (blogPost != undefined) {
-        this.authenticationService.getCurrentUser().subscribe((user: User) => {
-          if (user != undefined) {
-            this.enabled = (user.id == blogPost.authorId) ? true : false
-            this.blogPostId = blogPost.storyId
-          }
-        })
-      } else {
-        this.enabled = false
-        this.blogPostId = ""
-      }
-    })
+    this.BlogPostService.getCurrentlyViewedBlogPost().subscribe((blogPost: BlogPostMetaData) => this.blogPost = blogPost);
+    this.authenticationService.getCurrentUser().subscribe((user: User) => this.currentUser = user);
   }
 
-  deleteBlogPost() {
-    if (this.enabled) {
-      this.authenticationService.withLoggedInUser().then((user: User) => {
-        let form: DynamicForm = new DynamicForm("Delete Blog Post", "Delete")
-        form.addTextInput("Type DELETE", "delete", { multiline: false }, "")
+  isEnabled(): boolean {
+    return this.currentUser != undefined && this.blogPost != undefined
+      && this.blogPost.authorId != "" && this.currentUser.id == this.blogPost.authorId;
+  }
 
-        let onSubmit = (values: FormValues) => {
-          if (values["delete"] === "DELETE") {
-            this.BlogPostService.deleteBlogPost(this.blogPostId).then(() => {
-              this.router.navigate([''])
-            }).catch(e => {
-              this.alertService.error(e)
-            })
-          } else {
-            this.alertService.error("Invalid verification string")
+  async deleteBlogPost(): Promise<void> {
+    if (!this.isEnabled()) {
+      return;
+    }
+
+    try {
+      await this.authenticationService.ensureWithLoggedInUser();
+
+      let form: DynamicForm = new DynamicForm("Delete Blog Post", "Delete")
+      form.addTextInput("Type DELETE", "delete", { multiline: false }, "")
+
+      let onSubmit = async (values: FormValues) => {
+        if (values["delete"] === "DELETE") {
+          try {
+            await this.BlogPostService.deleteBlogPost(this.blogPost.storyId)
+            this.router.navigate([''])
+          } catch (error) {
+            this.alertService.error(error)
           }
+        } else {
+          this.alertService.error("Invalid verification string")
         }
-        this.uiService.promptForm(form, true, onSubmit)
-      }).catch(e => {
-        this.alertService.error(e)
-      })
+      }
+      this.uiService.promptForm(form, true, onSubmit);
+
+    } catch (error) {
+      this.alertService.error(error)
     }
   }
 

@@ -1,6 +1,4 @@
 ﻿import { Component, OnInit } from '@angular/core'
-import { User } from '../../_models/index'
-import { AuthenticationService } from '../../_services/index'
 
 @Component({
   selector: 'app-home',
@@ -8,19 +6,6 @@ import { AuthenticationService } from '../../_services/index'
 })
 
 export class HomeComponent implements OnInit {
-  currentUser: User
-  users: User[]
-  isLoggedIn: boolean
-
-  constructor(
-    private authService: AuthenticationService) {
-  }
-
   ngOnInit() {
-    this.authService.getCurrentUser().subscribe(user => {
-      this.currentUser = user
-      this.isLoggedIn = user ? true : false
-    })
   }
-
 }

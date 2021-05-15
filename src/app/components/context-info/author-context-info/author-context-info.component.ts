@@ -1,9 +1,8 @@
-import { Component, OnInit, AfterContentInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { UserService } from '../../../_services'
 import { BlogPostMetaData, User } from '../../../_models'
 import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { environment } from './../../../../environments/environment'
-import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-author-context-info',

@@ -9,7 +9,7 @@ export class InlineEditorComponent {
   @ViewChild('content', { static: true }) contentContainer: ElementRef
 
   @Output() onEdit: EventEmitter<string> = new EventEmitter<string>()
-  
+
   public btnText = "Edit"
   constructor() {
 
@@ -23,11 +23,11 @@ export class InlineEditorComponent {
       elem.focus()
     } else {
       let text = <string>elem.textContent
-      text = text.replace(/(\r\n\t|\n|\r\t)/gm,"").trim() // Sanitize string
+      text = text.replace(/(\r\n\t|\n|\r\t)/gm, "").trim() // Sanitize string
       this.onEdit.emit(text)
       this.btnText = "Edit"
       elem.contentEditable = 'false'
     }
-    
   }
+
 }

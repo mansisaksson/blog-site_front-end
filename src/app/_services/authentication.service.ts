@@ -21,21 +21,24 @@ export class AuthenticationService {
     this.validateLoginState()
   }
 
-  ensureWithLoggedInUser(): Promise<User> {
-    return this.withLoggedInUser();
+  ensureWithLoggedInUser(promptLogin: boolean = true): Promise<User> {
+    return this.withLoggedInUser(promptLogin);
   }
 
-  withLoggedInUser(): Promise<User> {
+  withLoggedInUser(promptLogin: boolean = true): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       this.getCurrentUser().subscribe((user: User) => {
         if (user) {
           resolve(user)
         }
-        else {
+        else if (promptLogin) {
           let onCanceled = () => {
             reject("Action Canceled")
           }
           this.uiService.promptUserLogin(undefined, onCanceled)
+        }
+        else {
+          reject("User not logged in")
         }
       })
     })

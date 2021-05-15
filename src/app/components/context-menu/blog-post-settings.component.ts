@@ -21,18 +21,13 @@ export class BlogPostSettingsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.blogEditor.getCurrentBlog().subscribe((blogPost: BlogPostMetaData) => {
-      this.blogPost = blogPost;
-    })
-
-    this.authenticationService.getCurrentUser().subscribe((user: User) => {
-      this.currentUser = user;
-    })
+    this.blogEditor.getCurrentBlog().subscribe((blogPost: BlogPostMetaData) => this.blogPost = blogPost);
+    this.authenticationService.getCurrentUser().subscribe((user: User) => this.currentUser = user);
   }
 
   isEnabled(): boolean {
-    return this.currentUser != undefined && this.blogPost != undefined 
-        && this.blogPost.authorId != "" && this.currentUser.id == this.blogPost.authorId;
+    return this.currentUser != undefined && this.blogPost != undefined
+      && this.blogPost.authorId != "" && this.currentUser.id == this.blogPost.authorId;
   }
 
   publishBlog(): void {

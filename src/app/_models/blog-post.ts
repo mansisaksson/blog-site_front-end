@@ -5,6 +5,15 @@ export interface ChapterMetaData {
     title: string
 }
 
+export namespace ChapterMetaData {
+    export const EmptyChapter = <ChapterMetaData>{
+        chapterId: "",
+        storyId: "",
+        URI: "",
+        title: ""
+    }
+}
+
 export class ChapterContent {
     URI: string
     content: string

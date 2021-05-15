@@ -6,13 +6,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div *ngIf="enabled" style="padding-top: 5px;">
+  <div *ngIf="isEnabled()" style="padding-top: 5px;">
     <button (click)="editBlog()" class="btn btn-primary" style="width: 100%">Edit Blog Post</button>
   </div>`
 })
 export class EditBlogPostComponent implements OnInit {
-  public enabled: boolean
-  private blogPostId: string
+  private blogPost: BlogPostMetaData = BlogPostMetaData.EmptyBlogPost;
+  private currentUser: User = User.EmptyUser
 
   constructor(
     private BlogPostService: BlogPostService,
@@ -22,29 +22,24 @@ export class EditBlogPostComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.enabled = false;
-    this.BlogPostService.getCurrentlyViewedBlogPost().subscribe((blogPost: BlogPostMetaData) => {
-      if (blogPost != undefined) {
-        this.authenticationService.getCurrentUser().subscribe((user: User) => {
-          if (user != undefined) {
-            this.enabled = (user.id == blogPost.authorId) ? true : false
-            this.blogPostId = blogPost.storyId
-          }
-        })
-      } else {
-        this.enabled = false
-        this.blogPostId = ""
-      }
-    })
+    this.BlogPostService.getCurrentlyViewedBlogPost().subscribe((blogPost: BlogPostMetaData) => this.blogPost = blogPost);
+    this.authenticationService.getCurrentUser().subscribe((user: User) => this.currentUser = user);
   }
 
-  editBlog() {
-    if (this.enabled) {
-      this.authenticationService.withLoggedInUser().then((user: User) => {
-        this.router.navigate(['edit/' + this.blogPostId])
-      }).catch(e => {
-        this.alertService.error(e)
-      })
+  isEnabled(): boolean {
+    return this.currentUser != undefined && this.blogPost != undefined
+      && this.blogPost.authorId != "" && this.currentUser.id == this.blogPost.authorId;
+  }
+
+  async editBlog() {
+    if (!this.isEnabled()) {
+      return;
+    }
+    try {
+      await this.authenticationService.ensureWithLoggedInUser();
+      this.router.navigate(['edit/' + this.blogPost.storyId]);
+    } catch (error) {
+      this.alertService.error(error)
     }
   }
 

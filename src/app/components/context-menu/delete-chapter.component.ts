@@ -17,24 +17,29 @@ export class DeleteChapterComponent {
     private alertService: AlertService
   ) { }
 
-  deleteChapter() {
-    this.authenticationService.withLoggedInUser().then((user: User) => {
-      let form: DynamicForm = new DynamicForm("Delete Chapter", "Delete")
-      form.addTextInput("Type DELETE", "delete", { multiline: false }, "")
+  async deleteChapter(): Promise<void> {
+    try {
+      await this.authenticationService.ensureWithLoggedInUser();
 
-      let onFormSubmit = (values: FormValues) => {
+      let form: DynamicForm = new DynamicForm("Delete Chapter", "Delete");
+      form.addTextInput("Type DELETE", "delete", { multiline: false }, "");
+
+      let onFormSubmit = async (values: FormValues) => {
         if (values["delete"] === "DELETE") {
-          this.blogEditorService.deleteCurrentChapter().then(() => {
-            this.alertService.success("Chapter Deleted!")
-          }).catch(e => this.alertService.error(e))
+          try {
+            await this.blogEditorService.deleteCurrentChapter();
+            this.alertService.success("Chapter Deleted!");
+          } catch (error) {
+            this.alertService.error(error);
+          }
         } else {
-          this.alertService.error("Invalid verification string")
+          this.alertService.error("Invalid verification string");
         }
       }
-      this.uiService.promptForm(form, true, onFormSubmit)
-    }).catch(e => {
-      this.alertService.error(e)
-    })
+      this.uiService.promptForm(form, true, onFormSubmit);
+    } catch (error) {
+      this.alertService.error(error);
+    }
   }
 
 }

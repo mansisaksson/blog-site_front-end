@@ -9,22 +9,14 @@ import { BlogPostMetaData, ChapterMetaData } from '../../_models'
   styleUrls: ['./blog-post-editor.component.css']
 })
 export class BlogPostEditorComponent implements AfterViewInit, OnDestroy {
-  public chapter: ChapterMetaData
+  public chapter: ChapterMetaData = ChapterMetaData.EmptyChapter;
   private blogPostId: string
-  private blogPost: BlogPostMetaData
+  private blogPost: BlogPostMetaData = BlogPostMetaData.EmptyBlogPost;
 
   constructor(
     private alertService: AlertService,
     private blogEditorService: BlogPostEditorService,
     private activatedRoute: ActivatedRoute) {
-
-    // Default values to avoid NULL reads
-    this.blogPost = <BlogPostMetaData>{
-      title: "..."
-    }
-    this.chapter = <ChapterMetaData>{
-      title: "..."
-    }
   }
 
   ngAfterViewInit() {
