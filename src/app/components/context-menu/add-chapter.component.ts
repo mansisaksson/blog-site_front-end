@@ -18,25 +18,28 @@ export class AddChapterComponent {
     private alertService: AlertService
   ) { }
 
-  asyncaddChapter() {
-    this.authenticationService.withLoggedInUser().then((user: User) => {
-      let form: DynamicForm = new DynamicForm("Create Chapter", "Create!")
-      form.addTextInput("Chapter Title", "chapter_title", { multiline: false }, "Chapter 1")
+  async addChapter() {
+    try {
+      await this.authenticationService.ensureWithLoggedInUser();
+      let form: DynamicForm = new DynamicForm("Create Chapter", "Create!");
+      form.addTextInput("Chapter Title", "chapter_title", { multiline: false }, "Chapter 1");
       let onFormSubmit = async (values: FormValues) => {
         try {
           let newChapter: BlogPostMetaData = await this.blogEditorService.createNewChapter(values["chapter_title"]);
           if (newChapter) {
-            this.alertService.success("Chapter added!")
+            this.alertService.success("Chapter added!");
           }
           else {
-            this.alertService.error("Failed to add chapter!")
+            this.alertService.error("Failed to add chapter!");
           }  
         } catch (error) {
-          this.alertService.error(error)
+          this.alertService.error(error);
         }
       }
-      this.uiService.promptForm(form, true, onFormSubmit)
-    }).catch(e => this.alertService.error(e))
+      this.uiService.promptForm(form, true, onFormSubmit);
+    } catch (error) {
+      this.alertService.error(error)
+    }
   }
 
 }

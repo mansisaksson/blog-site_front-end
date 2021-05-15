@@ -21,6 +21,10 @@ export class AuthenticationService {
     this.validateLoginState()
   }
 
+  ensureWithLoggedInUser(): Promise<User> {
+    return this.withLoggedInUser();
+  }
+
   withLoggedInUser(): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       this.getCurrentUser().subscribe((user: User) => {

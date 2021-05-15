@@ -4,6 +4,8 @@
 	[ ] Have uiService.promptForm return a form reference which can be used to listent to events
 			e.g. uiService.promptForm(form).on("FormSubmit", (values: FormValues) => { }).on(...)
 	[ ] Make the DynamicForm chain-able, e.g. new DynamicForm(Params).addTextInput(params).addBoolean(params)
+	[ ] Improve error handling of promise functions. e.g don't use exceptions for execution flow¨
+	[ ] Rename withLoggedInUser to ensureWithLoggedInUser to more clearly denote it will throw if login fails
 
 [ ] Use cache storage instead of local storage for cached posts
 

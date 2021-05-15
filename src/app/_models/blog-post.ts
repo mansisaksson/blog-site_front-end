@@ -27,3 +27,23 @@ export interface BlogPostMetaData {
     revision: number
     chapters: ChapterMetaData[]
 }
+
+export namespace BlogPostMetaData {
+    export const EmptyBlogPost = <BlogPostMetaData>{
+        storyId: "",
+        authorId: "",
+        title: "",
+        description: "",
+        friendlyId: "",
+        accessibility: "",
+        tags: [],
+        upvotes: 0,
+        downvotes: 0,
+        thumbnailURI: "",
+        bannerURI: "",
+        submittedAt: 0,
+        lastUpdated: 0,
+        revision: 0,
+        chapters: []
+    }
+}

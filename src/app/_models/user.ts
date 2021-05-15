@@ -8,3 +8,15 @@
     createdAt: number
     password?: string
 }
+
+export namespace User {
+    export const EmptyUser = <User>{
+        id: "", 
+        username: "", 
+        displayName: "", 
+        profilePictureURI: "", 
+        bannerURI: "", 
+        description: "", 
+        createdAt: 0 
+    }
+}

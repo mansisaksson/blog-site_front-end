@@ -20,23 +20,24 @@ export class CreateBlogPostComponent {
     private alertService: AlertService
   ) { }
 
-  createBlogPost() {
-    this.authenticationService.withLoggedInUser().then((user: User) => {
-      let form: DynamicForm = new DynamicForm("Create Blog", "Create!")
-      form.addTextInput("Blog Post Title", "title", { multiline: false }, "Title Here")
-      form.addTextInput("Chapter 1 Title", "chapter_title", { multiline: false }, "Chapter 1")
+  async createBlogPost() {
+    try {
+      let user: User = await this.authenticationService.withLoggedInUser();
+      let form: DynamicForm = new DynamicForm("Create Blog", "Create!");
+      form.addTextInput("Blog Post Title", "title", { multiline: false }, "Title Here");
+      form.addTextInput("Chapter 1 Title", "chapter_title", { multiline: false }, "Chapter 1");
 
-      let onFormSubmit = (values: FormValues) => {
-        this.BlogPostService.createBlogPost(user.id, values["title"], values["chapter_title"]).then((blogPost: BlogPostMetaData) => {
-          this.router.navigate(['edit/'+blogPost.storyId])
-        }).catch((error) => {
-          this.alertService.error(error)
-        })
+      let onFormSubmit = async (values: FormValues) => {
+        try {
+          let blogPost: BlogPostMetaData = await this.BlogPostService.createBlogPost(user.id, values["title"], values["chapter_title"]);
+          this.router.navigate(['edit/'+blogPost.storyId]);
+        } catch (error) {
+          this.alertService.error(error);
+        }
       }
-      this.uiService.promptForm(form, true, onFormSubmit)
-    }).catch(e => {
-      this.alertService.error(e)
-    })
+      this.uiService.promptForm(form, true, onFormSubmit);
+    } catch (error) {
+      this.alertService.error(error);
+    }
   }
-
 }

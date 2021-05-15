@@ -5,13 +5,13 @@ import { BlogPostEditorService, AuthenticationService, AlertService, DynamicForm
 @Component({
   selector: 'app-common-tools',
   template: `
-  <div *ngIf="enabled" style="padding-top: 5px;">
+  <div *ngIf="isEnabled()" style="padding-top: 5px;">
     <button (click)="publishBlog()" class="btn btn-primary" style="width: 100%">Blog Post Settings</button>
   </div>`
 })
 export class BlogPostSettingsComponent implements OnInit {
-  public enabled: boolean
-  private blogPost: BlogPostMetaData = <BlogPostMetaData>{ storyId: "", accessibility: 'private' }
+  private blogPost: BlogPostMetaData = BlogPostMetaData.EmptyBlogPost;
+  private currentUser: User = User.EmptyUser
 
   constructor(
     private blogEditor: BlogPostEditorService,
@@ -21,34 +21,32 @@ export class BlogPostSettingsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.enabled = false
     this.blogEditor.getCurrentBlog().subscribe((blogPost: BlogPostMetaData) => {
-      if (blogPost != undefined) {
-        this.authenticationService.getCurrentUser().subscribe((user: User) => {
-          if (user != undefined) {
-            this.enabled = (user.id == blogPost.authorId) ? true : false
-            this.blogPost = blogPost
-          }
-        })
-      } else {
-        this.enabled = false
-        this.blogPost = <BlogPostMetaData>{ storyId: "", accessibility: 'private' }
-      }
+      this.blogPost = blogPost;
+    })
+
+    this.authenticationService.getCurrentUser().subscribe((user: User) => {
+      this.currentUser = user;
     })
   }
 
-  async publishBlog() {
-    let form: DynamicForm = new DynamicForm("Blog Post Settings", "Apply")
-    form.addTextInput('Title', 'title', { multiline: false }, this.blogPost.title)
-    form.addTextInput('Description', 'description', { multiline: true, rows: 4, charLimit: 500 }, this.blogPost.description)
-    form.addTextInput('Friendly URL', 'friendlyId', { multiline: false, charLimit: 50 }, this.blogPost.friendlyId)
+  isEnabled(): boolean {
+    return this.currentUser != undefined && this.blogPost != undefined 
+        && this.blogPost.authorId != "" && this.currentUser.id == this.blogPost.authorId;
+  }
+
+  publishBlog(): void {
+    let form: DynamicForm = new DynamicForm("Blog Post Settings", "Apply");
+    form.addTextInput('Title', 'title', { multiline: false }, this.blogPost.title);
+    form.addTextInput('Description', 'description', { multiline: true, rows: 4, charLimit: 500 }, this.blogPost.description);
+    form.addTextInput('Friendly URL', 'friendlyId', { multiline: false, charLimit: 50 }, this.blogPost.friendlyId);
 
     form.addDropdown('Accessibility', 'accessibility', this.blogPost.accessibility)
       .addDropdownEntry('public', 'Public')
-      .addDropdownEntry('private', 'Private')
-    form.addFileSelection('Thumbnail', 'thumbnail', { fileTypes: ['.png'], fileLimit: '1mb' })
-    form.addFileSelection('Banner', 'banner', { fileTypes: ['.png'], fileLimit: '1mb' })
-    form.addTextInput('Tags', 'tags', { multiline: false, charLimit: 500 }, this.blogPost.tags.join(';'))
+      .addDropdownEntry('private', 'Private');
+    form.addFileSelection('Thumbnail', 'thumbnail', { fileTypes: ['.png'], fileLimit: '1mb' });
+    form.addFileSelection('Banner', 'banner', { fileTypes: ['.png'], fileLimit: '1mb' });
+    form.addTextInput('Tags', 'tags', { multiline: false, charLimit: 500 }, this.blogPost.tags.join(';'));
 
     let onSubmit = async (values: FormValues, closeForm, showError) => {
       let newBlogProperties = {
@@ -62,13 +60,13 @@ export class BlogPostSettingsComponent implements OnInit {
       function getImageData(file: File): Promise<string> {
         return new Promise<string>((resolve) => {
           if (file) {
-            let fileReader = new FileReader()
+            let fileReader = new FileReader();
             fileReader.onload = (e) => {
-              resolve(btoa(<string>fileReader.result))
+              resolve(btoa(<string>fileReader.result));
             }
-            fileReader.readAsBinaryString(file)
+            fileReader.readAsBinaryString(file);
           } else {
-            resolve(undefined)
+            resolve(undefined);
           }
         })
       }
@@ -79,14 +77,14 @@ export class BlogPostSettingsComponent implements OnInit {
       try {
         let blogPost: BlogPostMetaData = await this.blogEditor.updateBlogPost(newBlogProperties);
         if (blogPost) {
-          this.alertService.success('Blog Post Updated!')
+          this.alertService.success('Blog Post Updated!');
         } else {
-          this.alertService.error('Failed to update blog post!')
+          this.alertService.error('Failed to update blog post!');
         }
       } catch (error) {
-        this.alertService.error(error)
+        this.alertService.error(error);
       }
     }
-    this.uiService.promptForm(form, false, onSubmit)
+    this.uiService.promptForm(form, false, onSubmit);
   }
 }
