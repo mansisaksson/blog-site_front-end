@@ -1,4 +1,10 @@
 ---------- TODO ----------
+[ ] Refactoring
+	[ ] Replace .then with async/await
+	[ ] Have uiService.promptForm return a form reference which can be used to listent to events
+			e.g. uiService.promptForm(form).on("FormSubmit", (values: FormValues) => { }).on(...)
+	[ ] Make the DynamicForm chain-able, e.g. new DynamicForm(Params).addTextInput(params).addBoolean(params)
+
 [ ] Use cache storage instead of local storage for cached posts
 
 [ ] Create a "Get post Id"/"Get Persistent Link"
@@ -6,8 +12,6 @@
 [ ] If viable, re-work context menu to be a service/directive instead of being defined by the routing table
 
 [ ] User Page, visit a single users page.
-
-[ ] Go over default font + font sizes
 
 
 ---------- Backlog ----------

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core'
-import { User } from '../../_models'
+import { User, BlogPostMetaData } from '../../_models'
 import { AuthenticationService, AlertService, UIService, DynamicForm, FormValues, BlogPostEditorService } from '../../_services'
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-common-tools',
@@ -19,14 +18,22 @@ export class AddChapterComponent {
     private alertService: AlertService
   ) { }
 
-  addChapter() {
+  asyncaddChapter() {
     this.authenticationService.withLoggedInUser().then((user: User) => {
       let form: DynamicForm = new DynamicForm("Create Chapter", "Create!")
       form.addTextInput("Chapter Title", "chapter_title", { multiline: false }, "Chapter 1")
-      let onFormSubmit = (values: FormValues) => {
-        this.blogEditorService.createNewChapter(values["chapter_title"]).then(() => {
-          this.alertService.success("Chapter added!")
-        }).catch(e => this.alertService.error(e))
+      let onFormSubmit = async (values: FormValues) => {
+        try {
+          let newChapter: BlogPostMetaData = await this.blogEditorService.createNewChapter(values["chapter_title"]);
+          if (newChapter) {
+            this.alertService.success("Chapter added!")
+          }
+          else {
+            this.alertService.error("Failed to add chapter!")
+          }  
+        } catch (error) {
+          this.alertService.error(error)
+        }
       }
       this.uiService.promptForm(form, true, onFormSubmit)
     }).catch(e => this.alertService.error(e))

@@ -37,7 +37,7 @@ export class BlogPostSettingsComponent implements OnInit {
     })
   }
 
-  publishBlog() {
+  async publishBlog() {
     let form: DynamicForm = new DynamicForm("Blog Post Settings", "Apply")
     form.addTextInput('Title', 'title', { multiline: false }, this.blogPost.title)
     form.addTextInput('Description', 'description', { multiline: true, rows: 4, charLimit: 500 }, this.blogPost.description)
@@ -76,15 +76,17 @@ export class BlogPostSettingsComponent implements OnInit {
       newBlogProperties['thumbnail'] = await getImageData(<File>values['thumbnail'])
       newBlogProperties['banner'] = await getImageData(<File>values['banner'])
 
-      this.blogEditor.updateBlogPost(newBlogProperties).then(() => {
-        this.alertService.success('Blog Post Updated!')
-        closeForm()
-      }).catch(e => {
-        this.alertService.error(e)
-        closeForm()
-      })
+      try {
+        let blogPost: BlogPostMetaData = await this.blogEditor.updateBlogPost(newBlogProperties);
+        if (blogPost) {
+          this.alertService.success('Blog Post Updated!')
+        } else {
+          this.alertService.error('Failed to update blog post!')
+        }
+      } catch (error) {
+        this.alertService.error(error)
+      }
     }
     this.uiService.promptForm(form, false, onSubmit)
   }
-
 }

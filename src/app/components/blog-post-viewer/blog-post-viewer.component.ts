@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
 import { BlogPostService, UserService, SEOService, UIService } from '../../_services/index'
-import { ChapterContent, BlogPostMetaData, ChapterMetaData } from '../../_models/index'
+import { ChapterContent, BlogPostMetaData, ChapterMetaData, User } from '../../_models/index'
 
 import * as Quill from 'quill'
 
@@ -30,62 +30,61 @@ export class BlogPostViewerComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.blogPostId = params['blog_id']
-      this.refreshBlog()
+      this.blogPostId = params['blog_id'];
+      this.refreshBlog();
     })
   }
 
   ngOnDestroy() {
-    this.seoService.clearPageMeta()
+    this.seoService.clearPageMeta();
   }
 
-  refreshBlog() {
-    this.BlogPostService.getBlogPost(this.blogPostId).then((blogPost) => {
-      this.blogPost = blogPost
-      this.BlogPostService.setCurrentlyViewedBlogPost(blogPost)
-      this.uiService.setBannerURI(blogPost.bannerURI)
-
+  async refreshBlog() {
+    try {
+      this.blogPost = await this.BlogPostService.getBlogPost(this.blogPostId);
       if (!this.blogPost) {
-        this.blogPost = this.tempBlog
+        this.blogPost = this.tempBlog;
       }
 
+      this.BlogPostService.setCurrentlyViewedBlogPost(this.blogPost);
+      this.uiService.setBannerURI(this.blogPost.bannerURI);
+
       // Update post meta tags
-      this.seoService.setPageTitle(this.blogPost.title)
-      this.seoService.setPageDescription(this.blogPost.description)
-      this.seoService.setPageTags(this.blogPost.tags)
-      
-      setTimeout(() => { // One frame delay to let the html update
-        let chapterURIs = blogPost.chapters.map(a => a.URI)
-        this.BlogPostService.getChapterContents(chapterURIs).then((contents: ChapterContent[]) => {
-          var options = {
-            modules: {
-              toolbar: '',
-              syntax: true
-            },
-            placeholder: 'Nothing here yet...',
-            readOnly: true,
-            theme: 'bubble'
-          }
-          blogPost.chapters.forEach((chapter: ChapterMetaData) => {
-            try {
-              var editor = new Quill('#' + 'quill_content_' + chapter.chapterId, options)
-              let content = contents.find(a => { return chapter.URI == a.URI })
-              editor.setContents(JSON.parse(content.content))
-            } catch { }
-          })
-  
-        }).catch((e) => console.log(e))
-      }, 0)
+      this.seoService.setPageTitle(this.blogPost.title);
+      this.seoService.setPageDescription(this.blogPost.description);
+      this.seoService.setPageTags(this.blogPost.tags);
 
-      this.userService.getUser(this.blogPost.authorId).then(user => {
-        this.seoService.setPageAuthor(user.displayName)
-        if (!this.blogPost.bannerURI) {
-          this.uiService.setBannerURI(user.bannerURI)
+      await new Promise(resolve => setTimeout(resolve, 0)); // One frame delay to let the html update
+
+      let chapterURIs = this.blogPost.chapters.map(a => a.URI);
+      let contents: ChapterContent[] = await this.BlogPostService.getChapterContents(chapterURIs);
+      this.blogPost.chapters.forEach((chapter: ChapterMetaData) => {
+        var options = {
+          modules: {
+            toolbar: '',
+            syntax: true
+          },
+          placeholder: 'Nothing here yet...',
+          readOnly: true,
+          theme: 'bubble'
         }
-        this.userService.setCurrentlyViewedUser(user)
-      }).catch(e => console.log(e))
+        var editor = new Quill('#' + 'quill_content_' + chapter.chapterId, options);
+        let content = contents.find(a => { return chapter.URI == a.URI });
+        if (content) {
+          editor.setContents(JSON.parse(content.content));
+        }
+      });
 
-    }).catch((e) => console.log(e))
+      let user: User = await this.userService.getUser(this.blogPost.authorId);
+      this.seoService.setPageAuthor(user.displayName);
+      if (!this.blogPost.bannerURI) {
+        this.uiService.setBannerURI(user.bannerURI);
+      }
+      this.userService.setCurrentlyViewedUser(user);
+
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 }

@@ -13,6 +13,7 @@ export class BlogPostExplorerComponent implements OnInit {
   BlogPostMetaData: BlogPostMetaData[] = []
   authors: { [key: string]: User } = {}
   userId: string = ""
+  hasInit = false
 
   constructor(
     private BlogPostService: BlogPostService,
@@ -21,38 +22,45 @@ export class BlogPostExplorerComponent implements OnInit {
     private uiService: UIService,
     private userService: UserService) {
   }
-
-  hasInit = false
+  
   ngOnInit() {
     this.uiService.setBannerURI(undefined)
 
-    this.activatedRoute.params.subscribe(params => {
-      this.userId = params['user_id']
-      if (this.userId) {
-        this.userService.getUser(this.userId).then(user => {
-          this.uiService.setBannerURI(user.bannerURI)
-          this.userService.setCurrentlyViewedUser(user)
-        }).catch(e => { })
+    this.activatedRoute.params.subscribe(async (params) => {
+      this.userId = params['user_id'];
+      if (!this.userId) {
+        return;
       }
+
+      let user: User = await this.userService.getUser(this.userId);
+      this.uiService.setBannerURI(user.bannerURI);
+      this.userService.setCurrentlyViewedUser(user);
     })
 
     this.hasInit = true
     this.refreshBlogList()
   }
 
-  refreshBlogList() {
-    if (this.hasInit) {
-      this.BlogPostService.getBlogPosts(this.userId).then((data: BlogPostMetaData[]) => {
-        this.BlogPostMetaData = data
+  async refreshBlogList() {
+    if (!this.hasInit) {
+      return;
+    }
 
-        // Find author information
-        this.authors = {}
-        let authorIds = this.BlogPostMetaData.map(blogPost => blogPost.authorId)
-        authorIds.forEach(id => this.authors[id] = <User>{ username: "..." })
-        this.userService.getUsers(authorIds).then(users => {
-          users.forEach(user => this.authors[user.id] = user)
-        }).catch(e => this.alertService.error(e))
-      }).catch(e => this.alertService.error(e))
+    try {
+      this.BlogPostMetaData = await this.BlogPostService.getBlogPosts(this.userId);
+      
+      // Find author information
+      this.authors = {}
+      let authorIds: string[] = this.BlogPostMetaData.map(blogPost => blogPost.authorId);
+
+      // Fill out temporary author information while waiting for getUsers response
+      authorIds.forEach(id => this.authors[id] = <User>{ username: "..." });
+
+      // Fill out the author information
+      let users: User[] = await this.userService.getUsers(authorIds);
+      users.forEach(user => this.authors[user.id] = user);
+    } catch (error) {
+      this.alertService.error(error)
     }
   }
 
