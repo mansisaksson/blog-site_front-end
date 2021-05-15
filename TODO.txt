@@ -6,6 +6,7 @@
 	[ ] Make the DynamicForm chain-able, e.g. new DynamicForm(Params).addTextInput(params).addBoolean(params)
 	[ ] Improve error handling of promise functions. e.g don't use exceptions for execution flow¨
 	[ ] Rename withLoggedInUser to ensureWithLoggedInUser to more clearly denote it will throw if login fails
+	[ ] Remove all try catch and replace then with Result<T> https://benjaminjohnson.me/blog/typesafe-errors-in-typescript
 
 [ ] Use cache storage instead of local storage for cached posts
 
