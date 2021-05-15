@@ -14,44 +14,40 @@ export class UserService {
 		private userCacheService: UserCacheService) {
 	}
 
-	getUser(id: string): Promise<User> {
-		return new Promise<User>((resolve, reject) => {
-			return this.getUsers([id]).then(users => {
-				resolve(users && users.length > 0 ? users[0] : undefined)
-			}).catch(e => reject(e))
-		})
+	async getUser(id: string): Promise<User> {
+		let users: User[] = await this.getUsers([id]);
+		return users && users.length > 0 ? users[0] : undefined;
 	}
 
-	setCurrentlyViewedUser(user: User) {
-		this.currentlyViewedUser.next(user)
+	setCurrentlyViewedUser(user: User): void {
+		this.currentlyViewedUser.next(user);
 	}
 
 	getCurrentlyViewedUser(): Observable<User> {
-		return this.currentlyViewedUser.asObservable()
+		return this.currentlyViewedUser.asObservable();
 	}
 
-	getUsers(ids: string[]): Promise<User[]> {
+	// Gets the users for the specified user Ids.
+	// Will throw if backend responds with error.
+	async getUsers(ids: string[]): Promise<User[]> {
 		return new Promise<User[]>((resolve, reject) => {
-			let cache = this.userCacheService.FindUserCache(ids)
+			let cache = this.userCacheService.FindUserCache(ids);
 			if (cache.notFound.length == 0) {
-				return resolve(cache.foundUsers)
+				return resolve(cache.foundUsers);
 			}
 
-			let params = {
-				user_ids: ids
-			}
 			this.http.get<BackendResponse>(environment.backendAddr + '/api/users', {
 				headers: { 'Content-Type': 'application/json' },
-				params: params,
+				params: { user_ids: ids },
 				responseType: "json",
 				withCredentials: false
 			}).subscribe((response: BackendResponse) => {
 				if (response.success) {
-					let users = <User[]>response.body
-					this.userCacheService.UpdateUserCache(users)
-					resolve(users)
+					let users = <User[]>response.body;
+					this.userCacheService.UpdateUserCache(users);
+					resolve(users);
 				} else {
-					reject(response.error_code)
+					reject(response.error_code);
 				}
 			}, (error) => reject(error))
 		})
@@ -83,12 +79,9 @@ export class UserService {
 
 	updateUser(userId: string, newUserProperties: object): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
-			let params = {
-				userId: userId
-			}
 			this.http.put<BackendResponse>(environment.backendAddr + '/api/users', JSON.stringify(newUserProperties), {
 				headers: { 'Content-Type': 'application/json' },
-				params: params,
+				params: { userId: userId },
 				responseType: "json",
 				withCredentials: true
 			}).subscribe((data) => {
