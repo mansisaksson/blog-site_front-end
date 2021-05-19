@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core'
-import { User } from '../../_models'
+import { BackendError, User } from '../../_models'
 import { AuthenticationService, UserService, AlertService, DynamicForm, UIService, FormValues } from '../../_services'
 import { FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms'
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
+import { Result } from 'neverthrow';
 
 @Component({
   selector: 'edit-user',
@@ -15,7 +16,7 @@ export class EditUserComponent implements OnInit {
   public registerForm: FormGroup
   public submitted = false
   public loading = false
-  
+
   private profilePicture: File = null
   private banner: File = null
 
@@ -126,46 +127,48 @@ export class EditUserComponent implements OnInit {
       newUserProperties['banner'] = await getImageData(banner)
     }
 
-    if (Object.keys(newUserProperties).length > 0) {
-      this.loading = true
-      this.userService.updateUser(this.user.id, newUserProperties).then((user: User) => {
-        this.submitted = false
-        this.loading = false
-        this.authService.setUserSession(user)
-        this.alertService.success("User updated!")
-      }).catch(e => {
-        this.submitted = false
-        this.loading = false
-        this.alertService.error(e)
-      })
-    } else {
+    if (Object.keys(newUserProperties).length == 0) {
       this.submitted = false
+      return;
     }
+
+    this.loading = true
+    let userResult: Result<User, BackendError> = await this.userService.updateUser(this.user.id, newUserProperties);
+    this.submitted = false
+    this.loading = false
+
+    if (userResult.isErr()) {
+      this.alertService.error(BackendError.toString(userResult.error));
+      return;
+    }
+
+    this.authService.setUserSession(userResult.value);
+    this.alertService.success("User updated!");
   }
 
   // convenience getter for easy access to form fields
   get f() { return this.registerForm.controls }
 
   onSubmit() {
-    this.updateUser()
+    this.updateUser();
   }
 
   onDeleteUser() {
-    let form: DynamicForm = new DynamicForm("Delete User", "Delete")
-    form.addLabel('warning_text', "Warning!, this cannot be undone!", 'red')
-    form.addPasswordInput('Please enter your password', "user_password")
+    let form: DynamicForm = new DynamicForm("Delete User", "Delete");
+    form.addLabel('warning_text', "Warning!, this cannot be undone!", 'red');
+    form.addPasswordInput('Please enter your password', "user_password");
 
-    let onSubmit = (FormValues: FormValues, closeForm, showFormError) => {
-      let password = FormValues['user_password']
-      this.userService.delete(this.user.id, password).then(() => {
-        closeForm()
-        this.alertService.success('User Removed!')
-        this.authService.setUserSession(undefined)
-        this.router.navigate([''])
-      }).catch(e => {
-        showFormError(e)
-      })
+    let onSubmit = async (FormValues: FormValues, closeForm, showFormError) => {
+      let deleteResult: Result<void, BackendError> = await this.userService.delete(this.user.id, FormValues['user_password']);
+      if (deleteResult.isErr()) {
+        showFormError(BackendError.toString(deleteResult.error));
+        return;
+      }
+      closeForm();
+      this.alertService.success('User Removed!');
+      this.authService.setUserSession(undefined);
+      this.router.navigate(['']);
     }
-    this.uiService.promptForm(form, false, onSubmit)
+    this.uiService.promptForm(form, false, onSubmit);
   }
 }

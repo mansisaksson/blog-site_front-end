@@ -4,7 +4,6 @@ import { User, BackendResponse, BackendError } from '../_models/index'
 import { environment } from './../../environments/environment'
 import { UserCacheService } from './caching_services';
 import { BehaviorSubject, Observable } from 'rxjs'
-
 import { Result, ResultAsync, okAsync, errAsync } from 'neverthrow'
 
 @Injectable()
@@ -84,8 +83,8 @@ export class UserService {
 		}), (error: BackendError) => error);
 	}
 
-	updateUser(userId: string, newUserProperties: object): Promise<User> {
-		return new Promise<User>((resolve, reject) => {
+	updateUser(userId: string, newUserProperties: object): ResultAsync<User, BackendError> {
+		return ResultAsync.fromPromise<User, BackendError>(new Promise<User>((resolve, reject) => {
 			this.http.put<BackendResponse>(environment.backendAddr + '/api/users', JSON.stringify(newUserProperties), {
 				headers: { 'Content-Type': 'application/json' },
 				params: { userId: userId },
@@ -98,32 +97,28 @@ export class UserService {
 					this.userCacheService.UpdateUserCache([user])
 					resolve(user)
 				} else {
-					reject(response.error_code)
+					reject(<BackendError>{ errorCode: response.error_code, errorMessage: response.error_message });
 				}
-			}, (error) => reject(error))
-		})
+			}, (error) => reject(<BackendError>{ errorCode: "TRANSPORT_ERROR", errorMessage: "http communication error", error: error }));
+		}), (error: BackendError) => error);
 	}
 
-	delete(id: string, password: string): Promise<any> {
-		return new Promise<any>((resolve, reject) => {
-			let params = {
-				userId: id,
-				userPassword: password
-			}
+	delete(id: string, password: string): ResultAsync<void, BackendError> {
+		return ResultAsync.fromPromise<void, BackendError>(new Promise<void>((resolve, reject) => {
 			this.http.delete<BackendResponse>(environment.backendAddr + '/api/users', {
 				headers: { 'Content-Type': 'application/json' },
-				params: params,
+				params: { userId: id, userPassword: password },
 				responseType: "json",
 				withCredentials: true
 			}).subscribe((data) => {
-				let response = <BackendResponse>data
+				let response = <BackendResponse>data;
 				if (response.success) {
-					this.userCacheService.InvalidateUserCache([id])
-					resolve(response.body)
+					this.userCacheService.InvalidateUserCache([id]);
+					resolve();
 				} else {
-					reject(response.error_code)
+					reject(<BackendError>{ errorCode: response.error_code, errorMessage: response.error_message });
 				}
-			}, (error) => reject(error))
-		})
+			}, (error) => reject(<BackendError>{ errorCode: "TRANSPORT_ERROR", errorMessage: "http communication error", error: error }));
+		}), (error: BackendError) => error);
 	}
 }
