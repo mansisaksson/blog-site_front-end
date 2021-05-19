@@ -1,9 +1,11 @@
 ﻿import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { User, BackendResponse } from '../_models/index'
+import { User, BackendResponse, BackendError } from '../_models/index'
 import { environment } from './../../environments/environment'
 import { UserCacheService } from './caching_services';
 import { BehaviorSubject, Observable } from 'rxjs'
+
+import { Result, ResultAsync, okAsync, errAsync } from 'neverthrow'
 
 @Injectable()
 export class UserService {
@@ -14,9 +16,15 @@ export class UserService {
 		private userCacheService: UserCacheService) {
 	}
 
-	async getUser(id: string): Promise<User> {
-		let users: User[] = await this.getUsers([id]);
-		return users && users.length > 0 ? users[0] : undefined;
+	async getUser(id: string): Promise<Result<User, BackendError>> {
+		let usersResult: Result<User[], BackendError> = await this.getUsers([id]);
+		if (usersResult.isErr()) {
+			return errAsync(usersResult.error);
+		}
+		if (usersResult.value.length == 0) {
+			return errAsync(<BackendError>{ errorCode: "CLIENT_ERROR", errorMessage: `Could not find user with id ${id}` });
+		}
+		return okAsync(usersResult.value[0]);
 	}
 
 	setCurrentlyViewedUser(user: User): void {
@@ -28,9 +36,8 @@ export class UserService {
 	}
 
 	// Gets the users for the specified user Ids.
-	// Will throw if backend responds with error.
-	async getUsers(ids: string[]): Promise<User[]> {
-		return new Promise<User[]>((resolve, reject) => {
+	getUsers(ids: string[]): ResultAsync<User[], BackendError> {
+		return ResultAsync.fromPromise<User[], BackendError>(new Promise<User[]>((resolve, reject) => {
 			let cache = this.userCacheService.FindUserCache(ids);
 			if (cache.notFound.length == 0) {
 				return resolve(cache.foundUsers);
@@ -47,14 +54,14 @@ export class UserService {
 					this.userCacheService.UpdateUserCache(users);
 					resolve(users);
 				} else {
-					reject(response.error_code);
+					reject(<BackendError>{ errorCode: response.error_code, errorMessage: response.error_message });
 				}
-			}, (error) => reject(error))
-		})
+			}, (error) => reject(<BackendError>{ errorCode: "TRANSPORT_ERROR", errorMessage: "http communication error", error: error }))
+		}), (error: BackendError) => error);
 	}
 
-	createUser(userName: string, password: string, registrationKey: string): Promise<User> {
-		return new Promise<User>((resolve, reject) => {
+	createUser(userName: string, password: string, registrationKey: string): ResultAsync<User, BackendError> {
+		return ResultAsync.fromPromise<User, BackendError>(new Promise<User>((resolve, reject) => {
 			let body = {
 				userName: userName,
 				userPassword: password,
@@ -71,10 +78,10 @@ export class UserService {
 					this.userCacheService.UpdateUserCache([user])
 					resolve(user)
 				} else {
-					reject(response.error_code)
+					reject(<BackendError>{ errorCode: response.error_code, errorMessage: response.error_message });
 				}
-			}, (error) => reject(error))
-		})
+			}, (error) => reject(<BackendError>{ errorCode: "TRANSPORT_ERROR", errorMessage: "http communication error", error: error }))
+		}), (error: BackendError) => error);
 	}
 
 	updateUser(userId: string, newUserProperties: object): Promise<User> {

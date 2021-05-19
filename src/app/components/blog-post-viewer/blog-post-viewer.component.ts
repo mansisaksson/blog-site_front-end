@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Params } from '@angular/router'
 import { BlogPostService, UserService, SEOService, UIService } from '../../_services/index'
-import { ChapterContent, BlogPostMetaData, ChapterMetaData, User } from '../../_models/index'
+import { ChapterContent, BlogPostMetaData, ChapterMetaData, User, BackendError } from '../../_models/index'
+import { Result } from 'neverthrow'
 
 import * as Quill from 'quill'
 
@@ -40,7 +41,7 @@ export class BlogPostViewerComponent implements OnInit {
   }
 
   async refreshBlog() {
-    try {
+    try { // TODO: Remove when all backend functions have implemented Result<T, E>
       this.blogPost = await this.BlogPostService.getBlogPost(this.blogPostId);
       if (!this.blogPost) {
         this.blogPost = this.tempBlog;
@@ -75,12 +76,16 @@ export class BlogPostViewerComponent implements OnInit {
         }
       });
 
-      let user: User = await this.userService.getUser(this.blogPost.authorId);
-      this.seoService.setPageAuthor(user.displayName);
-      if (!this.blogPost.bannerURI) {
-        this.uiService.setBannerURI(user.bannerURI);
+      let userResult: Result<User, BackendError> = await this.userService.getUser(this.blogPost.authorId);
+      if (userResult.isErr()) {
+        console.error(`${userResult.error.errorCode}:${userResult.error.errorMessage}`);
+        return;
       }
-      this.userService.setCurrentlyViewedUser(user);
+      this.seoService.setPageAuthor(userResult.value.displayName);
+      if (!this.blogPost.bannerURI) {
+        this.uiService.setBannerURI(userResult.value.bannerURI);
+      }
+      this.userService.setCurrentlyViewedUser(userResult.value);
 
     } catch (error) {
       console.error(error);

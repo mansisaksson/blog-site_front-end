@@ -1,9 +1,12 @@
 ﻿import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { AlertService, UserService, AuthenticationService, UIService } from '../_services/index';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { AlertService, UserService, AuthenticationService, UIService } from '../_services/index';
 import { environment } from '../../environments/environment';
+import { BackendError, User } from '../_models';
+import { Result } from 'neverthrow';
+
 declare let $: any;
 
 @Component({
@@ -65,7 +68,7 @@ export class RegisterComponent implements OnDestroy, OnInit {
     }
   }
 
-  register() {
+  async register() {
     this.submitted = true
 
     if (this.registerForm.invalid) {
@@ -76,21 +79,24 @@ export class RegisterComponent implements OnDestroy, OnInit {
     let password = this.registerForm.get('password').value
     let registrationKey = this.registerForm.get('registrationKey').value
 
-    this.userService.createUser(userName, password, registrationKey).then(user => {
-      this.alertService.success('Registration successful', true)
-      this.authenticationService.login(userName, password).then(() => {
-        if (this.message && this.message.onRegister) {
-          this.message.onRegister()
-        }
-        this.closeModal()
-      }).catch(error => {
-        this.alertService.error(error)
-        this.closeModal()
-      })
-    }).catch((error) => {
+    let userResult: Result<User, BackendError> = await this.userService.createUser(userName, password, registrationKey);
+    if (userResult.isErr()) {
+      console.error(BackendError.toString(userResult.error));
+      this.alertService.error(userResult.error.errorMessage);
+      this.closeModal();
+      return;
+    }
+    
+    this.alertService.success('Registration successful', true)
+    this.authenticationService.login(userName, password).then(() => {
+      if (this.message && this.message.onRegister) {
+        this.message.onRegister()
+      }
+      this.closeModal()
+    }).catch(error => {
       this.alertService.error(error)
       this.closeModal()
-    });
+    })
   }
 
   // convenience getter for easy access to form fields

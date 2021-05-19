@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { BlogPostService, AlertService, UserService, UIService } from '../../_services/index'
-import { BlogPostMetaData, User } from '../../_models/index'
+import { BackendError, BlogPostMetaData, User } from '../../_models/index'
 import { environment } from '../../../environments/environment'
+import { Result } from 'neverthrow'
 
 @Component({
   selector: 'app-blog-post-explorer',
@@ -31,14 +32,17 @@ export class BlogPostExplorerComponent implements OnInit {
       if (!this.userId) {
         return;
       }
+      let userResult: Result<User, BackendError> = await this.userService.getUser(this.userId);
+      if (userResult.isErr()) {
+        console.error(BackendError.toString(userResult.error));
+        return;
+      }
+      this.uiService.setBannerURI(userResult.value.bannerURI);
+      this.userService.setCurrentlyViewedUser(userResult.value);
+    });
 
-      let user: User = await this.userService.getUser(this.userId);
-      this.uiService.setBannerURI(user.bannerURI);
-      this.userService.setCurrentlyViewedUser(user);
-    })
-
-    this.hasInit = true
-    this.refreshBlogList()
+    this.hasInit = true;
+    this.refreshBlogList();
   }
 
   async refreshBlogList() {
@@ -46,7 +50,7 @@ export class BlogPostExplorerComponent implements OnInit {
       return;
     }
 
-    try {
+    try { // TODO: Remove once getBlogPosts implements Result<T, E>
       this.BlogPostMetaData = await this.BlogPostService.getBlogPosts(this.userId);
       
       // Find author information
@@ -57,10 +61,15 @@ export class BlogPostExplorerComponent implements OnInit {
       authorIds.forEach(id => this.authors[id] = <User>{ username: "..." });
 
       // Fill out the author information
-      let users: User[] = await this.userService.getUsers(authorIds);
-      users.forEach(user => this.authors[user.id] = user);
+      let usersResult: Result<User[], BackendError> = await this.userService.getUsers(authorIds);
+      if (usersResult.isErr()) {
+        console.error(BackendError.toString(usersResult.error));
+        this.alertService.error(usersResult.error.errorMessage);
+        return;
+      }
+      usersResult.value.forEach(user => this.authors[user.id] = user);
     } catch (error) {
-      this.alertService.error(error)
+      this.alertService.error(error);
     }
   }
 
